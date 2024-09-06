@@ -1,0 +1,6 @@
+# created by virtualenv automatically
+venv
+.idea
+.env
+__pycache__
+accounts/migrations/versions
