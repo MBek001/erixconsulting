@@ -23,9 +23,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-sl#5*%2q8z7!u)9xqde1gzzz)h5lq%8#4&9ka-*f(c7^%p10p)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*'
+    # 'localhost',
+    # '127.0.0.1',
+    # '0.0.0.0',
+    # '192.168.0.111'
+
+]
+
+AUTH_USER_MODEL = 'accounts.User'
+
+# Set session timeout (in seconds)
+SESSION_COOKIE_AGE = 600  # 10 minutes
+
+# Expire session when the user closes their browser
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
 
 
 # Application definition
@@ -119,10 +134,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
-]
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']  # Path where your static files are located
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

@@ -64,3 +64,60 @@
     
 })(jQuery);
 
+// sssssssssssssssssssssssssssss
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    var chatIcon = document.getElementById('chat-icon');
+    var chatWindow = document.getElementById('chat-window');
+    var chatCloseButton = document.getElementById('chat-close-button');
+    var sendButton = document.getElementById('send-button');
+    var chatInput = document.getElementById('chat-input');
+
+    // Toggle chat window visibility
+    function toggleChatWindow() {
+        if (chatWindow.style.display === 'none' || chatWindow.style.display === '') {
+            chatWindow.style.display = 'flex';
+        } else {
+            chatWindow.style.display = 'none';
+        }
+    }
+
+    // Send message function
+    function sendMessage() {
+        var message = chatInput.value.trim();
+        if (message) {
+            // Create message element
+            var chatMessages = document.getElementById('chat-messages');
+            var messageDiv = document.createElement('div');
+            messageDiv.className = 'message user-message'; // Add user-message class
+            messageDiv.textContent = message;
+            chatMessages.appendChild(messageDiv);
+
+            // Clear input field
+            chatInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to bottom
+        }
+    }
+
+    // Event listener for chat icon
+    chatIcon.addEventListener('click', toggleChatWindow);
+
+    // Event listener for close button
+    chatCloseButton.addEventListener('click', function() {
+        chatWindow.style.display = 'none';
+    });
+
+    // Event listener for send button
+    sendButton.addEventListener('click', sendMessage);
+
+    // Event listener for Enter key in textarea
+    chatInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault(); // Prevent new line on Enter
+            sendMessage();
+        }
+    });
+});

@@ -1,5 +1,8 @@
+from traceback import print_tb
+
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
@@ -22,18 +25,14 @@ class RegisterView(View):
 
     def post(self, request):
         first_name = request.POST.get('first_name')
+        last_name = request.POST.get('last_name')
         email = request.POST.get('email')
-        surname = request.POST.get('surname')
         phone_number = request.POST.get('phone_number')
         password1 = request.POST.get('password')
-        password2 = request.POST.get('confirm-password')
+        password2 = request.POST.get('confirm_password')
 
         if not first_name:
             messages.error(request, "First name is required.")
-            return redirect('/register')
-
-        if not surname:
-            messages.error(request, "Surname name is required.")
             return redirect('/register')
 
         if not phone_number:
@@ -52,8 +51,8 @@ class RegisterView(View):
 
         user = User.objects.create(
             first_name=first_name,
+            last_name=last_name,
             email=email,
-            surname=surname,
             phone_number=phone_number,
             password=make_password(password1),
             is_superuser=is_first_user,
@@ -62,7 +61,7 @@ class RegisterView(View):
         user.save()
         login(request, user)
 
-        return redirect('/index_en')
+        return redirect('/')
 
 
 class LoginView(View):
@@ -79,10 +78,10 @@ class LoginView(View):
         if form.is_valid():
             email = form.cleaned_data.get("email")
             password = form.cleaned_data.get("password")
-            user = EmailBackend.authenticate(request, email=email, password=password)
+            user = EmailBackend.authenticate(request,email=email, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('/index_en')
+                return redirect('/')
             else:
                 messages.error(request, "Username or password is wrong !")
 
@@ -98,9 +97,10 @@ class LogoutView(View):
 
 def index_en(request):
     return render(request, 'index_en.html')
+#
 
-def index_ru(request):
-    return render(request, 'index_ru.html')
-
-def index_uz(request):
-    return render(request, 'index_uz.html')
+def profile(request):
+    return render(request, 'profile.html')
+#
+# def index_uz(request):
+#     return render(request, 'index_uz.html')
