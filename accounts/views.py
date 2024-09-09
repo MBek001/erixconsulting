@@ -10,7 +10,7 @@ from django.views import View
 from django.contrib.auth import authenticate, login,logout
 
 from accounts.forms import LoginForm
-from .models import User
+from .models import User, Service
 from .utils import EmailBackend
 
 
@@ -94,6 +94,13 @@ class LogoutView(View):
         logout(request)
         return redirect('/login')
 
+
+def service_list(request):
+    services = Service.objects.all()
+    context = {
+        'services': services
+    }
+    return render(request, 'service_list.html', context)
 
 def index_en(request):
     return render(request, 'index_en.html')
