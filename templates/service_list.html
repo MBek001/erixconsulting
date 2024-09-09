@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <!-- Local Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Local Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Local Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <style>
+        /* General Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f9;
+    color: #444;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-size: 32px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+/* Service Grid Styling */
+.service-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.service-container {
+    flex: 1 1 calc(25% - 20px); /* 4 items per row with gap */
+    margin-bottom: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    max-width: 300px; /* Optional: limit width to fit layout better */
+}
+
+.service-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Service Title */
+.service-name {
+    font-size: 26px;
+    color: #27ae60;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: capitalize;
+}
+
+/* Service Description */
+.service-description {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+/* Service Creation Date */
+.service-created {
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* Members List */
+.members-list {
+    margin-top: 20px;
+    padding-left: 0;
+    list-style: none;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.member-item img {
+    border-radius: 50%;
+    margin-right: 10px;
+    width: 30px; /* Smaller size */
+    height: 30px; /* Smaller size */
+    object-fit: cover;
+}
+
+.member-item a {
+    color: #3498db;
+    text-decoration: none;
+    margin-right: 8px;
+    font-size: 14px;
+}
+
+.member-item a:hover {
+    text-decoration: underline;
+    color: #2980b9;
+}
+
+/* Horizontal Divider */
+hr {
+    border: 0;
+    height: 1px;
+    background: #eee;
+    margin: 30px 0;
+}
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>All Services</h1>
+
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-container">
+            <h2 class="service-name">{{ service.name }}</h2>
+            <p class="service-description">{{ service.description|default:"No description available." }}</p>
+            <p class="service-created">Created on: {{ service.created_at }}</p>
+            <h3>Members:</h3>
+            <ul class="members-list">
+                {% for member in service.members.all %}
+                <li class="member-item">
+                    {% if service.members.user.profile_picture %}
+                        <img src="{{ services.members.user.profile_picture.url }}" alt="{{ member.user.first_name }} {{ member.user.last_name }}">
+                    {% else %}
+                        <img src="{% static 'images/default_profile_picture.png' %}" alt="Default Profile Picture">
+                    {% endif %}
+                    {{ member.user.first_name }} {{ member.user.last_name }} - {{ member.role }}<br>
+                    {% if member.instagram %}
+                        <a href="{{ member.instagram }}" target="_blank">Instagram</a>
+                    {% endif %}
+                    {% if member.twitter %}
+                        <a href="{{ member.twitter }}" target="_blank">Twitter</a>
+                    {% endif %}
+                    {% if member.facebook %}
+                        <a href="{{ member.facebook }}" target="_blank">Facebook</a>
+                    {% endif %}
+                    {% if member.youtube %}
+                        <a href="{{ member.youtube }}" target="_blank">YouTube</a>
+                    {% endif %}
+                    {% if member.linkedin %}
+                        <a href="{{ member.linkedin }}" target="_blank">LinkedIn</a>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block js %}
+    <!-- Local JavaScript Libraries -->
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+
+    <!-- Template JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

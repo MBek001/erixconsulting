@@ -117,3 +117,15 @@ class Conversation(models.Model):
     def __str__(self):
         return f"Conversation between {self.user.email} and {self.staff.user.email if self.staff else 'Unassigned'}"
 
+
+class About(models.Model):
+    company_name = models.CharField(max_length=100)
+    mission = models.TextField(blank=True, null=True)
+    description = models.TextField()  # General company info
+    services_overview = models.TextField(blank=True, null=True)  # Brief overview of consulting services
+    team_description = models.TextField(blank=True, null=True)  # Info about the team
+    contact_phone = models.CharField(max_length=20, blank=True, null=True)  # Optional phone number
+    image = models.ImageField(upload_to='about/', blank=True, null=True)  # Optional image for about page
+
+    def __str__(self):
+        return self.company_name

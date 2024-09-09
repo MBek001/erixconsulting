@@ -16,6 +16,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('services/', service_list, name='service_list'),
     # path('ru', index_ru, name='ru'),
     # path('uz', index_uz, name='uz'),
 ]
