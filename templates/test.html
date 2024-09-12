@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+    <style>
+        .team-carousel .team {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        /* Adjustments for mobile view */
+        @media (max-width: 768px) {
+            .team-carousel .team {
+                width: 100%;
+                margin: 0 auto;
+            }
+        }
+
+        .team-img img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+        /* Style the left and right navigation buttons */
+        .owl-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .owl-prev, .owl-next {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .owl-prev:hover, .owl-next:hover {
+            background-color: #555;
+        }
+
+        .owl-prev {
+            left: -25px;
+        }
+
+        .owl-next {
+            right: -25px;
+        }
+    </style>
+    <!-- Local Libraries Stylesheet -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.theme.default.min.css' %}" rel="stylesheet">
+
+    <!-- Local Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+
+
+    <!-- Local Template Stylesheet -->
+{#    <link href="{% static 'css/style.css' %}" rel="stylesheet">#}
+    
+{% endblock %}
+
+{% block content %}
+<!-- Team Section -->
+<div class="container-fluid pt-5">
+    <div class="container py-5">
+        <div class="row align-items-end mb-4">
+            <div class="col-lg-6">
+                <h6 class="text-secondary font-weight-semi-bold text-uppercase mb-3">Meet Our Team</h6>
+                <h1 class="section-title mb-3">Meet Our Highly Experienced Team</h1>
+            </div>
+            <div class="col-lg-6">
+                <h4 class="font-weight-normal text-muted mb-3">
+                    Our team is skilled and dedicated to providing the best service. We value professionalism and expertise.
+                </h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="owl-carousel team-carousel">
+                    {% for member in team_members %}
+                    <div class="team d-flex flex-column text-center rounded overflow-hidden">
+                        <div class="position-relative team-member">
+                            <div class="team-img">
+                                {% if member.user.profile_picture %}
+                                <img class="img" src="{{ member.user.profile_picture.url }}" alt="{{ member.user.first_name }} {{ member.user.last_name }}">
+                                {% else %}
+                                <img class="img-fluid" src="{% static 'img/default-profile.jpg' %}" alt="Default Profile Picture">
+                                {% endif %}
+                            </div>
+                            <div class="team-overlay">
+                                <div class="team-social flex-column justify-content-center">
+                                    <a class="btn btn-secondary btn-social mb-2" href="{{ member.twitter|default:'#' }}"><i class="fab fa-twitter"></i></a>
+                                    <a class="btn btn-secondary btn-social mb-2" href="{{ member.instagram|default:'#' }}"><i class="fab fa-instagram"></i></a>
+                                    <a class="btn btn-secondary btn-social mb-2" href="{{ member.facebook|default:'#' }}"><i class="fab fa-facebook-f"></i></a>
+                                    <a class="btn btn-secondary btn-social mb-2" href="{{ member.linkedin|default:'#' }}"><i class="fab fa-linkedin-in"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-primary text-center py-3">
+                            <h5 class="font-weight-bold">{{ member.user.first_name }} {{ member.user.last_name }}</h5>
+                            <p class="text-white m-0">{{ member.role }}</p>
+                        </div>
+                        <div class="team-description p-3">
+                             {% if member.description %}
+                            <p>{{ member.description }}</p>
+                            {% else%}
+                                <p>"Bringing a fresh perspective and innovative approach, 
+                                    <span class="team-member-name">{{ member.user.first_name }} {{ member.user.last_name }}</span> 
+                                    is instrumental in developing creative strategies and solutions. 
+                                    Their ability to think outside the box leads to effective problem-solving and improved processes."
+                                </p>
+                            {% endif %} </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('.team-carousel').owlCarousel({
+                loop: true,
+                margin: 30,
+                nav: true,  // Enable navigation
+                navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],  // Custom left/right buttons
+                dots: false,  // Disable dots if you don't need them
+                autoplay: true,
+                autoplayTimeout: 3000,
+                autoplayHoverPause: true,
+                smartSpeed: 1000,
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    576: {
+                        items: 2
+                    },
+                    992: {
+                        items: 3
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

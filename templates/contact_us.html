@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% load static %}
+<title>{% block title %}Contact Us{% endblock %}</title>
+
+{% block css %}
+    <!-- Local Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Local Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Local Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <style>
+       body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    padding: 0;
+    margin: 0;
+}
+
+.hero-wrap {
+    position: relative;
+    background-image: url('{% static 'img/logo-white.png' %}');
+    background-size: cover;
+    background-position: center;
+    height: 400px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Default background image for larger screens */
+.hero-wrap .overlay {
+    position: absolute;
+    background-image: url("{% static 'img/contact-banner.jpg' %}");
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background-size: cover; /* Ensure image covers the element */
+    background-position: center; /* Center the image */
+}
+
+.hero-wrap .slider-text {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.hero-wrap h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+}
+
+.hero-wrap .breadcrumbs {
+    font-size: 1.2rem;
+    color: #d4d4d4;
+}
+
+.hero-wrap .breadcrumbs a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.hero-wrap .breadcrumbs a:hover {
+    text-decoration: underline;
+}
+
+/* Layout for left container and right map */
+.content-wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allow wrapping for small screens */
+    gap: 20px; /* Added gap to ensure spacing between columns */
+    margin-top: 50px;
+}
+
+.content-wrap .container {
+    flex: 1;
+    max-width: 100%; /* Adjusted to 100% for better responsiveness */
+    background-color: rgba(21, 93, 162, 0.8);
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 0 10px; /* Added margin to ensure spacing */
+}
+
+.map-container {
+    flex: 1;
+    max-width: 100%; /* Adjusted to 100% for better responsiveness */
+    height: 800px; /* Set a default height */
+    margin: 0 10px; /* Added margin to ensure spacing */
+}
+
+/* Map Section */
+.map-container iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #27ae60;
+}
+
+.info-section, .contact-form-section {
+    margin-bottom: 10px;
+}
+
+.info-section h2, .contact-form-section h2 {
+    color: #f8f6f6;
+    border-bottom: 2px solid #000000;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.info-content, .contact-form-content {
+    padding: 1px;
+}
+
+.info-content p {
+    line-height: 1;
+    color: #555;
+}
+
+.alert-info {
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #d9edf7;
+    color: #31708f;
+    border-radius: 5px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #22cb69;
+    color: white;
+    border: none;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #c08a24;
+}
+
+.auth-info {
+    margin-bottom: 20px;
+    font-size: 16px;
+    color: #555;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .hero-wrap {
+        height: 300px;
+        background-image: url("{% static 'img/contactus.jpg' %}");
+    }
+    
+    .hero-wrap .overlay {
+        background-image: url("{% static 'img/contactus.jpg' %}"); /* Mobile background image */
+    }
+
+    .hero-wrap h1 {
+        font-size: 1.8rem; /* Smaller font size for mobile */
+    }
+
+    .content-wrap {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .content-wrap .container, .map-container {
+        max-width: 100%;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .map-container {
+        height: 400px; /* Adjusted height for mobile */
+    }
+
+    .contact-form-section h2 {
+        font-size: 1.5rem; /* Smaller font size for mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-wrap h1 {
+        font-size: 1.5rem; /* Even smaller font size for very small screens */
+    }
+
+    .contact-form-content {
+        padding: 5px; /* Reduced padding for smaller screens */
+    }
+
+    label, input, textarea, button {
+        font-size: 0.9rem; /* Smaller font size for inputs and labels */
+    }
+
+    textarea {
+        height: auto; /* Allow textarea to grow based on content */
+    }
+}
+
+    </style>
+{% endblock %}
+
+{% block content %}
+    <section class="hero-wrap">
+        <div class="overlay"></div>
+        <div class="slider-text">
+        </div>
+    </section>
+
+    <div class="content-wrap">
+    <div class="map-container">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3068.7884091593463!2d-84.33157388462645!3d39.32552657951667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x884053e1bb64ad53%3A0x2b9efb938fb94172!2s7577%20Central%20Parke%20Blvd%2C%20Mason%2C%20OH%2045040%2C%20USA!5e0!3m2!1sen!2sus!4v1603794290143!5m2!1sen!2sus"
+                allowfullscreen=""></iframe>
+        </div>
+        <div class="container">
+            <div class="contact-form-section">
+                <h2>Contact Us</h2>
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="alert alert-info" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    {% if user.is_authenticated %}
+                        <div class="auth-info">
+                            <p>Logged in as: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</p>
+                        </div>
+
+                        <label for="subject"  style="color: white">Subject:</label>
+                        <input type="text" id="subject" name="subject" required>
+
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    {% else %}
+                        <label for="email" style="color: white">Email (required):</label>
+                        <input type="email" id="email" name="email" required>
+                        <label for="name" style="color: white">Fullname:</label>
+                        <input type="text" id="name" name="name" required>
+
+                        <label for="phone_number"  style="color: white">Phone Number (optional):</label>
+                        <input type="text" id="phone_number" name="phone_number">
+
+                        <label for="subject"  style="color: white">Subject:</label>
+                        <input type="text" id="subject" name="subject" required>
+
+                        <label for="message"  style="color: white">Message:</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    {% endif %}
+
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    
+{% endblock %}
+
+{% block js %}
+    <!-- Local JavaScript Libraries -->
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+
+    <!-- Template JavaScript -->
+    <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

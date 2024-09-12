@@ -23,23 +23,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-sl#5*%2q8z7!u)9xqde1gzzz)h5lq%8#4&9ka-*f(c7^%p10p)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*'
-    # 'localhost',
-    # '127.0.0.1',
-    # '0.0.0.0',
-    # '192.168.0.111'
+ALLOWED_HOSTS = [
+    '*',
+    'localhost',
+    '127.0.0.1',
 
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
 
 # Set session timeout (in seconds)
-SESSION_COOKIE_AGE = 600  # 10 minutes
+SESSION_COOKIE_AGE = 1200  # 20 minutes
 
 # Expire session when the user closes their browser
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 
 
@@ -135,9 +134,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Path where your static files are located
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False  # Disable TLS when using SSL
+EMAIL_USE_SSL = True  # Enable SSL
+EMAIL_HOST_USER = 'bek0010311@gmail.com'
+EMAIL_HOST_PASSWORD = 'ukokmhdrbiiyerxj'
+DEFAULT_FROM_EMAIL = 'bek0010311@gmail.com'
+CONTACT_US_EMAIL = 'mmm857436@gmail.com'

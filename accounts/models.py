@@ -1,3 +1,6 @@
+from datetime import timezone, datetime
+
+import django
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -41,6 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', blank=True, null=True)
+    join_date = models.DateTimeField(default= django.utils.timezone.now)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
@@ -58,7 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']  # Fix the name here
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
         return self.email
@@ -78,6 +82,7 @@ class ContactMessage(models.Model):
 class TeamMembership(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     role = models.CharField(max_length=50)
+    description = models.TextField(max_length=500, blank=True, null=True)
     instagram = models.URLField(max_length=200, blank=True, null=True)
     twitter = models.URLField(max_length=200, blank=True, null=True)
     facebook = models.URLField(max_length=200, blank=True, null=True)
@@ -101,11 +106,10 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(max_length=500, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='comments', blank=True, null=True)
 
     def __str__(self):
-        return f"Comment by {self.user.email} on {self.service.name} at {self.created_at}"
+        return f"Comment by {self.user.email} at {self.created_at}"
 
 
 class Conversation(models.Model):
@@ -121,11 +125,20 @@ class Conversation(models.Model):
 class About(models.Model):
     company_name = models.CharField(max_length=100)
     mission = models.TextField(blank=True, null=True)
-    description = models.TextField()  # General company info
-    services_overview = models.TextField(blank=True, null=True)  # Brief overview of consulting services
-    team_description = models.TextField(blank=True, null=True)  # Info about the team
-    contact_phone = models.CharField(max_length=20, blank=True, null=True)  # Optional phone number
-    image = models.ImageField(upload_to='about/', blank=True, null=True)  # Optional image for about page
+    description = models.TextField()
+    services_overview = models.TextField(blank=True, null=True)
+    team_description = models.TextField(blank=True, null=True)
+    contact_phone = models.CharField(max_length=20, blank=True, null=True)
+    image = models.ImageField(upload_to='about/', blank=True, null=True)
 
     def __str__(self):
         return self.company_name
+
+class BlogPost(models.Model):
+    theme = models.CharField(max_length=100)
+    content = models.TextField()
+    file = models.FileField(upload_to='blog', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.theme

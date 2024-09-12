@@ -15,6 +15,33 @@
 {% endblock %}
 
 {% block content %}
+    
+    <!-- Display messages -->
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+                <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% elif message.tags == "error" %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% elif message.tags == "warning" %}
+                <div class="alert alert-warning" role="alert">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="alert alert-info" role="alert">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}  
+    
+    
 <!-- User Info Start -->
 <div class="container py-5">
     <div class="row justify-content-center">
@@ -27,7 +54,7 @@
                     <p><strong>Your Email:</strong> {{ request.user.email }}</p>
                     {% if profile_picture %}
                         <div class="profile-picture-container mb-3">
-                            <img src="{{ profile_picture.url }}" alt="Profile Picture" class="img-thumbnail rounded-circle">
+                            <img src="{{ profile_picture.url }}" alt="Profile Picture" class="img-thumbnail rounded-3">
                             <form action="{% url 'delete_profile_picture' %}" method="post" class="mt-2">
                                 {% csrf_token %}
                                 <button type="submit" class="btn btn-danger btn-sm">

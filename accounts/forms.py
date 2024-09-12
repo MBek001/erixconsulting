@@ -1,4 +1,4 @@
-from .models import User
+from .models import User, Comment
 from django.forms import CharField, PasswordInput, TextInput, Form
 from django import forms
 
@@ -20,3 +20,11 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'email', 'email']
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']  # We only want users to enter the comment content
+        widgets = {
+            'content': forms.Textarea(attrs={'placeholder': 'Write your comment here...', 'rows': 3}),
+        }

@@ -12,8 +12,8 @@
     <!-- Local Template Stylesheet -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
-    <style>
-        /* General Styles */
+<style>
+    /* General Styles */
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #f4f4f9;
@@ -39,7 +39,7 @@ h1 {
 }
 
 .service-container {
-    flex: 1 1 calc(25% - 20px); /* 4 items per row with gap */
+    flex: 0 1 calc(25% - 20px); /* Ensures 4 items per row */
     margin-bottom: 20px;
     padding: 20px;
     border: 1px solid #ddd;
@@ -47,9 +47,9 @@ h1 {
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    max-width: 300px; /* Optional: limit width to fit layout better */
 }
 
+/* Hover Effect for Service Container */
 .service-container:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
@@ -64,12 +64,26 @@ h1 {
     text-transform: capitalize;
 }
 
-/* Service Description */
+/* Description Label */
+.description-label {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 5px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Enhanced Service Description Styling */
 .service-description {
-    font-size: 18px;
-    color: #666;
+    font-size: 16px;
+    color: #555;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    line-height: 1.8;
+    font-style: italic;
+    border: 1px solid #e0e0e0;
     margin-bottom: 15px;
-    line-height: 1.6;
 }
 
 /* Service Creation Date */
@@ -87,40 +101,94 @@ h1 {
 
 .member-item {
     display: flex;
-    align-items: center;
-    margin-bottom: 10px;
+    align-items: center; /* Align items vertically */
+    margin-bottom: 20px; /* Space between members */
     font-size: 18px;
+    position: relative; /* To position the horizontal line */
+    padding-bottom: 20px; /* Space for the horizontal line */
 }
 
 .member-item img {
     border-radius: 50%;
-    margin-right: 10px;
-    width: 30px; /* Smaller size */
-    height: 30px; /* Smaller size */
+    margin-right: 15px; /* Space between image and text */
+    width: 60px;
+    height: 60px;
     object-fit: cover;
 }
 
-.member-item a {
-    color: #3498db;
-    text-decoration: none;
-    margin-right: 8px;
-    font-size: 14px;
+.member-details {
+    display: flex;
+    flex-direction: column; /* Stack name and role vertically */
+    margin-right: 15px; /* Space between details and social links */
 }
 
-.member-item a:hover {
-    text-decoration: underline;
-    color: #2980b9;
+.member-info {
+    display: flex; /* Display name in a row */
+    align-items: center;
+    gap: 10px; /* Space between elements */
+}
+
+.member-info .first-name,
+.member-info .last-name {
+    font-size: 16px; /* Slightly larger text for name */
+    color: #333;
+}
+
+.role-box {
+    display: inline-block;
+    padding: 5px 10px;
+    border: 1px solid #27ae60; /* Green border */
+    border-radius: 6px; /* Rounded corners */
+    background-color: #eafaf1; /* Light green background */
+    color: #27ae60; /* Text color matching the border */
+    font-size: 14px; /* Slightly smaller text */
+    font-weight: 600; /* Bold text */
+    margin-top: 5px; /* Space between label and role */
+}
+
+/* Social Media Links Styling */
+.social-links {
+    display: flex; /* Display links in a row */
+    gap: 10px; /* Space between icons */
+    margin-top: 10px; /* Add space above social links */
+}
+
+.social-links a {
+    font-size: 20px; /* Adjust the size of the icons */
+    color: #3498db; /* Default color for the icons */
+}
+
+.social-links a:hover {
+    color: #2980b9; /* Change color on hover */
 }
 
 /* Horizontal Divider */
-hr {
-    border: 0;
+.member-divider {
+    width: 100%;
     height: 1px;
-    background: #eee;
-    margin: 30px 0;
+    background-color: #ddd;
+    margin-top: 10px;
+    position: absolute;
+    bottom: 0;
 }
 
-    </style>
+/* Media query for smaller screens (2 services per row) */
+@media (max-width: 768px) {
+    .service-container {
+        flex: 0 1 calc(50% - 20px); /* 2 items per row */
+    }
+}
+
+/* Media query for mobile screens (1 service per row) */
+@media (max-width: 576px) {
+    .service-container {
+        flex: 0 1 100%; /* 1 item per row */
+    }
+}
+
+</style>
+
+
 {% endblock %}
 
 {% block content %}
@@ -130,40 +198,119 @@ hr {
         {% for service in services %}
         <div class="service-container">
             <h2 class="service-name">{{ service.name }}</h2>
+            
+            <!-- Description Label -->
+            <p class="description-label">Description:</p>
+            
+            <!-- Enhanced Service Description -->
             <p class="service-description">{{ service.description|default:"No description available." }}</p>
+            
             <p class="service-created">Created on: {{ service.created_at }}</p>
+            
             <h3>Members:</h3>
             <ul class="members-list">
                 {% for member in service.members.all %}
                 <li class="member-item">
-                    {% if service.members.user.profile_picture %}
-                        <img src="{{ services.members.user.profile_picture.url }}" alt="{{ member.user.first_name }} {{ member.user.last_name }}">
+                    {% if member.user.profile_picture %}
+                        <img src="{{ member.user.profile_picture.url }}" alt="{{ member.user.first_name }} {{ member.user.last_name }}">
                     {% else %}
                         <img src="{% static 'images/default_profile_picture.png' %}" alt="Default Profile Picture">
                     {% endif %}
-                    {{ member.user.first_name }} {{ member.user.last_name }} - {{ member.role }}<br>
-                    {% if member.instagram %}
-                        <a href="{{ member.instagram }}" target="_blank">Instagram</a>
-                    {% endif %}
-                    {% if member.twitter %}
-                        <a href="{{ member.twitter }}" target="_blank">Twitter</a>
-                    {% endif %}
-                    {% if member.facebook %}
-                        <a href="{{ member.facebook }}" target="_blank">Facebook</a>
-                    {% endif %}
-                    {% if member.youtube %}
-                        <a href="{{ member.youtube }}" target="_blank">YouTube</a>
-                    {% endif %}
-                    {% if member.linkedin %}
-                        <a href="{{ member.linkedin }}" target="_blank">LinkedIn</a>
-                    {% endif %}
+                    
+                    <!-- Member Details Section -->
+                    <div class="member-details">
+                        <!-- Display first name and last name on the same line -->
+                        <div class="member-info">
+                            <div class="first-name">Firstname: {{ member.user.first_name }}</div>
+                            <div class="last-name">Lastname: {{ member.user.last_name }}</div>
+                        </div>
+                        
+                        <!-- Role Label and Role Box -->
+                        <div class="role-box">{{ member.role }}</div>
+                        
+                        <!-- Social Media Links -->
+                        <div class="social-links">
+                            {% if member.instagram %}
+                                <a href="{{ member.instagram }}" target="_blank">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                                {% else %}
+                                 <a href="https://www.instagram.com" target="_blank">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            {% endif %}
+                            {% if member.twitter %}
+                                <a href="{{ member.twitter }}" target="_blank">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                {% else %}
+                                <a href="https://www.twitter.com" target="_blank">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                            {% endif %}
+                            {% if member.facebook %}
+                                <a href="{{ member.facebook }}" target="_blank">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                                {% else %}
+                                <a href="https://www.facebook.com" target="_blank">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            {% endif %}
+                            {% if member.youtube %}
+                                <a href="{{ member.youtube }}" target="_blank">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                                {% else %}
+                                <a href="https://www.youtube.com" target="_blank">
+                                    <i class="fab fa-youtube"></i>
+                                </a>
+                            {% endif %}
+                            {% if member.linkedin %}
+                                <a href="{{ member.linkedin }}" target="_blank">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                                {% else %}
+                                <a href="https://www.linkedin.com" target="_blank">
+                                    <i class="fab fa-linkedin"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Horizontal Divider Line -->
+                    <div class="member-divider"></div>
                 </li>
                 {% endfor %}
             </ul>
         </div>
         {% endfor %}
     </div>
+    
+    <!-- Chat Icon -->
+    <div id="chat-icon">
+    <i class="fa fa-comments"></i>
+</div>
+
+    <!-- Chat Window -->
+    <div id="chat-window">
+        <div id="chat-header">
+            <span>Chat</span>
+            <button id="chat-close-button">&times;</button>
+        </div>
+        <div id="chat-messages">
+            <!-- Messages will be appended here -->
+        </div>
+        <div id="chat-input-container">
+            <textarea id="chat-input" placeholder="Type your message..."></textarea>
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+    
 {% endblock %}
+
+
+
 
 {% block js %}
     <!-- Local JavaScript Libraries -->
