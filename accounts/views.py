@@ -43,6 +43,7 @@ def service_list(request):
 
 
 def contact_us(request):
+    context = {'active_page': 'contact'}
     if request.method == 'POST':
         if request.user.is_authenticated:
             # For authenticated users
@@ -92,7 +93,7 @@ def contact_us(request):
         return HttpResponse(response)
 
     # Render the contact form template for GET requests
-    return render(request, 'contact_us.html')
+    return render(request, 'contact_us.html',context)
 
 
 

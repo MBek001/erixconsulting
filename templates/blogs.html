@@ -25,8 +25,9 @@
 
 
 .blog-wrap .blog-overlay {
-            position: absolute;
-            background-image: url("{% static 'img/blogpost.jpg' %}");
+            position:absolute;
+            background-repeat: no-repeat;
+            background-image: url("{% static 'img/image-2000x450.jpg' %}");
             top: 0;
             left: 0;
             width: 100%;
@@ -39,6 +40,32 @@
             z-index: 2;
             text-align: center;
         }
+
+@media (max-width: 768px) {
+    .blog-wrap {
+        height: 220px; /* Reduce height for mobile screens */
+    }
+
+    .blog-wrap .blog-overlay {
+        background-size: cover; /* Ensure the image always covers the screen */
+        background-position: center top; /* Align image more towards the top */
+    }
+
+    .blog-wrap .slider-text {
+        font-size: 1.2rem; /* Adjust font size for smaller screens */
+        padding: 10px; /* Add padding for better readability */
+    }
+}
+
+@media (max-width: 480px) {
+    .blog-wrap {
+        height: 150px; /* Further reduce the height for very small screens */
+    }
+
+    .blog-wrap .slider-text {
+        font-size: 1rem; /* Smaller font size for mobile */
+    }
+}
 
     </style>
 {% endblock %}
