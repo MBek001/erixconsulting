@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, ContactMessage, TeamMembership, Service, Comment, Conversation, About,BlogPost
+from .models import User, ContactMessage, TeamMembership, Service, Comment, Conversation,BlogPost
 
 
 
@@ -66,13 +66,6 @@ class ConversationAdmin(admin.ModelAdmin):
 
 admin.site.register(Conversation, ConversationAdmin)
 
-
-class AboutAdmin(admin.ModelAdmin):
-    list_display = ('company_name', 'contact_phone')
-    search_fields = ('company_name',)
-    ordering = ('company_name',)
-
-admin.site.register(About, AboutAdmin)
 
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('theme','created_at')

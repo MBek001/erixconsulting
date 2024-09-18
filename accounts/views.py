@@ -13,7 +13,7 @@ from django.views import View
 from django.contrib.auth import authenticate, login,logout
 
 from accounts.forms import LoginForm, CommentForm
-from .models import User, Service, About, TeamMembership, Comment, BlogPost
+from .models import User, Service, TeamMembership, Comment, BlogPost
 from .utils import EmailBackend, send_mail_for_contact_us
 
 

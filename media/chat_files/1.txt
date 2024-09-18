@@ -1,0 +1,15 @@
+User: hello
+User: hello
+User: hello
+User: hello
+User: HI
+User: hi
+Bot: Hello! How can I assist you with your legal inquiry today?
+User: hello
+Bot: Hello! How can I assist you with your legal inquiry today?
+User: hat
+User: hi
+Bot: Hello! How can I assist you with your legal inquiry today?
+User: hat
+User: how re u
+Bot: I'm not sure I understood that correctly. Could you rephrase your question or provide more details?

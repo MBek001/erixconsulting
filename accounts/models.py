@@ -122,18 +122,6 @@ class Conversation(models.Model):
         return f"Conversation between {self.user.email} and {self.staff.user.email if self.staff else 'Unassigned'}"
 
 
-class About(models.Model):
-    company_name = models.CharField(max_length=100)
-    mission = models.TextField(blank=True, null=True)
-    description = models.TextField()
-    services_overview = models.TextField(blank=True, null=True)
-    team_description = models.TextField(blank=True, null=True)
-    contact_phone = models.CharField(max_length=20, blank=True, null=True)
-    image = models.ImageField(upload_to='about/', blank=True, null=True)
-
-    def __str__(self):
-        return self.company_name
-
 class BlogPost(models.Model):
     theme = models.CharField(max_length=100)
     content = models.TextField()
@@ -142,3 +130,8 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.theme
+
+class CharAi(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
+    text_file_url = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
