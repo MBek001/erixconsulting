@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
-    {% block css %}
-   
+{% block css %}
+
 
     <!-- Local Libraries Stylesheet -->
     <link href="{% static '/lib/animate/animate.min.css' %}" rel="stylesheet">
@@ -12,134 +12,133 @@
 
     <!-- Local Template Stylesheet -->
     <link href="{% static '/css/style.css' %}" rel="stylesheet">
-        
-        <style>
-/* Chat icon */
-#chat-icon {
-    position: fixed; /* Fixed position */
-    bottom: 40px; /* Adjusted to ensure chat icon is visible */
-    left: 50px; /* Positioned on the left */
-    font-size: 24px; /* Icon size */
-    cursor: pointer;
-    z-index: 1000; /* Ensure it is above other content */
-    background-color: #007bff; /* Icon background color */
-    color: #fff; /* Icon color */
-    border-radius: 50%; /* Circular icon */
-    padding: 10px; /* Padding around icon */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-    transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
-}
 
-#chat-icon:hover {
-    background-color: #0056b3; /* Darker background on hover */
-    transform: scale(1.1); /* Slightly increase size on hover */
-}
+    <style>
+        /* Chat icon */
+        #chat-icon {
+            position: fixed; /* Fixed position */
+            bottom: 40px; /* Adjusted to ensure chat icon is visible */
+            left: 50px; /* Positioned on the left */
+            font-size: 24px; /* Icon size */
+            cursor: pointer;
+            z-index: 1000; /* Ensure it is above other content */
+            background-color: #007bff; /* Icon background color */
+            color: #fff; /* Icon color */
+            border-radius: 50%; /* Circular icon */
+            padding: 10px; /* Padding around icon */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+        }
 
-/* Chat window */
-#chat-window {
-    {#display: none;#}
-    position: fixed;
-    bottom: 95px;
-    left: 50px; /* Align with the left side of the viewport */
-    width: 300px;
-    height: 500px;
-    background-color: #c2bfbf;
-    border-radius: 25px;
-    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    z-index: 1000;
-}
+        #chat-icon:hover {
+            background-color: #0056b3; /* Darker background on hover */
+            transform: scale(1.1); /* Slightly increase size on hover */
+        }
 
-/* Chat header */
-#chat-header {
-    background-color: rgba(0, 123, 255, 0.9);
-    color: white;
-    padding: 10px;
-    border-radius: 25px 25px 0 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        /* Chat window */
+        #chat-window {
+        {#display: none;#} position: fixed;
+            bottom: 95px;
+            left: 50px; /* Align with the left side of the viewport */
+            width: 300px;
+            height: 500px;
+            background-color: #c2bfbf;
+            border-radius: 25px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
 
-/* Close button */
-#chat-close-button {
-    cursor: pointer;
-    background-color: #dc1030;
-    border-radius: 50px;
-    color: white;
-    font-size: 24px; /* Adjusted to fit design */
-}
+        /* Chat header */
+        #chat-header {
+            background-color: rgba(0, 123, 255, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 25px 25px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-/* Chat messages container */
-#chat-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 10px;
-    word-wrap: break-word; /* Break long words to avoid horizontal scroll */
-}
+        /* Close button */
+        #chat-close-button {
+            cursor: pointer;
+            background-color: #dc1030;
+            border-radius: 50px;
+            color: white;
+            font-size: 24px; /* Adjusted to fit design */
+        }
 
-/* Message styling */
-.message {
-    max-width: 80%; /* Limit width to avoid stretching */
-    margin-bottom: 10px; /* Space between messages */
-    padding: 10px;
-    border-radius: 10px;
-    line-height: 1.5; /* Space between lines */
-}
+        /* Chat messages container */
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            word-wrap: break-word; /* Break long words to avoid horizontal scroll */
+        }
 
-/* User message */
-.user-message {
-    align-self: flex-end; /* Align to the right */
-    margin-left: 100px;
-    font-size: 15px;
-    background-color: #007bff; /* Blue background for user messages */
-    color: white; /* Text color for user messages */
-}
+        /* Message styling */
+        .message {
+            max-width: 80%; /* Limit width to avoid stretching */
+            margin-bottom: 10px; /* Space between messages */
+            padding: 10px;
+            border-radius: 10px;
+            line-height: 1.5; /* Space between lines */
+        }
 
-/* Answer message */
-.answer-message {
-    align-self: flex-start; /* Align to the left */
-    font-size: 15px;
-    background-color: #ffffff; /* White background for answer messages */
-    color: #000000; /* Text color for answer messages */
-}
+        /* User message */
+        .user-message {
+            align-self: flex-end; /* Align to the right */
+            margin-left: 100px;
+            font-size: 15px;
+            background-color: #007bff; /* Blue background for user messages */
+            color: white; /* Text color for user messages */
+        }
 
-/* Input container */
-#chat-input-container {
-    display: flex;
-    padding: 10px;
-    background-color: #fff;
-    border-top: 1px solid #ddd;
-    border-radius: 0 0 25px 25px;
-}
+        /* Answer message */
+        .answer-message {
+            align-self: flex-start; /* Align to the left */
+            font-size: 15px;
+            background-color: #ffffff; /* White background for answer messages */
+            color: #000000; /* Text color for answer messages */
+        }
 
-/* Input field */
-#chat-input {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-}
+        /* Input container */
+        #chat-input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            border-radius: 0 0 25px 25px;
+        }
 
-/* Send button */
-#send-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px;
-    margin-left: 10px;
-    border-radius: 15px;
-    cursor: pointer;
-}
+        /* Input field */
+        #chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
 
-
-        </style>
-        
-    {% endblock %}
+        /* Send button */
+        #send-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-left: 10px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
 
 
-    {% block content %}
+    </style>
+
+{% endblock %}
+
+
+{% block content %}
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5 wow fadeIn" data-wow-delay="0.1s">
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel">
@@ -150,8 +149,11 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-12 col-lg-6">
-                                    <h1 class="display-3 text-dark mb-4 animated slideInDown">The Best Jurisdiction Begins Here</h1>
-                                    <p class="fs-5 text-body mb-5">Keeping your peace of mind is our priority. As a leading juridical solutions provider, we are committed to providing you with unparalleled protection.</p>
+                                    <h1 class="display-3 text-dark mb-4 animated slideInDown">The Best Jurisdiction
+                                        Begins Here</h1>
+                                    <p class="fs-5 text-body mb-5">Keeping your peace of mind is our priority. As a
+                                        leading juridical solutions provider, we are committed to providing you with
+                                        unparalleled protection.</p>
                                     <a href="{% url 'about' %}" class="btn btn-primary py-3 px-5">More Details</a>
                                 </div>
                             </div>
@@ -159,13 +161,16 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                     <img class="w-100" src="{% static '/img/carousel-2.jpg' %}" alt="Carousel Image 1">
+                    <img class="w-100" src="{% static '/img/carousel-2.jpg' %}" alt="Carousel Image 1">
                     <div class="carousel-caption">
                         <div class="container">
                             <div class="row">
                                 <div class="col-12 col-lg-6">
-                                    <h1 class="display-3 text-dark mb-4 animated slideInDown">The Best Jurisdiction Begins Here</h1>
-                                    <p class="fs-5 text-body mb-5">Keeping your peace of mind is our priority. As a leading juridical solutions provider, we are committed to providing you with unparalleled protection.</p>
+                                    <h1 class="display-3 text-dark mb-4 animated slideInDown">The Best Jurisdiction
+                                        Begins Here</h1>
+                                    <p class="fs-5 text-body mb-5">Keeping your peace of mind is our priority. As a
+                                        leading juridical solutions provider, we are committed to providing you with
+                                        unparalleled protection.</p>
                                     <a href="{% url 'about' %}" class="btn btn-primary py-3 px-5">More Details</a>
                                 </div>
                             </div>
@@ -174,12 +179,12 @@
                 </div>
             </div>
             <button class="carousel-control-prev" type="button" data-bs-target="#header-carousel"
-                data-bs-slide="prev">
+                    data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Previous</span>
             </button>
             <button class="carousel-control-next" type="button" data-bs-target="#header-carousel"
-                data-bs-slide="next">
+                    data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Next</span>
             </button>
@@ -195,7 +200,8 @@
                 <div class="col-lg-6 facts-text wow fadeIn" data-wow-delay="0.1s">
                     <div class="h-100 px-4 ps-lg-0">
                         <h1 class="text-white mb-4">For Individuals And Organisations</h1>
-                        <p class="text-light mb-5">We also take care of jurisdiction for private companies. Make your future secure, get jurisdiction</p>
+                        <p class="text-light mb-5">We also take care of jurisdiction for private companies. Make your
+                            future secure, get jurisdiction</p>
                         <a href="" class="align-self-start btn btn-secondary py-3 px-5">More Details</a>
                     </div>
                 </div>
@@ -233,16 +239,20 @@
             <div class="row g-5">
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
                     <h1 class="display-6 mb-5">Few Reasons Why People Choose Us!</h1>
-                    <p class="mb-4">Choosing the right juridical company is critical to peace of mind and financial security.
-                    We stand out from the crowd with our unwavering commitment to our policyholders.
-                    With a focus on personalized service, comprehensive coverage options and a reputation for reliability,
-                    We offer you the assurance you need to protect what matters most. Find out why countless people and families trust
-                    us to protect our future.</p>
+                    <p class="mb-4">Choosing the right juridical company is critical to peace of mind and financial
+                        security.
+                        We stand out from the crowd with our unwavering commitment to our policyholders.
+                        With a focus on personalized service, comprehensive coverage options and a reputation for
+                        reliability,
+                        We offer you the assurance you need to protect what matters most. Find out why countless people
+                        and families trust
+                        us to protect our future.</p>
                     <div class="row g-3">
                         <div class="col-sm-6 wow fadeIn" data-wow-delay="0.1s">
                             <div class="bg-light rounded h-100 p-3">
                                 <div class="bg-white d-flex flex-column justify-content-center text-center rounded h-100 py-4 px-3">
-                              <img class="align-self-center mb-3" src="{% static '/img/icon/icon-06-primary.png' %}" alt="Icon 06 Primary">
+                                    <img class="align-self-center mb-3"
+                                         src="{% static '/img/icon/icon-06-primary.png' %}" alt="Icon 06 Primary">
 
                                     <h5 class="mb-0">Easy Process</h5>
                                 </div>
@@ -251,7 +261,8 @@
                         <div class="col-sm-6 wow fadeIn" data-wow-delay="0.2s">
                             <div class="bg-light rounded h-100 p-3">
                                 <div class="bg-white d-flex flex-column justify-content-center text-center rounded py-4 px-3">
-                                   <img class="align-self-center mb-3" src="{% static '/img/icon/icon-03-primary.png' %}" alt="Icon 03 Primary">
+                                    <img class="align-self-center mb-3"
+                                         src="{% static '/img/icon/icon-03-primary.png' %}" alt="Icon 03 Primary">
 
                                     <h5 class="mb-0">Fast Delivery</h5>
                                 </div>
@@ -260,7 +271,8 @@
                         <div class="col-sm-6 wow fadeIn" data-wow-delay="0.3s">
                             <div class="bg-light rounded h-100 p-3">
                                 <div class="bg-white d-flex flex-column justify-content-center text-center rounded py-4 px-3">
-                                    <img class="align-self-center mb-3" src="{% static '/img/icon/icon-04-primary.png' %}" alt="Icon 04 Primary">
+                                    <img class="align-self-center mb-3"
+                                         src="{% static '/img/icon/icon-04-primary.png' %}" alt="Icon 04 Primary">
 
                                     <h5 class="mb-0">Policy Controlling</h5>
                                 </div>
@@ -269,7 +281,8 @@
                         <div class="col-sm-6 wow fadeIn" data-wow-delay="0.4s">
                             <div class="bg-light rounded h-100 p-3">
                                 <div class="bg-white d-flex flex-column justify-content-center text-center rounded h-100 py-4 px-3">
-                            <img class="align-self-center mb-3" src="{% static '/img/icon/icon-07-primary.png' %}" alt="Icon 07 Primary">
+                                    <img class="align-self-center mb-3"
+                                         src="{% static '/img/icon/icon-07-primary.png' %}" alt="Icon 07 Primary">
 
                                     <h5 class="mb-0">Money Saving</h5>
                                 </div>
@@ -279,7 +292,8 @@
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="position-relative rounded overflow-hidden h-100" style="min-height: 400px;">
-                        <img class="position-absolute w-100 h-100" src="{% static '/img/feature.jpg' %}" alt="Feature" style="object-fit: cover;">
+                        <img class="position-absolute w-100 h-100" src="{% static '/img/feature.jpg' %}" alt="Feature"
+                             style="object-fit: cover;">
 
                     </div>
                 </div>
@@ -301,13 +315,15 @@
                         <div class="d-flex align-items-center ms-n5 mb-4">
                             <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
 
-                               <img class="img-fluid" src="{% static '/img/icon/icon-10-light.png' %}" alt="Icon 10 Light">
+                                <img class="img-fluid" src="{% static '/img/icon/icon-10-light.png' %}"
+                                     alt="Icon 10 Light">
 
 
                             </div>
                             <h4 class="mb-0">Life</h4>
                         </div>
-                        <p class="mb-4">Life Insurance is one of the most important ways to provide financial protection for your family in case of unforeseen circumstances.</p>
+                        <p class="mb-4">Life Insurance is one of the most important ways to provide financial protection
+                            for your family in case of unforeseen circumstances.</p>
                         <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
                     </div>
                 </div>
@@ -316,13 +332,15 @@
                         <div class="d-flex align-items-center ms-n5 mb-4">
                             <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
 
-                             <img class="img-fluid" src="{% static '/img/icon/icon-01-light.png' %}" alt="Icon 01 Light">
+                                <img class="img-fluid" src="{% static '/img/icon/icon-01-light.png' %}"
+                                     alt="Icon 01 Light">
 
 
                             </div>
                             <h4 class="mb-0">Health</h4>
                         </div>
-                        <p class="mb-4">Health Jurisdiction plays a key role in ensuring access to quality medical care in the event of illness or accidents.</p>
+                        <p class="mb-4">Health Jurisdiction plays a key role in ensuring access to quality medical care
+                            in the event of illness or accidents.</p>
                         <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
                     </div>
                 </div>
@@ -331,14 +349,15 @@
                         <div class="d-flex align-items-center ms-n5 mb-4">
                             <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
 
-                                <img class="img-fluid" src="{% static '/img/icon/icon-05-light.png' %}" alt="Icon 05 Light">
-
+                                <img class="img-fluid" src="{% static '/img/icon/icon-05-light.png' %}"
+                                     alt="Icon 05 Light">
 
 
                             </div>
                             <h4 class="mb-0">House</h4>
                         </div>
-                        <p class="mb-4">Owning a house or apartment is a big investment that is important to protect.</p>
+                        <p class="mb-4">Owning a house or apartment is a big investment that is important to
+                            protect.</p>
                         <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
                     </div>
                 </div>
@@ -348,14 +367,15 @@
                             <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
 
 
-                               <img class="img-fluid" src="{% static '/img/icon/icon-08-light.png' %}" alt="Icon 08 Light">
-
+                                <img class="img-fluid" src="{% static '/img/icon/icon-08-light.png' %}"
+                                     alt="Icon 08 Light">
 
 
                             </div>
                             <h4 class="mb-0">Vehicle</h4>
                         </div>
-                        <p class="mb-4">Vehicle Jurisdiction is an important part of ensuring road safety and protecting your car from various risks.</p>
+                        <p class="mb-4">Vehicle Jurisdiction is an important part of ensuring road safety and protecting
+                            your car from various risks.</p>
                         <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
                     </div>
                 </div>
@@ -364,14 +384,15 @@
                         <div class="d-flex align-items-center ms-n5 mb-4">
                             <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
 
-                                <img class="img-fluid" src="{% static '/img/icon/icon-07-light.png' %}" alt="Icon 07 Light">
-
+                                <img class="img-fluid" src="{% static '/img/icon/icon-07-light.png' %}"
+                                     alt="Icon 07 Light">
 
 
                             </div>
                             <h4 class="mb-0">Business</h4>
                         </div>
-                        <p class="mb-4">Business Jurisdiction plays an important role in ensuring financial stability and protecting your business from various risks.</p>
+                        <p class="mb-4">Business Jurisdiction plays an important role in ensuring financial stability
+                            and protecting your business from various risks.</p>
                         <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
                     </div>
                 </div>
@@ -381,13 +402,16 @@
                             <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
 
 
-                              <img class="img-fluid" src="{% static '/img/icon/icon-06-light.png' %}" alt="Icon 06 Light">
+                                <img class="img-fluid" src="{% static '/img/icon/icon-06-light.png' %}"
+                                     alt="Icon 06 Light">
 
 
                             </div>
                             <h4 class="mb-0">Property</h4>
                         </div>
-                        <p class="mb-4">Property Jurisdiction is a key element in ensuring that your property is protected from various risks such as fire, theft, natural disasters and other unforeseen events.</p>
+                        <p class="mb-4">Property Jurisdiction is a key element in ensuring that your property is
+                            protected from various risks such as fire, theft, natural disasters and other unforeseen
+                            events.</p>
                         <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
                     </div>
                 </div>
@@ -395,87 +419,94 @@
         </div>
     </div>
     <!-- Service End -->
-        
 
-   <!-- Comment Section -->
-<div class="container py-5">
-    <h2 class="text-center mb-4" style="font-size: 2.5rem; font-weight: bold;">What People Are Saying</h2>
-    <div class="row g-5">
-        <div class="col-lg-8 mx-auto">
-            <!-- Testimonial Carousel -->
-            <div class="owl-carousel testimonial-carousel">
-                {% for comment in comments %}
-                <div class="testimonial-item text-center p-4 d-flex flex-column justify-content-between"
-                     style="border-radius: 15px; background-color: #dadada; box-shadow: 5px 4px 15px rgba(0, 0, 0, 0.1); height: 300px;">
-                    <!-- User's profile picture or default -->
-                    <div class="mb-3">
-                        <img class="img-fluid rounded-circle mx-auto mb-3"
-                             {% if comment.user.profile_picture %}
-                             src="{{ comment.user.profile_picture.url }}"
-                             {% else %}
-                                src="{% static 'img/team-1.jpg' %}"
-                             {% endif %}
-                             alt="{{ comment.user.first_name }}'s profile picture"
-                             style="width: 80px; height: 80px; object-fit: cover; border: 4px solid #007bff;">
-                    </div>
 
-                    <p class="fs-5" style="font-style: italic; color: #555; margin-bottom: 1rem;">"{{ comment.content }}"</p>
-                    <div>
-                        <h5 style="font-size: 1.2rem; font-weight: bold; color: rgba(0,123,255,0.9);">{{ comment.user.first_name }} {{ comment.user.last_name }}</h5>
-                        <span style="color: #999;">{{ comment.created_at|date:"F j, Y" }}</span>
-                    </div>
+    <!-- Comment Section -->
+    <div class="container py-5">
+        <h2 class="text-center mb-4" style="font-size: 2.5rem; font-weight: bold;">What People Are Saying</h2>
+        <div class="row g-5">
+            <div class="col-lg-8 mx-auto">
+                <!-- Testimonial Carousel -->
+                <div class="owl-carousel testimonial-carousel">
+                    {% for comment in comments %}
+                        <div class="testimonial-item text-center p-4 d-flex flex-column justify-content-between"
+                             style="border-radius: 15px; background-color: #dadada; box-shadow: 5px 4px 15px rgba(0, 0, 0, 0.1); height: 300px;">
+                            <!-- User's profile picture or default -->
+                            <div class="mb-3">
+                                <img class="img-fluid rounded-circle mx-auto mb-3"
+                                        {% if comment.user.profile_picture %}
+                                     src="{{ comment.user.profile_picture.url }}"
+                                        {% else %}
+                                     src="{% static 'img/team-1.jpg' %}"
+                                        {% endif %}
+                                     alt="{{ comment.user.first_name }}'s profile picture"
+                                     style="width: 80px; height: 80px; object-fit: cover; border: 4px solid #007bff;">
+                            </div>
+
+                            <p class="fs-5" style="font-style: italic; color: #555; margin-bottom: 1rem;">
+                                "{{ comment.content }}"</p>
+                            <div>
+                                <h5 style="font-size: 1.2rem; font-weight: bold; color: rgba(0,123,255,0.9);">{{ comment.user.first_name }} {{ comment.user.last_name }}</h5>
+                                <span style="color: #999;">{{ comment.created_at}}</span>
+                            </div>
+
+                        </div>
+                        {% empty %}
+                        <p>No comments yet. Be the first to leave a comment!</p>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <p>No comments yet. Be the first to leave a comment!</p>
-                {% endfor %}
+
+                <!-- Comment Form for authenticated users -->
+                {% if request.user.is_authenticated %}
+                    <form method="POST" action="" class="mt-5 p-4"
+                          style="border-radius: 15px; background-color: #dad8d8; box-shadow: 1px 4px 15px rgba(0, 0, 0, 0.1);">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_content" class="form-label">Leave a Comment:</label>
+                            <textarea id="id_content" name="content" class="form-control" rows="4"
+                                      placeholder="Write your comment here..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="background-color: #007bff; border: none;">
+                            Submit Comment
+                        </button>
+                    </form>
+                {% else %}
+                    <p class="text-center mt-5">Commenting is available for registered users. Please <a
+                            href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to leave a
+                        comment.</p>
+                {% endif %}
             </div>
-
-            <!-- Comment Form for authenticated users -->
-            {% if request.user.is_authenticated %}
-            <form method="POST" action="" class="mt-5 p-4"
-                  style="border-radius: 15px; background-color: #dad8d8; box-shadow: 1px 4px 15px rgba(0, 0, 0, 0.1);">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id_content" class="form-label">Leave a Comment:</label>
-                    <textarea id="id_content" name="content" class="form-control" rows="4" placeholder="Write your comment here..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="background-color: #007bff; border: none;">Submit Comment</button>
-            </form>
-            {% else %}
-            <p class="text-center mt-5">Commenting is available for registered users. Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a> to leave a comment.</p>
-            {% endif %}
         </div>
     </div>
-</div>
 
 
-      <!-- Chat Icon -->
-<div id="chat-icon">
-    <i class="fa fa-comments"></i>
-</div>
-
-<!-- Chat Window -->
-<div id="chat-window">
-    <div id="chat-header">
-        <span>Chat</span>
-        <button id="chat-close-button">&times;</button>
-    </div>
-    <div id="chat-messages">
+    <!-- Chat Icon -->
+    <div id="chat-icon">
+        <i class="fa fa-comments"></i>
     </div>
 
-    <div id="chat-input-container">
-        <textarea id="chat-input" placeholder="Type your message..."></textarea>
-        <button id="send-button">Send</button>
+    <!-- Chat Window -->
+    <div id="chat-window">
+        <div id="chat-header">
+            <span>Chat</span>
+            <button id="chat-close-button">&times;</button>
+        </div>
+        <div id="chat-messages">
+        </div>
+
+        <div id="chat-input-container">
+            <textarea id="chat-input" placeholder="Type your message..."></textarea>
+            <button id="send-button">Send</button>
+        </div>
     </div>
-</div>
 
 {% endblock %}
 
 
 
 {% block js %}
-    
-     <!-- Локальные JavaScript библиотеки -->
+
+    <!-- Локальные JavaScript библиотеки -->
     <script src="/static/lib/wow/wow.min.js"></script>
     <script src="/static/lib/easing/easing.min.js"></script>
     <script src="/static/lib/waypoints/waypoints.min.js"></script>
@@ -489,7 +520,7 @@
     <script src="{% static 'js/main.js' %}"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.team-carousel').owlCarousel({
                 loop: true,
                 margin: 30,
@@ -513,29 +544,29 @@
                 }
             });
         });
-        
-        $(document).ready(function() {
-        $('.counter-up').counterUp({
-        delay: 10,
-        time: 1000
-    });
-});
+
+        $(document).ready(function () {
+            $('.counter-up').counterUp({
+                delay: 10,
+                time: 1000
+            });
+        });
     </script>
-    
+
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             // Function to fetch chat history
             function fetchChatHistory() {
                 $.ajax({
                     url: '{% url "chat_with_bot" %}',  // Ensure this URL is correct
                     method: 'GET',
-                    success: function(response) {
+                    success: function (response) {
                         console.log('Chat history response:', response); // Log response for debugging
 
                         $('#chat-messages').empty(); // Clear existing messages
 
-                        response.chat_history.forEach(function(message) {
+                        response.chat_history.forEach(function (message) {
                             var messageClass = message.sender === 'user' ? 'user-message' : 'answer-message';
                             $('#chat-messages').append('<div class="message ' + messageClass + '">' + message.text + '</div>');
                         });
@@ -549,22 +580,22 @@
             $('#chat-window').hide(); // Ensure the chat window stays hidden on page load
 
             // Toggle chat window visibility
-            $('#chat-icon').on('click', function() {
+            $('#chat-icon').on('click', function () {
                 $('#chat-window').toggle(); // Show/Hide chat window
                 if ($('#chat-window').is(':visible')) {
                     fetchChatHistory(); // Fetch chat history when opening the chat window
                 }
             });
 
-            $('#chat-close-button').on('click', function() {
+            $('#chat-close-button').on('click', function () {
                 $('#chat-window').hide(); // Hide chat window
             });
 
-            $('#send-button').on('click', function() {
+            $('#send-button').on('click', function () {
                 var userMessage = $('#chat-input').val();
                 if (userMessage.trim()) {
                     $('#chat-messages').append('<div class="message user-message">' + userMessage + '</div>');
-                    
+
 
                     $.ajax({
                         url: '{% url "chat_with_bot" %}',  // URL to your Django class-based view
@@ -573,8 +604,8 @@
                             'message': userMessage,
                             'csrfmiddlewaretoken': '{{ csrf_token }}'
                         },
-                        success: function(response) {
-                            response.messages.forEach(function(msg) {
+                        success: function (response) {
+                            response.messages.forEach(function (msg) {
                                 $('#chat-messages').append('<div class="message answer-message">' + msg.text + '</div>');
                             });
                             $('#chat-input').val('');  // Clear input field
@@ -584,7 +615,7 @@
                 }
             });
 
-            $('#chat-input').on('keypress', function(e) {
+            $('#chat-input').on('keypress', function (e) {
                 if (e.which === 13 && !e.shiftKey) {
                     e.preventDefault();
                     $('#send-button').click(); // Trigger send button click on Enter key press

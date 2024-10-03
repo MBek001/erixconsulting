@@ -100,7 +100,6 @@ def contact_us(request):
 def home_view(request):
     # Fetch all comments and pass them to the home page
     comments = Comment.objects.select_related('user').order_by('-created_at')
-
     if request.method == 'POST':
         if request.user.is_authenticated:
             form = CommentForm(request.POST)
@@ -108,7 +107,6 @@ def home_view(request):
                 # Create a new comment and associate it with the current user
                 comment = form.save(commit=False)
                 comment.user = request.user
-                comment.service = Service.objects.first()  # You can modify to link it to a particular service
                 comment.save()
                 return redirect('home')
         else:
@@ -121,7 +119,7 @@ def home_view(request):
     context = {
         'comments': comments,
         'form': form,
-        'active_page': 'home',  # For highlighting the navbar
+        'active_page': 'home',
     }
     return render(request, 'index_en.html', context)
 

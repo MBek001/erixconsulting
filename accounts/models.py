@@ -135,3 +135,13 @@ class CharAi(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
     text_file_url = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class TelegramUserMessage(models.Model):
+    username = models.CharField(max_length=100)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    chat_id = models.CharField(max_length=100, null=True, blank=True)  # New Field for Chat ID
+    message_file = models.FileField(upload_to='messages/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.first_name or self.username} ({self.chat_id})'
