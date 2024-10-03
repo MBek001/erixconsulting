@@ -148,7 +148,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-       <div class="collapse navbar-collapse" id="navbarCollapse">
+      <div class="collapse navbar-collapse" id="navbarCollapse">
     <div class="navbar-nav mx-auto bg-light rounded pe-4 py-3 py-lg-0">
         <a href="{% url 'home' %}" class="nav-item nav-link {% if active_page == 'home' %}active{% endif %}">Main page</a>
         <a href="{% url 'about' %}" class="nav-item nav-link {% if active_page == 'about' %}active{% endif %}">About us</a>
@@ -167,8 +167,20 @@
                 <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
             {% endif %}
         </div>
+
+        <!-- Dropdown button for Chat, visible only to superusers or staff -->
+        {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_staff %}
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" id="chatDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Chat</a>
+                <ul class="dropdown-menu" aria-labelledby="chatDropdown">
+                    <li><a href="{% url 'chat_page' %}" class="dropdown-item{% if active_page == 'chat1'%} active{% endif %}">Chat1</a></li>
+                    <li><a href="{% url 'chat_page' %}" class="dropdown-item{% if active_page == 'chat2'%} active{% endif %}">Chat2</a></li>
+                </ul>
+            </div>
+        {% endif %}
     </div>
 </div>
+
 
     </nav>
         

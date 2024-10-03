@@ -6,6 +6,9 @@
     <!-- Local Libraries Stylesheet -->
     <link href="{% static '/lib/animate/animate.min.css' %}" rel="stylesheet">
     <link href="{% static '/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
 
     <!-- Local Customized Bootstrap Stylesheet -->
     <link href="{% static '/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -420,14 +423,14 @@
     </div>
     <!-- Service End -->
 
+    {#Comment Start ----->#}
 
-    <!-- Comment Section -->
     <div class="container py-5">
         <h2 class="text-center mb-4" style="font-size: 2.5rem; font-weight: bold;">What People Are Saying</h2>
         <div class="row g-5">
             <div class="col-lg-8 mx-auto">
                 <!-- Testimonial Carousel -->
-                <div class="owl-carousel testimonial-carousel">
+                <div class="team-carousel owl-carousel">  <!-- Corrected class name -->
                     {% for comment in comments %}
                         <div class="testimonial-item text-center p-4 d-flex flex-column justify-content-between"
                              style="border-radius: 15px; background-color: #dadada; box-shadow: 5px 4px 15px rgba(0, 0, 0, 0.1); height: 300px;">
@@ -444,12 +447,14 @@
                             </div>
 
                             <p class="fs-5" style="font-style: italic; color: #555; margin-bottom: 1rem;">
-                                "{{ comment.content }}"</p>
+                                "{{ comment.content }}"
+                            </p>
                             <div>
-                                <h5 style="font-size: 1.2rem; font-weight: bold; color: rgba(0,123,255,0.9);">{{ comment.user.first_name }} {{ comment.user.last_name }}</h5>
-                                <span style="color: #999;">{{ comment.created_at}}</span>
+                                <h5 style="font-size: 1.2rem; font-weight: bold; color: rgba(0,123,255,0.9);">
+                                    {{ comment.user.first_name }} {{ comment.user.last_name }}
+                                </h5>
+                                <span style="color: #999;">{{ comment.created_at|date:"F d, Y" }}</span>
                             </div>
-
                         </div>
                         {% empty %}
                         <p>No comments yet. Be the first to leave a comment!</p>
@@ -478,6 +483,7 @@
             </div>
         </div>
     </div>
+
 
 
     <!-- Chat Icon -->
@@ -512,38 +518,39 @@
     <script src="/static/lib/waypoints/waypoints.min.js"></script>
     <script src="/static/lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="/static/lib/counterup/counterup.min.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
     <!-- Template JavaScript -->
     <script src="{% static 'js/main.js' %}"></script>
 
     <script>
-        $(document).ready(function () {
-            $('.team-carousel').owlCarousel({
-                loop: true,
-                margin: 30,
-                nav: true,
-                navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
-                dots: true,
-                autoplay: true,
-                autoplayTimeout: 3000,
-                autoplayHoverPause: true,
-                smartSpeed: 1000,
-                responsive: {
-                    0: {
-                        items: 1
-                    },
-                    576: {
-                        items: 1
-                    },
-                    992: {
-                        items: 3
-                    }
+        $('.team-carousel').owlCarousel({
+            loop: true,
+            margin: 30,
+            nav: true,
+            navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
+            dots: true,
+            autoplay: true,
+            autoplayTimeout: 3000,
+            autoplayHoverPause: true,
+            smartSpeed: 1000,
+            responsive: {
+                0: {
+                    items: 1
+                },
+                576: {
+                    items: 1
+                },
+                992: {
+                    items: 3
                 }
-            });
+            }
         });
+
 
         $(document).ready(function () {
             $('.counter-up').counterUp({
