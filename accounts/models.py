@@ -141,6 +141,7 @@ class TelegramUserMessage(models.Model):
     first_name = models.CharField(max_length=100, null=True, blank=True)
     chat_id = models.CharField(max_length=100, null=True, blank=True)  # New Field for Chat ID
     message_file = models.FileField(upload_to='messages/')
+    is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
