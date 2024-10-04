@@ -12,7 +12,8 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
     <style>
-    .blog-wrap {
+    
+        .blog-wrap {
             position: relative;
             background-size: cover;
             background-position: center;
@@ -24,8 +25,8 @@
         }
 
 
-.blog-wrap .blog-overlay {
-            position:absolute;
+        .blog-wrap .blog-overlay {
+            position: absolute;
             background-repeat: no-repeat;
             background-image: url("{% static 'img/image-2000x450.jpg' %}");
             top: 0;
@@ -35,37 +36,160 @@
             z-index: 1;
         }
 
-.blog-wrap .slider-text {
+        .blog-wrap .slider-text {
             position: relative;
             z-index: 2;
             text-align: center;
         }
 
-@media (max-width: 768px) {
-    .blog-wrap {
-        height: 220px; /* Reduce height for mobile screens */
-    }
+        @media (max-width: 768px) {
+            .blog-wrap {
+                height: 220px; /* Reduce height for mobile screens */
+            }
 
-    .blog-wrap .blog-overlay {
-        background-size: cover; /* Ensure the image always covers the screen */
-        background-position: center top; /* Align image more towards the top */
-    }
+            .blog-wrap .blog-overlay {
+                background-size: cover; /* Ensure the image always covers the screen */
+                background-position: center top; /* Align image more towards the top */
+            }
 
-    .blog-wrap .slider-text {
-        font-size: 1.2rem; /* Adjust font size for smaller screens */
-        padding: 10px; /* Add padding for better readability */
-    }
-}
+            .blog-wrap .slider-text {
+                font-size: 1.2rem; /* Adjust font size for smaller screens */
+                padding: 10px; /* Add padding for better readability */
+            }
+        }
 
-@media (max-width: 480px) {
-    .blog-wrap {
-        height: 150px; /* Further reduce the height for very small screens */
-    }
+        @media (max-width: 480px) {
+            .blog-wrap {
+                height: 150px; /* Further reduce the height for very small screens */
+            }
 
-    .blog-wrap .slider-text {
-        font-size: 1rem; /* Smaller font size for mobile */
-    }
-}
+            .blog-wrap .slider-text {
+                font-size: 1rem; /* Smaller font size for mobile */
+            }
+        }
+
+    </style>
+     <style>
+        /* Chat icon */
+        #chat-icon {
+            position: fixed; /* Fixed position */
+            bottom: 40px; /* Adjusted to ensure chat icon is visible */
+            left: 50px; /* Positioned on the left */
+            font-size: 24px; /* Icon size */
+            cursor: pointer;
+            z-index: 1000; /* Ensure it is above other content */
+            background-color: #007bff; /* Icon background color */
+            color: #fff; /* Icon color */
+            border-radius: 50%; /* Circular icon */
+            padding: 10px; /* Padding around icon */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+        }
+
+        #chat-icon:hover {
+            background-color: #0056b3; /* Darker background on hover */
+            transform: scale(1.1); /* Slightly increase size on hover */
+        }
+
+        /* Chat window */
+        #chat-window {
+        {#display: none;#} position: fixed;
+            bottom: 95px;
+            left: 50px; /* Align with the left side of the viewport */
+            width: 300px;
+            height: 500px;
+            background-color: #c2bfbf;
+            border-radius: 25px;
+            box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        /* Chat header */
+        #chat-header {
+            background-color: rgba(0, 123, 255, 0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 25px 25px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Close button */
+        #chat-close-button {
+            cursor: pointer;
+            background-color: #dc1030;
+            border-radius: 50px;
+            color: white;
+            font-size: 24px; /* Adjusted to fit design */
+        }
+
+        /* Chat messages container */
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            word-wrap: break-word; /* Break long words to avoid horizontal scroll */
+        }
+
+        /* Message styling */
+        .message {
+            max-width: 80%; /* Limit width to avoid stretching */
+            margin-bottom: 10px; /* Space between messages */
+            padding: 10px;
+            border-radius: 10px;
+            line-height: 1.5; /* Space between lines */
+        }
+
+        /* User message */
+        .user-message {
+            align-self: flex-end; /* Align to the right */
+            margin-left: 100px;
+            font-size: 15px;
+            background-color: #007bff; /* Blue background for user messages */
+            color: white; /* Text color for user messages */
+        }
+
+        /* Answer message */
+        .answer-message {
+            align-self: flex-start; /* Align to the left */
+            font-size: 15px;
+            background-color: #ffffff; /* White background for answer messages */
+            color: #000000; /* Text color for answer messages */
+        }
+
+        /* Input container */
+        #chat-input-container {
+            display: flex;
+            padding: 5px;
+            margin-bottom: 1px;
+            height: 60px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            border-radius: 0 0 25px 25px;
+        }
+
+        /* Input field */
+        #chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        /* Send button */
+        #send-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            margin-left: 10px;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
 
     </style>
 {% endblock %}
@@ -79,44 +203,66 @@
         </div>
     </section>
     <div class="text-md-center" style=" font-style: inherit; color: rgb(84,84,84); font-size: xxx-large; margin-top: 50px; margin-bottom: -50px;
-            ">Welcome to our Blog-Page hope you will enjoy it </div>
+            ">Welcome to our Blog-Page hope you will enjoy it
+    </div>
 
     <!-- Blog Section Start -->
     <div class="container-fluid pt-5">
         <div class="container py-5">
             <div class="row">
                 {% for post in blogs %}
-                <div class="col-md-6 mb-4">
-                    <div class="blog-post">
-                        <!-- Display Theme/Title (Name) -->
-                        <h3>{{ post.theme }}</h3>
+                    <div class="col-md-6 mb-4">
+                        <div class="blog-post">
+                            <!-- Display Theme/Title (Name) -->
+                            <h3>{{ post.theme }}</h3>
 
-                        <!-- Display file content if it exists (Video/Photo) -->
-                        {% if post.file %}
-                            {% if post.file.url|slice:"-4:" == ".mp4" %}
-                                <video controls class="media-content">
-                                    <source src="{{ post.file.url }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            {% elif post.file.url|slice:"-4:" == ".jpg" or post.file.url|slice:"-4:" == ".png" %}
-                                <img src="{{ post.file.url }}" class="media-content" alt="Blog Image">
-                            {% else %}
-                                <p>Unsupported file type.</p>
+                            <!-- Display file content if it exists (Video/Photo) -->
+                            {% if post.file %}
+                                {% if post.file.url|slice:"-4:" == ".mp4" %}
+                                    <video controls class="media-content">
+                                        <source src="{{ post.file.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                {% elif post.file.url|slice:"-4:" == ".jpg" or post.file.url|slice:"-4:" == ".png" %}
+                                    <img src="{{ post.file.url }}" class="media-content" alt="Blog Image">
+                                {% else %}
+                                    <p>Unsupported file type.</p>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
 
-                        <!-- Display Content -->
-                        <p>{{ post.content|truncatewords:30 }}</p>
+                            <!-- Display Content -->
+                            <p>{{ post.content|truncatewords:30 }}</p>
 
-                        <!-- Display Posted Date -->
-                        <p class="text-muted">Posted on {{ post.created_at|date:"F j, Y" }}</p>
+                            <!-- Display Posted Date -->
+                            <p class="text-muted">Posted on {{ post.created_at|date:"F j, Y" }}</p>
+                        </div>
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div>
     </div>
     <!-- Blog Section End -->
+
+
+    <!-- Chat Icon -->
+    <div id="chat-icon">
+        <i class="fa fa-comments"></i>
+    </div>
+
+    <!-- Chat Window -->
+    <div id="chat-window">
+        <div id="chat-header">
+            <span>Chat</span>
+            <button id="chat-close-button">&times;</button>
+        </div>
+        <div id="chat-messages">
+        </div>
+
+        <div id="chat-input-container">
+            <textarea id="chat-input" placeholder="Type your message..."></textarea>
+            <button id="send-button">Send</button>
+        </div>
+    </div>
     
 {% endblock %}
 
@@ -132,44 +278,156 @@
     <script src="{% static 'js/main.js' %}"></script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const posts = document.querySelectorAll('.blog-post');
-        const videos = document.querySelectorAll('video'); // Select all video elements
-        let currentIndex = 0;
+        document.addEventListener('DOMContentLoaded', function () {
+            const posts = document.querySelectorAll('.blog-post');
+            const videos = document.querySelectorAll('video'); // Select all video elements
+            let currentIndex = 0;
 
-        function scrollToPost(index) {
-            if (index < 1 || index >= posts.length) return;
-            posts[index].scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function pauseAllVideos() {
-            videos.forEach(video => {
-                video.pause(); // Pause all videos
-                video.currentTime = 0; // Reset to the beginning
-            });
-        }
-
-        window.addEventListener('scroll', function() {
-            const scrollPosition = window.scrollY + window.innerHeight;
-            const postHeight = posts[0].offsetHeight;
-
-            if (scrollPosition >= (currentIndex + 1) * postHeight) {
-                currentIndex++;
-                if (currentIndex < posts.length) {
-                    pauseAllVideos(); // Pause all videos when moving to the next post
-                    scrollToPost(currentIndex);
-                }
-            } else if (scrollPosition <= currentIndex * postHeight) {
-                currentIndex--;
-                if (currentIndex >= 0) {
-                    pauseAllVideos(); // Pause all videos when moving to the previous post
-                    scrollToPost(currentIndex);
-                }
+            function scrollToPost(index) {
+                if (index < 1 || index >= posts.length) return;
+                posts[index].scrollIntoView({behavior: 'smooth'});
             }
+
+            function pauseAllVideos() {
+                videos.forEach(video => {
+                    video.pause(); // Pause all videos
+                    video.currentTime = 0; // Reset to the beginning
+                });
+            }
+
+            window.addEventListener('scroll', function () {
+                const scrollPosition = window.scrollY + window.innerHeight;
+                const postHeight = posts[0].offsetHeight;
+
+                if (scrollPosition >= (currentIndex + 1) * postHeight) {
+                    currentIndex++;
+                    if (currentIndex < posts.length) {
+                        pauseAllVideos(); // Pause all videos when moving to the next post
+                        scrollToPost(currentIndex);
+                    }
+                } else if (scrollPosition <= currentIndex * postHeight) {
+                    currentIndex--;
+                    if (currentIndex >= 0) {
+                        pauseAllVideos(); // Pause all videos when moving to the previous post
+                        scrollToPost(currentIndex);
+                    }
+                }
+            });
+
+            // Initial scroll to the first post
+            scrollToPost(0);
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            // Function to fetch chat history
+            function fetchChatHistory() {
+                $.ajax({
+                    url: '{% url "chat_with_bot" %}',  // URL to the Django view for chat history
+                    method: 'GET',
+                    success: function (response) {
+                        console.log('Chat history response:', response); // Debugging log
+
+                        $('#chat-messages').empty(); // Clear the existing messages
+
+                        // Loop through chat history and append messages
+                        response.chat_history.forEach(function (message) {
+                            var messageClass = message.sender === 'user' ? 'user-message' : 'answer-message';
+                            $('#chat-messages').append('<div class="message ' + messageClass + '">' + escapeHtml(message.text) + '</div>');
+                        });
+
+                        // Scroll to the bottom to show the latest messages
+                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+                    },
+                    error: function (error) {
+                        console.error('Error fetching chat history:', error); // Log error
+                    }
+                });
+            }
+
+            // Hide chat window initially
+            $('#chat-window').hide();
+
+            // Toggle chat window visibility
+            $('#chat-icon').on('click', function () {
+                $('#chat-window').toggle(); // Show/Hide the chat window
+                if ($('#chat-window').is(':visible')) {
+                    fetchChatHistory(); // Fetch chat history when opening the chat window
+                }
+            });
+
+            // Close button for chat window
+            $('#chat-close-button').on('click', function () {
+                $('#chat-window').hide(); // Hide chat window when clicked
+            });
+
+            // Function to send message
+            function sendMessage(userMessage) {
+                // Append user message to chat window
+                $('#chat-messages').append('<div class="message user-message">' + escapeHtml(userMessage) + '</div>');
+                $('#chat-input').val('');  // Clear input field
+
+                // Send message via AJAX POST request
+                $.ajax({
+                    url: '{% url "chat_with_bot" %}',  // URL to Django view handling messages
+                    method: 'POST',
+                    data: {
+                        'message': userMessage,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        // Append bot response to the chat window
+                        response.messages.forEach(function (msg) {
+                            $('#chat-messages').append('<div class="message answer-message">' + escapeHtml(msg.text) + '</div>');
+                        });
+
+                        // Scroll to the bottom after receiving the bot response
+                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+                    },
+                    error: function (error) {
+                        if (error.status === 401) {
+                            $('#chat-messages').append('<div  class="message error-message">You must log in or register to use the chatbot.</div>');
+                        } else {
+                            console.error('Error sending message:', error); // Log error if message sending fails
+                        }
+                    }
+                });
+            }
+
+            // Send message on button click
+            $('#send-button').on('click', function () {
+                var userMessage = $('#chat-input').val();
+                if (userMessage.trim()) {
+                    sendMessage(userMessage);  // Call sendMessage function
+                }
+            });
+
+            $('#chat-input').on('keypress', function (e) {
+                if (e.which === 13 && !e.shiftKey) {
+                    e.preventDefault();
+                    var userMessage = $('#chat-input').val();
+                    if (userMessage.trim()) {
+                        sendMessage(userMessage);  // Call sendMessage function
+                    }
+                }
+            });
+
+            // Escape HTML to prevent XSS
+            function escapeHtml(text) {
+                var map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, function (m) {
+                    return map[m];
+                });
+            }
+
         });
 
-        // Initial scroll to the first post
-        scrollToPost(0);
-    });
     </script>
 {% endblock %}

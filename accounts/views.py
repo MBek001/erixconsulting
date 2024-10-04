@@ -269,3 +269,6 @@ def delete_profile_picture(request):
         messages.warning(request, "Profile does not exist.")
 
     return redirect('profile')
+
+def test_view(request):
+    raise Exception("This is a test exception to check Telegram error reporting.")

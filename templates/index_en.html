@@ -110,7 +110,9 @@
         /* Input container */
         #chat-input-container {
             display: flex;
-            padding: 10px;
+            padding: 5px;
+            margin-bottom: 1px;
+            height: 60px;
             background-color: #fff;
             border-top: 1px solid #ddd;
             border-radius: 0 0 25px 25px;
@@ -560,75 +562,117 @@
         });
     </script>
 
-    <script>
-        $(document).ready(function () {
+   <script>
+    $(document).ready(function () {
 
-            // Function to fetch chat history
-            function fetchChatHistory() {
-                $.ajax({
-                    url: '{% url "chat_with_bot" %}',  // Ensure this URL is correct
-                    method: 'GET',
-                    success: function (response) {
-                        console.log('Chat history response:', response); // Log response for debugging
+    // Function to fetch chat history
+    function fetchChatHistory() {
+        $.ajax({
+            url: '{% url "chat_with_bot" %}',  // URL to the Django view for chat history
+            method: 'GET',
+            success: function (response) {
+                console.log('Chat history response:', response); // Debugging log
 
-                        $('#chat-messages').empty(); // Clear existing messages
+                $('#chat-messages').empty(); // Clear the existing messages
 
-                        response.chat_history.forEach(function (message) {
-                            var messageClass = message.sender === 'user' ? 'user-message' : 'answer-message';
-                            $('#chat-messages').append('<div class="message ' + messageClass + '">' + message.text + '</div>');
-                        });
-
-                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight); // Scroll to the bottom
-                    },
+                // Loop through chat history and append messages
+                response.chat_history.forEach(function (message) {
+                    var messageClass = message.sender === 'user' ? 'user-message' : 'answer-message';
+                    $('#chat-messages').append('<div class="message ' + messageClass + '">' + escapeHtml(message.text) + '</div>');
                 });
+
+                // Scroll to the bottom to show the latest messages
+                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+            },
+            error: function (error) {
+                console.error('Error fetching chat history:', error); // Log error
             }
-
-            // Call fetchChatHistory on page load
-            $('#chat-window').hide(); // Ensure the chat window stays hidden on page load
-
-            // Toggle chat window visibility
-            $('#chat-icon').on('click', function () {
-                $('#chat-window').toggle(); // Show/Hide chat window
-                if ($('#chat-window').is(':visible')) {
-                    fetchChatHistory(); // Fetch chat history when opening the chat window
-                }
-            });
-
-            $('#chat-close-button').on('click', function () {
-                $('#chat-window').hide(); // Hide chat window
-            });
-
-            $('#send-button').on('click', function () {
-                var userMessage = $('#chat-input').val();
-                if (userMessage.trim()) {
-                    $('#chat-messages').append('<div class="message user-message">' + userMessage + '</div>');
-
-
-                    $.ajax({
-                        url: '{% url "chat_with_bot" %}',  // URL to your Django class-based view
-                        method: 'POST',
-                        data: {
-                            'message': userMessage,
-                            'csrfmiddlewaretoken': '{{ csrf_token }}'
-                        },
-                        success: function (response) {
-                            response.messages.forEach(function (msg) {
-                                $('#chat-messages').append('<div class="message answer-message">' + msg.text + '</div>');
-                            });
-                            $('#chat-input').val('');  // Clear input field
-                            $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight); // Scroll to the bottom
-                        },
-                    });
-                }
-            });
-
-            $('#chat-input').on('keypress', function (e) {
-                if (e.which === 13 && !e.shiftKey) {
-                    e.preventDefault();
-                    $('#send-button').click(); // Trigger send button click on Enter key press
-                }
-            });
         });
-    </script>
+    }
+
+    // Hide chat window initially
+    $('#chat-window').hide();
+
+    // Toggle chat window visibility
+    $('#chat-icon').on('click', function () {
+        $('#chat-window').toggle(); // Show/Hide the chat window
+        if ($('#chat-window').is(':visible')) {
+            fetchChatHistory(); // Fetch chat history when opening the chat window
+        }
+    });
+
+    // Close button for chat window
+    $('#chat-close-button').on('click', function () {
+        $('#chat-window').hide(); // Hide chat window when clicked
+    });
+
+    // Function to send message
+    function sendMessage(userMessage) {
+        // Append user message to chat window
+        $('#chat-messages').append('<div class="message user-message">' + escapeHtml(userMessage) + '</div>');
+        $('#chat-input').val('');  // Clear input field
+
+        // Send message via AJAX POST request
+        $.ajax({
+            url: '{% url "chat_with_bot" %}',  // URL to Django view handling messages
+            method: 'POST',
+            data: {
+                'message': userMessage,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function (response) {
+                // Append bot response to the chat window
+                response.messages.forEach(function (msg) {
+                    $('#chat-messages').append('<div class="message answer-message">' + escapeHtml(msg.text) + '</div>');
+                });
+
+                // Scroll to the bottom after receiving the bot response
+                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+            },
+            error: function (error) {
+                if (error.status === 401) {
+                    $('#chat-messages').append('<div  class="message error-message">You must log in or register to use the chatbot.</div>');
+                } else {
+                    console.error('Error sending message:', error); // Log error if message sending fails
+                }
+            }
+        });
+    }
+
+    // Send message on button click
+    $('#send-button').on('click', function () {
+        var userMessage = $('#chat-input').val();
+        if (userMessage.trim()) {
+            sendMessage(userMessage);  // Call sendMessage function
+        }
+    });
+
+    // Send message on Enter key press (without Shift key)
+    $('#chat-input').on('keypress', function (e) {
+        if (e.which === 13 && !e.shiftKey) {
+            e.preventDefault();
+            var userMessage = $('#chat-input').val();
+            if (userMessage.trim()) {
+                sendMessage(userMessage);  // Call sendMessage function
+            }
+        }
+    });
+
+    // Escape HTML to prevent XSS
+    function escapeHtml(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+});
+
+</script>
+
 
 {% endblock %}

@@ -11,11 +11,12 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 
+from ERRORS import send_error_to_telegram
 from erixconsulting import settings
 from .models import TelegramUserMessage
 
-TELEGRAM_API_URL = f"https://api.telegram.org/bot7334080838:AAECrnJlcDbhrdWVmSAK85VVre2z1fV-6p4/sendMessage"
-CHAT_ID = '497640654'
+TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
+CHAT_ID = os.getenv('CHAT_ID')
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -76,6 +77,7 @@ def chat_page(request):
                     })
             except Exception as e:
                 print(f"Error reading {file_path}: {e}")
+                send_error_to_telegram(f"Error reading {file_path}: {e}")
 
     messages = sorted(messages, key=lambda x: x['created_at'], reverse=True)
 
@@ -130,16 +132,17 @@ def send_message_to_bot(request):
                         return JsonResponse({'status': 'error', 'message': error_message}, status=500)
                 else:
                     logger.error(f"Failed to send message to Telegram bot: {response.text}")
+                    send_error_to_telegram(f"Failed to send message to Telegram bot: {response.text}")
                     return JsonResponse({'status': 'error', 'message': 'Failed to send message to bot'}, status=500)
             except Exception as e:
                 logger.error(f"Exception occurred while sending message: {str(e)}")
-                return JsonResponse({'status': 'error', 'message': 'An error occurred while sending the message.'},
-                                    status=500)
+                send_error_to_telegram(f"Exception occurred while sending message: {str(e)}")
+                return JsonResponse({'status': 'error', 'message': 'An error occurred while sending the message.'},status=500)
         else:
             logger.warning("No message, chat ID, or first name provided.")
             return JsonResponse({'status': 'error', 'message': 'No message, chat ID, or first name provided'},
                                 status=400)
-
+    send_error_to_telegram({'status': 'invalid method'}, status=405)
     return JsonResponse({'status': 'invalid method'}, status=405)
 
 
