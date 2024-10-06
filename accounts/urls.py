@@ -1,14 +1,13 @@
 from django.urls import path
-from setuptools.extern import names
 
 from .aiview import ChatWithBotView
+from .request import save_message
 from .request_view import request_messages
 from .views import *
-from .web_bot import save_message, chat_page, send_message_to_bot, fetch_messages, fetch_users, mark_messages_as_read
+from .web_bot import  chat_page, send_message_to_bot, fetch_messages, fetch_users, mark_messages_as_read
 
 urlpatterns = [
     path('', home_view, name='home'),
-    path('test', tes, name='test'),
     path('about', about_view, name='about'),
     path('service', service_list, name='service'),
     path('blog', blog_view, name='blog'),
@@ -25,6 +24,5 @@ urlpatterns = [
     path('send-message-to-bot/', send_message_to_bot, name='send_message_to_bot'),
     path('fetch_messages/', fetch_messages, name='fetch_messages'),
     path('fetch_users/', fetch_users, name='fetch_users'),
-    path('requests/',request_messages,name='request_messages'),
     path('mark_messages_as_read/', mark_messages_as_read, name='mark_messages_as_read')
 ]

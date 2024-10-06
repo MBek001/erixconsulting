@@ -22,53 +22,15 @@ CHAT_ID = os.getenv('CHAT_ID')
 # Set up logging
 logger = logging.getLogger(__name__)
 
-
-@csrf_exempt
-def save_message(request):
-    """
-    Handles messages received from Telegram and saves them as 'customer' in a text file.
-    """
-    if request.method == 'POST':
-        first_name = request.POST.get('first_name')
-        message = request.POST.get('message')
-        chat_id = request.POST.get('chat_id')
-
-        if first_name and message and chat_id:
-            # Check if the chat ID already exists to prevent duplicate files
-            message_instance, created = TelegramUserMessage.objects.get_or_create(
-                first_name=first_name,
-                chat_id=chat_id,
-                defaults={'username': first_name, 'message_file': None}
-            )
-
-            if not created:
-                message_instance.is_read = False
-                message_instance.save()
-
-            # If the message instance is new, create a new file
-            if not message_instance.message_file:
-                filename = f'{first_name}_{chat_id}.txt'
-                file_path = os.path.join('media/messages', filename)
-                message_instance.message_file.name = f'messages/{filename}'
-                message_instance.save()
-
-            # Append the new message to the file with 'customer' label
-            file_path = os.path.join('media', message_instance.message_file.name)
-            with open(file_path, 'a') as file:
-                file.write(f'customer: {message}\ncreated_at: {datetime.now()}\n')
-
-            return JsonResponse({'status': 'success', 'file_url': message_instance.message_file.url}, status=200)
-        return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
-    return JsonResponse({'status': 'invalid method'}, status=405)
-
-
 @user_passes_test(lambda u: u.is_staff, login_url='/login/')
 def chat_page(request):
     messages = []
-    users = TelegramUserMessage.objects.values('first_name', 'chat_id').distinct()
+    users = TelegramUserMessage.objects.filter(staff=request.user).values('first_name', 'chat_id').distinct()
 
-    # Fetch all messages from the database
-    for chat in TelegramUserMessage.objects.all():
+    # Fetch messages assigned to the logged-in staff member
+    staff_messages = TelegramUserMessage.objects.filter(staff=request.user)
+
+    for chat in staff_messages:
         file_path = os.path.join(settings.MEDIA_ROOT, chat.message_file.name)
         if os.path.exists(file_path):
             try:
@@ -82,12 +44,13 @@ def chat_page(request):
                         'is_read': chat.is_read
                     })
             except Exception as e:
-                print(f"Error reading {file_path}: {e}")
-                send_error_to_telegram(f"Error reading {file_path}: {e}")
+                logger.error(f"Error reading {file_path}: {e}")
 
     messages = sorted(messages, key=lambda x: x['created_at'], reverse=True)
 
     return render(request, 'chat_page.html', {'messages': messages, 'users': users})
+
+
 
 
 @csrf_exempt
@@ -96,15 +59,15 @@ def send_message_to_bot(request):
     Sends a message to the Telegram bot and saves it to the corresponding chat file as 'assistant'.
     """
     if request.method == 'POST':
-        message = request.POST.get('message')
+        message_text = request.POST.get('message')  # Change variable name to avoid confusion
         chat_id = request.POST.get('chat_id')  # Get the chat ID from the request
         first_name = request.POST.get('first_name')  # Get the first name from the request
 
-        if message and chat_id and first_name:
+        if message_text and chat_id and first_name:
             # Prepare the data to be sent to the bot
             payload = {
                 'chat_id': chat_id,
-                'text': message,
+                'text': message_text,  # Use the updated variable name
             }
 
             logger.debug(f"Sending message to Telegram: {payload}")  # Log the payload
@@ -126,7 +89,8 @@ def send_message_to_bot(request):
                             query = TelegramUserMessage.objects.filter(first_name=first_name)
                             query.update(is_read=True)
                         except Exception as e:
-                            message.error(f"Database update error: {str(e)}")
+                            # Log an error instead of using message.error
+                            logger.error(f"Database update error: {str(e)}")
                             return JsonResponse({'status': 'error', 'message': 'An error occurred while updating the message status.'}, status=500)
 
                         # Save the message to the file with the 'assistant' label
@@ -138,27 +102,26 @@ def send_message_to_bot(request):
 
                         # Append the assistant message to the file
                         with open(file_path, 'a') as file:
-                            file.write(f'assistant: {message}\ncreated_at: {datetime.now()}\n')
+                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()}\n')  # Use updated variable name
 
-                        message.info(f"Message saved to file: {file_path}")
+                        logger.info(f"Message saved to file: {file_path}")  # Log the success
                         return JsonResponse({'status': 'success'}, status=200)
                     else:
                         error_message = response_data.get('description', 'Unknown error')
-                        message.error(f"Telegram API error: {error_message}")
+                        logger.error(f"Telegram API error: {error_message}")
                         return render(request, 'chat_page.html')
                 else:
-                    message.error(f"Failed to send message to Telegram bot: {response.text}")
+                    logger.error(f"Failed to send message to Telegram bot: {response.text}")
                     return render(request, 'chat_page.html')
             except Exception as e:
-                message.error(f"Exception occurred while sending message: {str(e)}")
+                logger.error(f"Exception occurred while sending message: {str(e)}")
                 return render(request, 'chat_page.html')
         else:
-            message.warning("No message, chat ID, or first name provided.")
-            messages.error(request, f"Exception occurred while sending message:")
-            return render(request, 'chat_page.html')
-
+            logger.warning("No message, chat ID, or first name provided.")
+            return render(request, 'chat_page.html', {'active_page': 'chat1'})
 
     return JsonResponse({'status': 'invalid method'}, status=405)
+
 
 
 
@@ -172,7 +135,7 @@ def fetch_messages(request):
 
     # Check if the file exists
     if not os.path.exists(file_path):
-        messages.error(request, f"Chat file does not exist")
+        logger.error(request, f"Chat file does not exist")
         return JsonResponse({"error": "Chat file does not exist"})
 
     messages = []
@@ -218,22 +181,30 @@ def fetch_messages(request):
     return JsonResponse({"messages": messages})
 
 
-def fetch_users(request):
-    users = TelegramUserMessage.objects.all()
+from django.http import JsonResponse
+from .models import TelegramUserMessage
 
-    # `is_read` ni `bool()` yordamida boolean formatga o‘tkazish
+def fetch_users(request):
+    # Get the currently logged-in staff member
+    if request.user.is_authenticated and request.user.is_staff:
+        # Filter messages by the logged-in staff member
+        users = TelegramUserMessage.objects.filter(staff=request.user)
+    else:
+        # If the user is not authenticated or not staff, return an empty list or an error
+        return JsonResponse({"users": []})
+
+    # Prepare user list
     user_list = [
         {
             "chat_id": user.chat_id,
             "first_name": user.first_name,
-            "is_read": bool(user.is_read)  # `is_read` ni boolean formatda qaytarish
+            "is_read": bool(user.is_read)  # Convert is_read to boolean
         }
         for user in users
     ]
 
-    print(user_list)  # Konsolda foydalanuvchi ma'lumotlarini tekshiring
-
     return JsonResponse({"users": user_list})
+
 
 
 @csrf_exempt

@@ -21,6 +21,8 @@ from django.urls import path, include
 from erixconsulting import settings
 
 urlpatterns = [
-    path('adminkillerekanu/', admin.site.urls),
-    path('', include('accounts.urls'))
+    path('admin/', admin.site.urls),
+    path('', include('accounts.urls')),
+    path('', include('accounts.request_url')),
 ] +  static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

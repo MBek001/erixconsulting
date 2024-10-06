@@ -1,3 +1,4 @@
+import logging
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -5,7 +6,7 @@ from email.mime.text import MIMEText
 from django.contrib.auth.backends import ModelBackend
 
 from erixconsulting import settings
-from .models import User
+from .models import User, TelegramUserMessage, ChatRequest
 
 
 class EmailBackend(ModelBackend):
@@ -112,3 +113,19 @@ def send_mail_for_contact_us(email: str, phone_number: str, subject: str, messag
 
     except Exception as e:
         print(f"Failed to send email. Error: {str(e)}")
+
+
+
+def unread_messages(request):
+    if request.user.is_authenticated:
+        # Check if the current user has unread messages
+        has_unread_messages = TelegramUserMessage.objects.filter(staff_id=request.user.id, is_read=False).exists()
+        return {'has_unread_messages': has_unread_messages}
+    return {'has_unread_messages': False}
+
+def open_requests(request):
+    if request.user.is_authenticated and request.user.is_staff:
+        # Check if there are open requests
+        open_requests = ChatRequest.objects.filter(status='open').exists()
+        return {'open_requests': open_requests}
+    return {'open_requests': False}

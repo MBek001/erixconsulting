@@ -6,7 +6,9 @@ from aiogram import Bot, Dispatcher
 from aiogram.filters import Command
 from aiogram.types import Message
 
-API_TOKEN = '7334080838:AAECrnJlcDbhrdWVmSAK85VVre2z1fV-6p4'
+from config import API_TOKEN
+
+API_TOKEN =API_TOKEN
 DJANGO_SAVE_URL = 'http://localhost:8000/save-message'
 
 
@@ -23,7 +25,6 @@ print(API_TOKEN)
 async def start_command(message: Message):
     print(message.chat.id)
     await message.answer("Xush kelibsiz! Sizning xabaringizni saqlash uchun xabar yuboring.")
-
 @dp.message()
 async def save_message(message: Message):
     user = message.from_user
@@ -35,13 +36,18 @@ async def save_message(message: Message):
         data = {
             'first_name': user.first_name,
             'message': user_message,
-            'chat_id': chat_id  # Send chat_id
+            'chat_id': chat_id,
+            'username': user.username
         }
         async with session.post(DJANGO_SAVE_URL, data=data) as response:
+            response_text = await response.text()  # Get the response text for logging
+            logging.info(f'Response status: {response.status}, Response text: {response_text}')
+
             if response.status == 200:
                 await message.reply("Xabaringiz saqlandi.")
             else:
                 await message.reply("Xabarni saqlashda xatolik yuz berdi!")
+
 
 async def main():
     await dp.start_polling(bot)

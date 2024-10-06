@@ -49,20 +49,30 @@
                    class="nav-item nav-link {% if active_page == 'services' %}active{% endif %}">Our services</a>
                 <a href="{% url 'contact' %}"
                    class="nav-item nav-link {% if active_page == 'contact' %}active{% endif %}">Contact us</a>
-                <!-- Dropdown button for Chat, visible only to superusers or staff -->
-                {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_staff %}
-                    <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" id="chatDropdown" role="button"
-                           data-bs-toggle="dropdown" aria-expanded="false">Chat</a>
-                        <ul class="dropdown-menu" aria-labelledby="chatDropdown">
-                            <li><a href="{% url 'chat_page' %}"
-                                   class="dropdown-item{% if active_page == 'chat1' %} active{% endif %}">Private Chat</a></li>
-                            <li><a href="{% url 'request_messages' %}"
-                                   class="dropdown-item{% if active_page == 'chat2' %} active{% endif %}">Requests</a></li>
-                        </ul>
-                    </div>
-                {% endif %}
-
+                <ul class="navbar-nav">
+                    {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_staff %}
+                        <li class="nav-item">
+                            <a href="{% url 'chat_page' %}"
+                               class="nav-link {% if active_page == 'chat1' %}active{% endif %}">
+                                Private Chat
+                                {% if has_unread_messages %}
+                                    <span class="unread-indicator"></span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated and request.user.is_superuser %}
+                        <li class="nav-item">
+                            <a href="{% url 'request_messages' %}"
+                               class="nav-link {% if active_page == 'chat2' %}active{% endif %}">
+                                Requests
+                                {% if open_requests %}
+                                    <span class="unread-indicator"></span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
                 <div class="nav-item dropdown">
                     {% if request.user.is_authenticated %}
                         <a href="#" class="nav-link dropdown-toggle" id="profileDropdown" role="button"
@@ -113,13 +123,14 @@
                 <small class="far fa-clock me-2"></small>
                 <small>Mon - Fri : 09 AM - 09 PM</small>
             </div>
+
         </div>
         <div class="col-lg-5 px-5 text-end">
             <div class="h-100 d-inline-flex align-items-center">
-                <a class="text-white-50 ms-4" href=""><i class="fab fa-facebook-f"></i></a>
-                <a class="text-white-50 ms-4" href=""><i class="fab fa-twitter"></i></a>
-                <a class="text-white-50 ms-4" href=""><i class="fab fa-linkedin-in"></i></a>
-                <a class="text-white-50 ms-4" href=""><i class="fab fa-instagram"></i></a>
+                <a class="text-white-50 ms-4" href="https://www.facebook.com/erix_consulting"><i class="fab fa-facebook-f"></i></a>
+                <a class="text-white-50 ms-4" href="https://www.twitter.co/erix_consulting"><i class="fab fa-twitter"></i></a>
+                <a class="text-white-50 ms-4" href="https://t.me/Ohio_uz"><i class="fab fa-telegram"></i></a>
+                <a class="text-white-50 ms-4" href="https://www.instagram.com/erix_consulting"><i class="fab fa-instagram"></i></a>
             </div>
         </div>
     </div>
@@ -141,10 +152,13 @@
 
                 <p>Helping in protection against potential risks by purchasing a jurisdiction policy.</p>
                 <div class="d-flex pt-2">
-                    <a class="btn btn-square me-1" href=""><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-square me-1" href=""><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-square me-1" href=""><i class="fab fa-youtube"></i></a>
-                    <a class="btn btn-square me-0" href=""><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-square me-1" href="https://www.twitter.co/erix_consulting"><i
+                            class="fab fa-twitter"></i></a>
+                    <a class="btn btn-square me-1" href="https://www.facebook.com/erix_consulting"><i
+                            class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-square me-1" href="https://www.instagram.com/erix_consulting/"><i
+                            class="fab fa-instagram"></i></a>
+                    <a class="btn btn-square me-0" href="https://t.me/Ohio_uz"><i class="fab fa-telegram"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6">

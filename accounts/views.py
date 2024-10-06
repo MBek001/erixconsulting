@@ -1,3 +1,4 @@
+import logging
 from traceback import print_tb
 
 from django.conf import settings
@@ -14,36 +15,64 @@ from django.contrib.auth import authenticate, login,logout
 
 from accounts.forms import LoginForm, CommentForm
 from .models import User, Service, TeamMembership, Comment, BlogPost
-from .utils import EmailBackend, send_mail_for_contact_us
+from .utils import EmailBackend, send_mail_for_contact_us, open_requests, unread_messages
 
 
-# from django.contrib.auth.models import User
+
+
 def about_view(request):
     team_members = TeamMembership.objects.select_related('user').all()
-    context = {'team_members': team_members,
-               'active_page': 'about'
-               }
-    return render(request, 'about.html', context,)
+
+    # Call context processor functions
+    open_reqs_context = open_requests(request)
+    unread_mess_context = unread_messages(request)
+
+    context = {
+        'team_members': team_members,
+        'active_page': 'about',
+        'open_requests': open_reqs_context['open_requests'],
+        'has_unread_messages': unread_mess_context['has_unread_messages'],
+    }
+
+    return render(request, 'about.html', context)
+
 
 def blog_view(request):
     blogs = BlogPost.objects.all().order_by('-created_at')
+    # Call context processor functions
+    open_reqs_context = open_requests(request)
+    unread_mess_context = unread_messages(request)
     context = {'blogs': blogs,
-               'active_page': 'blog'
+               'active_page': 'blog',
+               'open_requests': open_reqs_context['open_requests'],
+               'has_unread_messages': unread_mess_context['has_unread_messages'],
                }
     return render(request,'blogs.html',context,)
 
 
 def service_list(request):
     services = Service.objects.all()
+
+    # Call context processor functions
+    open_reqs_context = open_requests(request)
+    unread_mess_context = unread_messages(request)
     context = {
         'services': services,
-        'active_page': 'services'
+        'active_page': 'services',
+        'open_requests': open_reqs_context['open_requests'],
+        'has_unread_messages': unread_mess_context['has_unread_messages'],
     }
     return render(request, 'service_list.html', context,)
 
 
 def contact_us(request):
-    context = {'active_page': 'contact'}
+    # Call context processor functions
+    open_reqs_context = open_requests(request)
+    unread_mess_context = unread_messages(request)
+    context = {'active_page': 'contact',
+               'open_requests': open_reqs_context['open_requests'],
+               'has_unread_messages': unread_mess_context['has_unread_messages'],
+               }
     if request.method == 'POST':
         if request.user.is_authenticated:
             # For authenticated users
@@ -100,6 +129,11 @@ def contact_us(request):
 def home_view(request):
     # Fetch all comments and pass them to the home page
     comments = Comment.objects.select_related('user').order_by('-created_at')
+
+    # Call context processor functions
+    open_reqs_context = open_requests(request)
+    unread_mess_context = unread_messages(request)
+
     if request.method == 'POST':
         if request.user.is_authenticated:
             form = CommentForm(request.POST)
@@ -120,14 +154,10 @@ def home_view(request):
         'comments': comments,
         'form': form,
         'active_page': 'home',
+        'open_requests': open_reqs_context['open_requests'],
+        'has_unread_messages': unread_mess_context['has_unread_messages'],
     }
     return render(request, 'index_en.html', context)
-
-
-def tes(request):
-    team_members = TeamMembership.objects.select_related('user').all()
-    context = {'team_members': team_members}
-    return render(request, 'test.html', context)
 
 
 
@@ -213,13 +243,18 @@ class LogoutView(View):
 class Profile(LoginRequiredMixin, View):
     template_name = 'profile.html'
 
+
     def get(self, request):
+        open_reqs_context = open_requests(request)
+        unread_mess_context = unread_messages(request)
         user = request.user
         context = {
             'firstname': user.first_name,
             'last_name': user.last_name,
             'email': user.email,
-            'profile_picture': user.profile_picture
+            'profile_picture': user.profile_picture,
+            'open_requests': open_reqs_context['open_requests'],
+            'has_unread_messages': unread_mess_context['has_unread_messages'],
         }
         return render(request, self.template_name, context)
 

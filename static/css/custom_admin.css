@@ -1,0 +1,69 @@
+/* custom_admin.css */
+
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+/* Button Styles */
+.btn {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Card and Section Styles */
+.dashboard-header,
+.module {
+    background-color: #f8f9fa; /* Light gray background */
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+/* Table Styles */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff; /* Table header background */
+    color: white;
+}
+
+/* Form Styles */
+fieldset {
+    border: 1px solid #007bff;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+h2 {
+    color: #007bff; /* Headings color */
+}
+
+/* Adjusting Inputs */
+input, select, textarea {
+    border: 1px solid #007bff;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* Customizing Alerts */
+.alert {
+    border-radius: 5px;
+}

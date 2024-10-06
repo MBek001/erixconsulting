@@ -2,184 +2,194 @@
 {% load static %}
 
 {% block css %}
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chat Page</title>
-<link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
-<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-<link href="{% static 'css/style.css' %}" rel="stylesheet">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<style>
-    body {
-        background-color: #e5ddd5;
-        font-family: 'Helvetica', 'Arial', sans-serif;
-        margin: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Page</title>
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #e5ddd5;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            margin: 0;
+        }
 
-    .chat-container {
-        display: flex;
-        height: 80vh;
-        overflow: hidden;
-    }
+        .chat-container {
+            display: flex;
+            height: 80vh;
+            overflow: hidden;
+        }
 
-    /* User list */
-    .user-list {
-        width: 30%;
-        background-color: #f8f9fa;
-        padding: 15px;
-        border-right: 1px solid #ddd;
-        overflow-y: auto;
-        height: 100%;
-    }
+        /* User list */
+        .user-list {
+            width: 30%;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+            height: 100%;
+        }
 
-    .user-list h3 {
-        font-size: 18px;
-        margin-bottom: 15px;
-        color: #007bff;
-    }
+        .user-list h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #007bff;
+            /* No need for display: block; as it is the default for <h3> */
+        }
 
-    .user {
-        padding: 10px;
-        background-color: white;
-        border-radius: 8px;
-        cursor: pointer;
-        margin-bottom: 10px;
-        transition: background-color 0.2s ease;
-        position: relative; /* Needed for unread indicator */
-        display: flex;
-        align-items: center; /* Align items vertically center */
-        justify-content: space-between; /* Space between text and indicator */
-    }
+        .user {
+            padding: 10px;
+            background-color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.2s ease;
+            display: flex; /* Change to flex for better alignment */
+            align-items: center; /* Center items vertically */
+            justify-content: space-between; /* Space between text and indicator */
+        }
 
-    .user:hover {
-        background-color: #007bff;
-        color: #fff;
-    }
+        .user:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-    /* Chat window */
-    .chat-window1 {
-        width: 70%;
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        background-color: #ffffff;
-        padding: 15px;
-        overflow: hidden;
-    }
+        /* Optional: add a specific style for the unread indicator */
+        .unread-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            margin-left: 10px; /* Space between name and indicator */
+        }
 
-    .chat-header {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
-        border-bottom: 1px solid #ddd;
-        padding-bottom: 10px;
-    }
 
-    /* Chat box */
-    .chat-box {
-        flex-grow: 1;
-        padding: 10px;
-        background-color: #f1f1f1;
-        border-radius: 8px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+        /* Chat window */
+        .chat-window1 {
+            width: 70%;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background-color: #ffffff;
+            padding: 15px;
+            overflow: hidden;
+        }
 
-    /* Message styling */
-    .message {
-        padding: 10px;
-        border-radius: 5px;
-        position: relative;
-        display: inline-block;
-        max-width: 70%;
-        word-wrap: break-word;
-    }
+        .chat-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
 
-    .message.customer {
-        background-color: #d1e7dd;
-        align-self: flex-start;
-        text-align: left;
-        border-bottom-left-radius: 0;
-    }
+        /* Chat box */
+        .chat-box {
+            flex-grow: 1;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 8px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-    .message.assistant {
-        background-color: #d9edf7;
-        align-self: flex-end;
-        text-align: right;
-        border-bottom-right-radius: 0;
-        margin-left: auto;
-    }
+        /* Message styling */
+        .message {
+            padding: 10px;
+            border-radius: 5px;
+            position: relative;
+            display: inline-block;
+            max-width: 70%;
+            word-wrap: break-word;
+        }
 
-    .message .firstname {
-        font-weight: bold;
-        color: #007bff;
-    }
+        .message.customer {
+            background-color: #d1e7dd;
+            align-self: flex-start;
+            text-align: left;
+            border-bottom-left-radius: 0;
+        }
 
-    .message .timestamp {
-        font-size: 12px;
-        color: gray;
-        margin-top: 5px;
-        align-self: flex-end;
-    }
+        .message.assistant {
+            background-color: #d9edf7;
+            align-self: flex-end;
+            text-align: right;
+            border-bottom-right-radius: 0;
+            margin-left: auto;
+        }
 
-    /* Input section */
-    .input-group {
-        margin-top: auto;
-        background-color: #f8f9fa;
-        border-radius: 8px;
-        padding: 10px;
-        display: flex;
-        align-items: center;
-    }
+        .message .firstname {
+            font-weight: bold;
+            color: #007bff;
+        }
 
-    #message-input {
-        resize: none;
-        border: none;
-        background-color: #f1f1f1;
-        padding: 10px;
-        border-radius: 5px;
-        width: 100%;
-        min-height: 40px;
-    }
+        .message .timestamp {
+            font-size: 12px;
+            color: gray;
+            margin-top: 5px;
+            align-self: flex-end;
+        }
 
-    #send-message-button {
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 5px;
-        margin-left: 10px;
-        padding: 10px 15px;
-    }
+        .input-group {
+            margin-top: auto;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd; /* Slight border for a clean look */
+        }
 
-    /* Button hover effect */
-    #send-message-button:hover {
-        background-color: #0056b3;
-    }
+        #message-input {
+            resize: none;
+            border: none;
+            background-color: transparent;
+            padding: 10px;
+            width: 100%;
+            min-height: 40px;
+            outline: none; /* Remove the border when the input is focused */
+            font-size: 16px;
+        }
 
-    /* Unread indicator style */
-    .unread-indicator {
-        width: 10px;
-        height: 10px;
-        background-color: red;
-        border-radius: 50%;
-        margin-left: 10px; /* Space between name and indicator */
-    }
-</style>
+        #send-message-button {
+            background-color: transparent;
+            color: #007bff;
+            border: none;
+        {#padding: 0 50px 1px 15px;#} margin-left: 650px;
+            margin-top: -50px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #send-message-button:hover {
+            color: #0056b3;
+        }
+
+        #send-message-button:active {
+            color: #00408a;
+        }
+
+        /* Unread indicator style */
+        .unread-indicator {
+            width: 10px;
+            height: 10px;
+            background-color: red;
+            border-radius: 50%;
+            margin-left: 10px; /* Space between name and indicator */
+        }
+    </style>
 {% endblock %}
 
+
 {% block content %}
-    
-       {% if messages %}
-        <div class="messages">
-        {% for message in messages %}
-            <div class="alert alert-danger" role="alert" class="error-message">
-                {{ message }}
-            </div>
-        {% endfor %}
-        </div>
-        {% endif %}
-    
     <div class="container mt-5">
         <div class="card">
             <div class="card-body">
@@ -191,7 +201,7 @@
                             <div class="user" data-chat-id="{{ user.chat_id }}" data-firstname="{{ user.first_name }}">
                                 <div class="firstname">{{ user.first_name }}</div>
                                 {% if not user.is_read %}
-                                    <div class="unread-indicator"></div> <!-- Red circular indicator -->
+                                    <div class="unread-indicator"></div>
                                 {% endif %}
                             </div>
                         {% endfor %}
@@ -206,8 +216,11 @@
 
                         <!-- Message input -->
                         <div class="input-group">
-                            <textarea id="message-input" class="form-control" rows="1" placeholder="Write your message here..."></textarea>
-                            <button id="send-message-button" class="btn btn-primary">Send</button>
+                            <textarea id="message-input" class="form-control" rows="1"
+                                      placeholder="Write your message here..."></textarea>
+                            <button id="send-message-button" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -224,161 +237,173 @@
     <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script>
-    $(document).ready(function () {
-        let selectedChatId = null;
-        let selectedFirstName = null;
-        let messagePollingInterval = null;
+        $(document).ready(function () {
+            let selectedChatId = null;
+            let selectedFirstName = null;
+            let messagePollingInterval = null;
+            let userPollingInterval = null;
 
-        // Function to fetch users and update the user list
-        function fetchUsers() {
-            $.ajax({
-                url: "{% url 'fetch_users' %}",  // Replace with your actual URL for fetching users
-                type: "GET",
-                success: function (response) {
-                    $('.user-list').empty();
-                    response.users.forEach(function (user) {
-                        const userClass = user.is_read ? "user" : "user"; // Class based on read status
-                        $('.user-list').append(`
+            // Function to fetch users and update the user list
+            function fetchUsers() {
+                $.ajax({
+                    url: "{% url 'fetch_users' %}",  // Replace with your actual URL for fetching users
+                    type: "GET",
+                    success: function (response) {
+                        $('.user-list').empty();
+                        response.users.forEach(function (user) {
+                            const userClass = user.is_read ? "user" : "user unread"; // Add 'unread' class if the message is unread
+                            $('.user-list').append(`
                             <div class="${userClass}" data-chat-id="${user.chat_id}" data-firstname="${user.first_name}">
                                 <div class="firstname">${user.first_name}</div>
-                                ${user.is_read ? '' : '<div class="unread-indicator"></div>'}
+                                ${user.is_read ? '' : '<div class="unread-indicator"></div>'} <!-- Red indicator for unread messages -->
                             </div>
                         `);
-                    });
-                    bindUserClick();
-                },
-                error: function (xhr) {
-                    alert("Error fetching users: " + xhr.responseText);
-                }
-            });
-        }
+                        });
+                        bindUserClick();  // Rebind click event for the new list
+                    },
+                });
+            }
 
-        // Function to bind click event for each user
-        function bindUserClick() {
-            $('.user').off('click');
-            $('.user').click(function () {
-                $('.user').removeClass('active');
-                $(this).addClass('active');
+            // Binding user click event
+            function bindUserClick() {
+                $('.user').off('click').click(function () {
+                    $('.user').removeClass('active');
+                    $(this).addClass('active');
 
-                selectedChatId = $(this).data('chat-id');
-                selectedFirstName = $(this).data('firstname');
+                    selectedChatId = $(this).data('chat-id');
+                    selectedFirstName = $(this).data('firstname');
 
-                // Fetch messages for the selected user
-                fetchMessages();
+                    fetchMessages();  // Fetch messages when a user is clicked
+                    markMessagesAsRead();  // Mark the messages as read
+                    startMessagePolling();  // Start polling for new messages
+                });
+            }
 
-                // Start polling for new messages
-                startPolling();
-            });
-        }
+            // Function to fetch messages
+            function fetchMessages() {
+                if (!selectedChatId || !selectedFirstName) return;
 
-        // Function to fetch messages for the selected user
-        function fetchMessages() {
-            if (selectedChatId === null) return;
-
-            $.ajax({
-                url: "{% url 'fetch_messages' %}",
-                type: "GET",
-                data: {
-                    chat_id: selectedChatId,
-                    first_name: selectedFirstName
-                },
-                success: function (response) {
-                    $('.chat-box').empty();
-                    response.messages.forEach(function (message) {
-                        const messageClass = message.is_assistant ? 'assistant' : 'customer';
-                        const displayName = message.is_assistant ? 'Assistant' : message.first_name;
-
-                        $('.chat-box').append(`
+                $.ajax({
+                    url: "{% url 'fetch_messages' %}",
+                    type: "GET",
+                    data: {
+                        chat_id: selectedChatId,
+                        first_name: selectedFirstName
+                    },
+                    success: function (response) {
+                        const chatBox = $('.chat-box');
+                        chatBox.empty();  // Clear previous messages
+                        response.messages.forEach(message => {
+                            const messageClass = message.is_assistant ? 'assistant' : 'customer';
+                            chatBox.append(`
                             <div class="message ${messageClass}">
-                                <div class="firstname">${displayName}</div>
+                                <div class="firstname">${message.first_name}</div>
                                 <div class="text">${message.message_text}</div>
                                 <div class="timestamp">${message.created_at}</div>
                             </div>
                         `);
-                    });
+                        });
+                        chatBox.scrollTop(chatBox[0].scrollHeight); // Auto-scroll to bottom
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching messages:", error);
+                    }
+                });
+            }
 
-                    $('.chat-box').scrollTop($('.chat-box')[0].scrollHeight);
-                },
-                error: function (xhr) {
-                    alert("Error fetching messages: " + xhr.responseText);
+            // Function to mark messages as read
+            function markMessagesAsRead() {
+                if (selectedChatId === null || selectedFirstName === null) return;
+
+                $.ajax({
+                    url: "{% url 'mark_messages_as_read' %}",
+                    type: "POST",
+                    data: {
+                        chat_id: selectedChatId,
+                        first_name: selectedFirstName,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function () {
+                        fetchUsers();  
+                    },
+                    error: function (xhr) {
+                        alert("Error marking messages as read: " + xhr.responseText);
+                    }
+                });
+            }
+
+            // Send message function
+            function sendMessage() {
+                const messageText = $('#message-input').val();
+                if (messageText.trim() === '' || selectedChatId === null) {
+                    return;  // Don't send empty messages
+                }
+
+                $.ajax({
+                    url: "{% url 'send_message_to_bot' %}",
+                    type: "POST",
+                    data: {
+                        chat_id: selectedChatId,
+                        message: messageText,
+                        first_name: selectedFirstName,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function () {
+                        $('#message-input').val(''); // Clear input
+                        fetchMessages(); // Refresh messages immediately after sending
+                    },
+                    error: function (xhr) {
+                        alert("Error occurred: " + xhr.responseText);
+                    }
+                });
+            }
+
+            // Handle sending the message on button click
+            $('#send-message-button').click(function () {
+                sendMessage();
+            });
+
+            // Handle Enter key for sending the message
+            $('#message-input').keydown(function (event) {
+                if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault(); // Prevent new line
+                    sendMessage(); // Send message on Enter
                 }
             });
 
-            // Mark messages as read
-            markMessagesAsRead();
-        }
-
-        // Function to mark messages as read
-        function markMessagesAsRead() {
-            if (selectedChatId === null || selectedFirstName === null) return;
-
-            $.ajax({
-                url: "{% url 'mark_messages_as_read' %}",  // Define this URL in your Django app
-                type: "POST",
-                data: {
-                    chat_id: selectedChatId,
-                    first_name: selectedFirstName  // Add first_name here
-                },
-                success: function (response) {
-                    fetchUsers(); // Refresh user list to update unread indicators
-                },
-                error: function (xhr) {
-                    alert("Error marking messages as read: " + xhr.responseText);
+            // Polling function to fetch users every 10 seconds
+            function startUserPolling() {
+                if (userPollingInterval) {
+                    clearInterval(userPollingInterval); // Clear any existing interval
                 }
-            });
-        }
+                userPollingInterval = setInterval(function () {
+                    fetchUsers();  // Fetch users list
+                }, 5000);  // Poll every 10 seconds
+            }
 
-        // Send message
-        $('#send-message-button').click(function () {
-            const messageText = $('#message-input').val().trim();
-            if (!messageText || selectedChatId === null) return;
-
-            $.ajax({
-                url: "{% url 'send_message_to_bot' %}",
-                type: "POST",
-                data: {
-                    chat_id: selectedChatId,
-                    first_name: selectedFirstName,
-                    message: messageText,
-                },
-                success: function (response) {
-                    $('#message-input').val(''); // Clear input after sending
-                    fetchMessages(); // Fetch messages again
-                    updateUnreadIndicator(selectedChatId); // Update unread indicator
-                },
-                error: function (xhr) {
-                    alert("Error sending message: " + xhr.responseText);
+            // Poll for new messages every 5 seconds
+            function startMessagePolling() {
+                if (messagePollingInterval) {
+                    clearInterval(messagePollingInterval); // Clear any existing interval
                 }
-            });
+                messagePollingInterval = setInterval(function () {
+                    fetchMessages(); // Fetch new messages
+                }, 2000);  // Poll every 5 seconds
+            }
+
+            // Initial fetch of users and start polling
+            fetchUsers();
+            startUserPolling();
+
+            // Auto-hide error messages after 3 seconds
+            setTimeout(function () {
+                document.querySelectorAll('.error-message').forEach(function (element) {
+                    element.style.display = 'none';
+                });
+            }, 3000);
         });
-
-        // Function to update the unread indicator for the selected user
-        function updateUnreadIndicator(chatId) {
-            const userElement = $('.user[data-chat-id="' + chatId + '"]');
-            if (userElement.length) {
-                userElement.find('.unread-indicator').remove(); // Remove any existing indicator
-                userElement.append('<div class="unread-indicator"></div>'); // Add new indicator
-            }
-        }
-
-        // Poll for new messages and unread status
-        function startPolling() {
-            if (messagePollingInterval) {
-                clearInterval(messagePollingInterval); // Clear any existing polling interval
-            }
-            messagePollingInterval = setInterval(function () {
-                fetchMessages(); // Fetch new messages every 5 seconds
-                fetchUsers(); // Fetch users to update unread indicators
-            }, 5000);
-        }
-
-        // Initial fetch of users
-        fetchUsers();
-    });
-    setTimeout(function() {
-            document.querySelectorAll('.error-message').forEach(function(element) {
-                element.style.display = 'none';
-            });
-        }, 3000);
     </script>
+
+
 {% endblock %}
+

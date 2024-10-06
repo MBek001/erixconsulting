@@ -12,7 +12,7 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
     <style>
-    
+
         .blog-wrap {
             position: relative;
             background-size: cover;
@@ -69,7 +69,7 @@
         }
 
     </style>
-     <style>
+    <style>
         /* Chat icon */
         #chat-icon {
             position: fixed; /* Fixed position */
@@ -193,8 +193,10 @@
 
     </style>
 {% endblock %}
-
+{{ open_requests }}
+{{ has_unread_messages }}
 {% block content %}
+
 
     <section class="blog-wrap">
         <div class="blog-overlay">
@@ -263,7 +265,7 @@
             <button id="send-button">Send</button>
         </div>
     </div>
-    
+
 {% endblock %}
 
 

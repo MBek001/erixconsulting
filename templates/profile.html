@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-    
+    {{ open_requests }} {{ has_unread_messages }}
     <!-- Display messages -->
 {% if messages %}
     <div class="messages">

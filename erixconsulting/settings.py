@@ -68,7 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'error_middleware.ErrorReportingMiddleware'
+    'error_middleware.ErrorReportingMiddleware',
+    # 'accounts.mid.AdminOnlyMiddleware',
 ]
 
 ROOT_URLCONF = 'erixconsulting.urls'
@@ -141,6 +142,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -163,3 +166,23 @@ EMAIL_HOST_USER = 'bek0010311@gmail.com'
 EMAIL_HOST_PASSWORD = 'ukokmhdrbiiyerxj'
 DEFAULT_FROM_EMAIL = 'bek0010311@gmail.com'
 CONTACT_US_EMAIL = 'mmm857436@gmail.com'
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django_debug.log'),  # Specify the log file path
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}

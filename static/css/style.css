@@ -1623,3 +1623,14 @@ form .btn-block {
   color: rgba(0, 123, 255, 0.9);
 }
 
+.unread-indicator {
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+    display: inline-block; /* Makes the span behave like an inline block element */
+    margin-left: 10px; /* Space between the text and the indicator */
+    vertical-align: middle; /* Aligns the dot vertically with the text */
+}
+
+
