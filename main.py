@@ -1,3 +1,4 @@
+import os
 import aiohttp
 import logging
 import asyncio
@@ -80,16 +81,14 @@ async def ask_reason(message: types.Message, state: FSMContext):
 async def receive_text_message(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
     reason = user_data.get('reason')
-    await save_message(message, reason, state)
 
-@dp.message(Form.waiting_for_message)
-async def receive_document_message(message: types.Message, state: FSMContext):
-    if message.document:
-        user_data = await state.get_data()
-        reason = user_data.get('reason')
-
-        # Instead of replying, just send the file to the backend
+    if message.text:
+        await save_message(message, reason, state)
+    elif message.document:
         await save_file(message, reason, state)
+    else:
+        await message.reply("Please send a valid text message or file.")
+
 
 async def save_message(message: types.Message, reason: str, state: FSMContext):
     first_name = message.from_user.first_name
@@ -105,19 +104,58 @@ async def save_message(message: types.Message, reason: str, state: FSMContext):
     else:
         await message.reply("Please provide a reason before sending your message.")
 
+
 async def save_file(message: types.Message, reason: str, state: FSMContext):
+    """
+    Save the file sent by the user to the user's directory and send its path to the backend.
+
+    Args:
+        message (types.Message): The incoming message containing a file.
+        reason (str): Reason for sending the file.
+        state (FSMContext): Finite state machine context for managing states.
+    """
     first_name = message.from_user.first_name
     username = message.from_user.username or "Unknown"
     chat_id = message.chat.id
 
-    # Get the file ID
-    file_id = message.document.file_id
+    # Check if the message contains a document (file)
+    if message.document:
+        file_id = message.document.file_id
 
-    # Download the file and get the file path
-    file = await bot.get_file(file_id)
+        # Get the file info using the file_id
+        file_info = await bot.get_file(file_id)
 
-    # Send the file to your backend or save it
-    await process_file_to_backend(first_name, username, chat_id, file.file_path, reason)
+        # Define the user directory path
+        user_directory = f'media/messages/{first_name}_{chat_id}'
+
+        # Check if the directory exists, create it if it doesn't
+        if not os.path.exists(user_directory):
+            os.makedirs(user_directory)  # Create directory if not exists
+            print(f'Created directory: {user_directory}')
+        else:
+            print(f'Directory already exists: {user_directory}')
+
+        # Determine the local path where the file should be saved
+        file_path = os.path.join(user_directory, file_info.file_path.split('/')[-1])
+
+        # Download the file from Telegram servers and save it to the user directory
+        await bot.download_file(file_info.file_path, file_path)
+
+        # Notify user that the file is being processed
+        await message.reply("Thank you! Your file is being processed and sent to the assistant.")
+
+        # Send the file path and details to the backend
+        await process_file_to_backend(first_name, username, chat_id, file_path, reason)
+
+        # Notify the user that the file has been successfully sent
+        await message.reply(
+            f"Your file has been sent and saved. Please wait for an assistant to respond.")
+
+        # Clear the state if it is provided
+        if state:
+            await state.clear()
+    else:
+        await message.reply("No file detected. Please send a valid document or file.")
 
 async def process_message_to_backend(first_name, username, chat_id, message_text, reason):
     """Send the message to the backend."""

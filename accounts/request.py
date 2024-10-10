@@ -28,7 +28,7 @@ def save_message(request):
         message = data.get('message')  # This can be text or None if a file is sent
         chat_id = data.get('chat_id')
         reason = data.get('reason')
-        file = data.get('file')  # Expecting a file field if one is sent
+        file = data.get('file_path')  # Expecting a file field if one is sent
 
         logging.info(f'Received data: {first_name}, {username}, {message}, {chat_id}, {file}')
 
@@ -48,28 +48,9 @@ def save_message(request):
 
         # Check if a file is being sent
         if file:
-            # Assuming the file is received as a base64 encoded string or some URL
-            # If it's a base64 string, decode and save it
-            if isinstance(file, str) and file.startswith('data:'):
-                # Extract file type and base64 data
-                header, encoded = file.split(',', 1)
-                file_data = base64.b64decode(encoded)
-
-                # Determine file type (example: image/png or video/mp4)
-                file_type = header.split(';')[0].split(':')[1]  # e.g., image/png
-                extension = file_type.split('/')[1]  # e.g., png or mp4
-                file_name = f'{first_name}_{chat_id}.{extension}'
-                file_save_path = os.path.join('media/chat_files_2', file_name)
-
-                # Save the decoded file
-                with open(file_save_path, 'wb') as file_handle:
-                    file_handle.write(file_data)
-
-                # Optionally save file info to ChatFile model
-                chat_message = TelegramUserMessage.objects.filter(chat_id=chat_id).first()
-                if chat_message:
-                    chat_file = ChatFile(chat=chat_message, file_type=file_type, file=file_name)
-                    chat_file.save()
+            # Append file information to the same text file
+            with open(file_path, 'a') as file_handle:
+                file_handle.write(f'file: {file}\ncreated_at: {datetime.now()}\n')
 
         # Update message read status
         TelegramUserMessage.objects.filter(chat_id=chat_id, is_read=True).update(is_read=False)

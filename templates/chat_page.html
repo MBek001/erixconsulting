@@ -138,6 +138,13 @@
             margin-top: 5px;
             align-self: flex-end;
         }
+        
+        .message a.file-link {
+            color: #007bff;
+            text-decoration: underline;
+            display: block;
+            margin-top: 5px;
+        }
 
         .input-group {
             margin-top: auto;
@@ -346,7 +353,7 @@
             // Function to fetch messages
             function fetchMessages() {
                 if (!selectedChatId || !selectedFirstName) return;
-
+            
                 $.ajax({
                     url: "{% url 'fetch_messages' %}",
                     type: "GET",
@@ -357,16 +364,29 @@
                     success: function (response) {
                         const chatBox = $('.chat-box');
                         chatBox.empty();  // Clear previous messages
+            
+                        // Append messages
                         response.messages.forEach(message => {
                             const messageClass = message.is_assistant ? 'assistant' : 'customer';
                             chatBox.append(`
-                        <div class="message ${messageClass}">
-                            <div class="firstname">${message.first_name}</div>
-                            <div class="text">${message.message_text}</div>
-                            <div class="timestamp">${message.created_at}</div>
-                        </div>
-                    `);
+                                <div class="message ${messageClass}">
+                                    <div class="firstname">${message.first_name}</div>
+                                    <div class="text">${message.message_text}</div>
+                                    <div class="timestamp">${message.created_at}</div>
+                                </div>
+                            `);
                         });
+            
+                        // Append files with their created_at timestamps
+                        response.files.forEach(file => {
+                            chatBox.append(`
+                                <div class="message">
+                                    <a href="${file.file_path}" class="file-link" target="_blank">${file.file_path}</a>
+                                    <div class="timestamp">${file.created_at}</div>
+                                </div>
+                            `);
+                        });
+            
                         chatBox.scrollTop(chatBox[0].scrollHeight); // Auto-scroll to bottom
                     },
                     error: function (xhr, status, error) {

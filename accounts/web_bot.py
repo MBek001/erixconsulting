@@ -137,6 +137,8 @@ def fetch_messages(request):
         return JsonResponse({"error": "Chat file does not exist"}, status=404)
 
     messages = []
+    files = []  # Fayl yo'llarini saqlash uchun
+
     try:
         with open(file_path, 'r') as file:
             lines = file.readlines()
@@ -168,13 +170,24 @@ def fetch_messages(request):
                     "first_name": first_name if not is_assistant else 'Assistant',
                     "message_text": message_text,
                     "created_at": created_at,
-                    "is_assistant": is_assistant,
-                    "file": message_text if message_text.startswith('File sent:') else None  # Handle file messages
+                    "is_assistant": is_assistant,# Fayl xabarini ajratish
                 })
+
+                # Fayl yo'lini olish
+                if message_text.startswith('file:'):
+                    file_path_value = message_text.split(': ', 1)[1]  # Fayl yo'lini olish
+                    file_created_at = created_at  # Faylning created_at vaqtini olish
+                    files.append({
+                        "file_path": file_path_value,
+                        "created_at": file_created_at  # Faylning created_at vaqtini qo'shish
+                    })
+
     except Exception as e:
+        logger.error(f"Error reading file: {str(e)}")
         return JsonResponse({"error": f"Error reading file: {str(e)}"}, status=500)
 
-    return JsonResponse({"messages": messages})
+    # Return the result
+    return JsonResponse({"messages": messages, "files": files})
 
 
 
