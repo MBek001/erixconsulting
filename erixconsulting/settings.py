@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'erixconsulting',
-    'accounts'
+    'accounts',
+    'main'
 ]
 
 MIDDLEWARE = [
@@ -167,22 +168,3 @@ EMAIL_HOST_PASSWORD = 'ukokmhdrbiiyerxj'
 DEFAULT_FROM_EMAIL = 'bek0010311@gmail.com'
 CONTACT_US_EMAIL = 'mmm857436@gmail.com'
 
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'django_debug.log'),  # Specify the log file path
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
-}

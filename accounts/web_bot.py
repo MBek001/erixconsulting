@@ -1,20 +1,21 @@
+import asyncio
 import json
 import os
 import logging
 from datetime import datetime
+from django.http import JsonResponse
+from django.utils import timezone
 
+from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory
 import requests
-from django.contrib import messages
 
 from django.contrib.auth.decorators import user_passes_test
-from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET
 
-from ERRORS import send_error_to_telegram
+from accounts.request import notify_customer
 from erixconsulting import settings
-from .models import TelegramUserMessage
 
 TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
 CHAT_ID = os.getenv('CHAT_ID')
@@ -124,19 +125,16 @@ def send_message_to_bot(request):
 
 
 
-
 def fetch_messages(request):
     chat_id = request.GET.get('chat_id')
     first_name = request.GET.get('first_name')
 
-    # Define the file path based on first_name and chat_id
     filename = f"{first_name}_{chat_id}.txt"
     file_path = os.path.join('media/messages', filename)
 
-    # Check if the file exists
     if not os.path.exists(file_path):
-        logger.error(request, f"Chat file does not exist")
-        return JsonResponse({"error": "Chat file does not exist"})
+        logger.error(f"Chat file does not exist for {chat_id}")
+        return JsonResponse({"error": "Chat file does not exist"}, status=404)
 
     messages = []
     try:
@@ -162,18 +160,16 @@ def fetch_messages(request):
                 try:
                     created_at = datetime.strptime(created_at_raw, '%Y-%m-%d %H:%M:%S.%f').strftime('%Y-%m-%d %H:%M')
                 except ValueError:
-                    # Fallback in case the format is different
                     created_at = created_at_raw
 
-                # Identify if the message is from the assistant or the customer
                 is_assistant = (message_sender == 'assistant')
 
-                # Append the parsed message to the list
                 messages.append({
-                    "first_name": first_name if not is_assistant else 'Assistant',  # Display the correct name
+                    "first_name": first_name if not is_assistant else 'Assistant',
                     "message_text": message_text,
-                    "created_at": created_at,  # Formatted timestamp
-                    "is_assistant": is_assistant  # Boolean flag to identify sender
+                    "created_at": created_at,
+                    "is_assistant": is_assistant,
+                    "file": message_text if message_text.startswith('File sent:') else None  # Handle file messages
                 })
     except Exception as e:
         return JsonResponse({"error": f"Error reading file: {str(e)}"}, status=500)
@@ -181,24 +177,18 @@ def fetch_messages(request):
     return JsonResponse({"messages": messages})
 
 
-from django.http import JsonResponse
-from .models import TelegramUserMessage
 
 def fetch_users(request):
-    # Get the currently logged-in staff member
     if request.user.is_authenticated and request.user.is_staff:
-        # Filter messages by the logged-in staff member
         users = TelegramUserMessage.objects.filter(staff=request.user)
     else:
-        # If the user is not authenticated or not staff, return an empty list or an error
         return JsonResponse({"users": []})
 
-    # Prepare user list
     user_list = [
         {
             "chat_id": user.chat_id,
             "first_name": user.first_name,
-            "is_read": bool(user.is_read)  # Convert is_read to boolean
+            "is_read": bool(user.is_read)
         }
         for user in users
     ]
@@ -214,10 +204,67 @@ def mark_messages_as_read(request):
         first_name = request.POST.get('first_name')
 
         if chat_id and first_name:
-            # Update the message status in the database
             updated_count = TelegramUserMessage.objects.filter(chat_id=chat_id, first_name=first_name,
                                                                is_read=False).update(is_read=True)
             return JsonResponse({'success': True, 'updated_count': updated_count})
         return JsonResponse({'success': False, 'error': 'Missing chat_id or first_name'}, status=400)
 
     return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
+@csrf_exempt
+def close_chat(request):
+    if request.method == 'POST':
+        if request.user.is_authenticated and request.user.is_staff:
+            try:
+                # Find the messages related to the logged-in staff
+                messages = TelegramUserMessage.objects.filter(staff=request.user, status='open')
+
+
+                if messages.exists():
+                    chat_id = request.POST.get('chat_id')
+                    first_name = request.POST.get('first_name')
+
+                    # send to tg bot customer
+                    message = "Your chat is closed. Please press /start button for new request !"
+                    asyncio.run(notify_customer(chat_id, message))
+
+                    # Get the request_user from ChatRequest table
+                    request_user = ChatRequest.objects.filter(chat_id=chat_id).first()
+
+                    if not request_user:
+                        return JsonResponse({'success': False, 'error': 'Chat request not found.'}, status=404)
+
+                    # Remove message file if exists
+                    filename = f'{first_name}_{chat_id}.txt'
+                    file_path = os.path.join('media/messages', filename)
+                    if os.path.exists(file_path):
+                        os.remove(file_path)
+
+                    # Add to request history table
+                    RequestHistory.objects.create(
+                        chat_id=chat_id,
+                        first_name=request_user.first_name,
+                        username=request_user.username,
+                        reason=request_user.reason,  # Use 'reason', not 'request'
+                        staff_id=request.user.id,
+                        created_at=request_user.created_at,
+                        closed_at=timezone.now(),
+                    )
+
+                    # Delete from telegramusermessage table
+                    messages.filter(chat_id=chat_id).delete()
+
+                    # Delete customer from ChatRequest table
+                    ChatRequest.objects.filter(chat_id=chat_id).delete()
+
+                    return JsonResponse({'success': True}, status=200)
+                else:
+                    return JsonResponse({'success': False, 'error': 'No open messages found for the current staff.'}, status=404)
+
+            except Exception as e:
+                return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+        return JsonResponse({'success': False, 'error': 'User not authenticated or not staff'}, status=403)
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
+

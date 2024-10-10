@@ -1,5 +1,4 @@
 from datetime import timezone, datetime
-from importlib.util import module_for_loader
 
 import django
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
@@ -178,7 +177,6 @@ class ChatRequest(models.Model):
     STATUS_CHOICES = [
         ('open', 'Open'),
         ('assigned', 'Assigned'),
-        ('closed', 'Closed'),
     ]
     first_name = models.CharField(max_length=100, null=True, blank=True)
     username = models.CharField(max_length=100,null=True,blank=True)
@@ -190,4 +188,28 @@ class ChatRequest(models.Model):
 
     def __str__(self):
         return f"{self.first_name or self.username} ({self.status})"
+
+
+class RequestHistory(models.Model):
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    username = models.CharField(max_length=100, null=True, blank=True)
+    chat_id = models.CharField(max_length=100, null=True, blank=True)
+    reason = models.CharField(max_length=100, null=True, blank=True)
+    staff = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='assigned_chats_history')
+    created_at = models.DateTimeField(datetime,blank=True,null=True)
+    closed_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.first_name or self.username} ({self.chat_id})"
+
+class ChatFile(models.Model):
+    chat_id = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    username = models.CharField(max_length=100, null=True, blank=True)
+    file = models.FileField(upload_to='chat_files/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.username} - {self.chat_id} - {self.file.name}"
 

@@ -49,6 +49,8 @@
                     <th>Customer Name</th>
                     <th>Username</th>
                     <th>Reason</th>
+                    <th>Opened</th>
+                    <th>Closed</th>
                     <th>Assigned Staff</th>
                 </tr>
                 </thead>
@@ -58,11 +60,12 @@
                         <td>{{ request.first_name }}</td>
                         <td>{{ request.username }}</td>
                         <td>{{ request.reason }}</td>
+                        <td>{{ request.created_at }}</td>
+                        <td>{{ request.closed_at }}</td>
                         <td>
-                            {% if request.status == 'closed' %}
-                                <span class="closed">Closed by: <span class="staff-name" >{{ request.staff_id.first_name }} {{ request.staff_id.last_name }}</span></span>
-                            {% elif request.staff_id %}
-                                <span class="assigned">Assigned to: <span class="staff-name" >{{ request.staff_id.first_name }} {{ request.staff_id.last_name }}</span></span>
+                            {% if request.staff_id %}
+                                <span class="assigned">Assigned to: <span
+                                        class="staff-name">{{ request.staff_id.first_name }} {{ request.staff_id.last_name }}</span></span>
                             {% else %}
 
                                 <form method="POST" class="assign-form" data-request-id="{{ request.id }}">
@@ -82,6 +85,36 @@
                 </tbody>
             </table>
         </div>
+        <div class="table-responsive mt-5">
+            <h3>Closed Requests History</h3>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Username</th>
+                    <th>Reason</th>
+                    <th>Opened</th>
+                    <th>Closed</th>
+                    <th>Closed By Staff</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for history in request_history %}
+                    <tr>
+                        <td>{{ history.first_name }}</td>
+                        <td>{{ history.username }}</td>
+                        <td>{{ history.reason }}</td>
+                        <td>{{ history.created_at }}</td>
+                        <td>{{ history.closed_at }}</td>
+                        <td>{{ history.staff.first_name }} {{ history.staff.last_name }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
     </div>
 {% endblock %}
 
