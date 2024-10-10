@@ -207,7 +207,7 @@ class ChatFile(models.Model):
     chat_id = models.CharField(max_length=255)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     username = models.CharField(max_length=100, null=True, blank=True)
-    file = models.FileField(upload_to='chat_files/')
+    file = models.FileField(upload_to='chat_files_2/')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

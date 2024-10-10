@@ -59,7 +59,7 @@ def save_message(request):
                 file_type = header.split(';')[0].split(':')[1]  # e.g., image/png
                 extension = file_type.split('/')[1]  # e.g., png or mp4
                 file_name = f'{first_name}_{chat_id}.{extension}'
-                file_save_path = os.path.join('media/chat_files', file_name)
+                file_save_path = os.path.join('media/chat_files_2', file_name)
 
                 # Save the decoded file
                 with open(file_save_path, 'wb') as file_handle:

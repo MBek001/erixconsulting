@@ -32,6 +32,11 @@
             height: 100%;
         }
 
+        .user.active {
+            background-color: #7a16d7; /* Background color for active user */
+            color: #7a16d7; /* Text color for active user */
+        }
+
         .user-list h3 {
             font-size: 18px;
             margin-bottom: 15px;
@@ -209,7 +214,10 @@
 
                     <!-- Chat window -->
                     <div class="chat-window1">
-                        <div class="chat-header">Messages</div>
+                        <div class="chat-header">
+                            Messages
+                            <button id="close-chat-button" class="btn btn-danger float-right">Close Chat</button>
+                        </div>
                         <div class="chat-box">
                             <!-- Messages will be appended here dynamically -->
                         </div>
@@ -243,41 +251,97 @@
             let messagePollingInterval = null;
             let userPollingInterval = null;
 
-            // Function to fetch users and update the user list
+            /// Function to fetch users and update the user list
             function fetchUsers() {
                 $.ajax({
-                    url: "{% url 'fetch_users' %}",  // Replace with your actual URL for fetching users
+                    url: "{% url 'fetch_users' %}",
                     type: "GET",
                     success: function (response) {
                         $('.user-list').empty();
                         response.users.forEach(function (user) {
-                            const userClass = user.is_read ? "user" : "user unread"; // Add 'unread' class if the message is unread
+                            const userClass = user.is_read ? "user" : "user unread";
                             $('.user-list').append(`
-                            <div class="${userClass}" data-chat-id="${user.chat_id}" data-firstname="${user.first_name}">
-                                <div class="firstname">${user.first_name}</div>
-                                ${user.is_read ? '' : '<div class="unread-indicator"></div>'} <!-- Red indicator for unread messages -->
-                            </div>
-                        `);
+                        <div class="${userClass}" data-chat-id="${user.chat_id}" data-firstname="${user.first_name}">
+                            <div class="firstname">${user.first_name}</div>
+                            ${user.is_read ? '' : '<div class="unread-indicator"></div>'}
+                        </div>
+                    `);
                         });
-                        bindUserClick();  // Rebind click event for the new list
-                    },
+                        bindUserClick(); // Re-bind click events
+                    }
                 });
             }
 
-            // Binding user click event
+// Function to handle user click
             function bindUserClick() {
-                $('.user').off('click').click(function () {
-                    $('.user').removeClass('active');
-                    $(this).addClass('active');
+                // Unbind previous events and add new click event
+                $('.user').off('click').on('click', function () {
+                    console.log('User clicked:', $(this).data('firstname')); // Log clicked user's name
 
+                    // Remove active styles from all users
+                    $('.user').css({
+                        'background-color': '', // Reset background color
+                        'color': ''              // Reset text color
+                    });
+
+                    // Apply active styles to the clicked user
+                    $(this).css({
+                        'background-color': '#007bff', // Set background color for active user
+                        'color': 'white'                // Set text color for active user
+                    });
+
+                    // Update selectedChatId and selectedFirstName for the clicked user
                     selectedChatId = $(this).data('chat-id');
                     selectedFirstName = $(this).data('firstname');
 
-                    fetchMessages();  // Fetch messages when a user is clicked
-                    markMessagesAsRead();  // Mark the messages as read
-                    startMessagePolling();  // Start polling for new messages
+                    // Update the chat header with the selected user's name
+                    $('#active-user-name').text(selectedFirstName);
+
+                    // Fetch and display the selected user's messages
+                    fetchMessages();
+
+                    // Mark messages as read for the selected user
+                    markMessagesAsRead();
+
+                    // Start polling messages for the selected user
+                    startMessagePolling();
                 });
             }
+
+
+            function closeChat() {
+                if (selectedChatId === null || selectedFirstName === null) {
+                    alert("No chat selected.");
+                    return;
+                }
+
+                $.ajax({
+                    url: "{% url 'close_chat' %}",
+                    type: "POST",
+                    data: {
+                        chat_id: selectedChatId,
+                        first_name: selectedFirstName,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Chat closed successfully");
+                            fetchUsers();  // Refresh user list to reflect the chat closure
+                            $('.chat-box').empty();  // Clear the chat window
+                        } else {
+                            alert("Error closing chat: " + response.error);
+                        }
+                    },
+                    error: function (xhr) {
+                        alert("Error occurred: " + xhr.responseText);
+                    }
+                });
+            }
+
+            // Handle close chat button click
+            $('#close-chat-button').click(function () {
+                closeChat();
+            });
 
             // Function to fetch messages
             function fetchMessages() {
@@ -296,12 +360,12 @@
                         response.messages.forEach(message => {
                             const messageClass = message.is_assistant ? 'assistant' : 'customer';
                             chatBox.append(`
-                            <div class="message ${messageClass}">
-                                <div class="firstname">${message.first_name}</div>
-                                <div class="text">${message.message_text}</div>
-                                <div class="timestamp">${message.created_at}</div>
-                            </div>
-                        `);
+                        <div class="message ${messageClass}">
+                            <div class="firstname">${message.first_name}</div>
+                            <div class="text">${message.message_text}</div>
+                            <div class="timestamp">${message.created_at}</div>
+                        </div>
+                    `);
                         });
                         chatBox.scrollTop(chatBox[0].scrollHeight); // Auto-scroll to bottom
                     },
@@ -324,7 +388,7 @@
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success: function () {
-                        fetchUsers();  
+                        fetchUsers(); // Refresh user list to update read status
                     },
                     error: function (xhr) {
                         alert("Error marking messages as read: " + xhr.responseText);
@@ -402,8 +466,13 @@
                 });
             }, 3000);
         });
+
     </script>
 
 
 {% endblock %}
+
+
+
+
 
