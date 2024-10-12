@@ -253,6 +253,13 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script>
         $(document).ready(function () {
+            $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) {
+                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            }
+        }
+    });
             let selectedChatId = null;
             let selectedFirstName = null;
             let messagePollingInterval = null;
