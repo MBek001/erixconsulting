@@ -6,8 +6,8 @@ def escape_markdown(text):
     return text.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("]", "\\]").replace("`", "\\`")
 
 def send_error_to_telegram(error_message):
-    bot_token = os.getenv("ERRORS_BOT")
-    chat_id = os.getenv("CHANNEL_ID")
+    bot_token = '7451477534:AAFYTKDG-rHyl20pShvIhIPaeGhh75NzIS0'
+    chat_id = '-1002452313294'
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
 
     project_prefix = "Project: ErixConsulting:\n"
