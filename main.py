@@ -10,7 +10,7 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
 from ERRORS import send_error_to_telegram
-from config import API_TOKEN
+from config import *
 
 
 
