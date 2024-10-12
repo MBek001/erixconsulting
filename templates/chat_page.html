@@ -138,7 +138,7 @@
             margin-top: 5px;
             align-self: flex-end;
         }
-        
+
         .message a.file-link {
             color: #007bff;
             text-decoration: underline;
@@ -350,10 +350,9 @@
                 closeChat();
             });
 
-            // Function to fetch messages
             function fetchMessages() {
                 if (!selectedChatId || !selectedFirstName) return;
-            
+
                 $.ajax({
                     url: "{% url 'fetch_messages' %}",
                     type: "GET",
@@ -364,29 +363,37 @@
                     success: function (response) {
                         const chatBox = $('.chat-box');
                         chatBox.empty();  // Clear previous messages
-            
-                        // Append messages
-                        response.messages.forEach(message => {
-                            const messageClass = message.is_assistant ? 'assistant' : 'customer';
-                            chatBox.append(`
-                                <div class="message ${messageClass}">
-                                    <div class="firstname">${message.first_name}</div>
-                                    <div class="text">${message.message_text}</div>
-                                    <div class="timestamp">${message.created_at}</div>
-                                </div>
-                            `);
+
+                        // Combine messages and files into one array
+                        let combinedMessages = [...response.messages, ...response.files];
+
+                        // Sort combined array by full_created_at timestamp (including seconds)
+                        combinedMessages.sort((a, b) => new Date(a.full_created_at) - new Date(b.full_created_at));
+
+                        // Append messages and files in sorted order
+                        combinedMessages.forEach(item => {
+                            if (item.file_path) {
+                                // Render file message
+                                const fileUrl = `/media/${item.file_path.replace('media/', '')}`;  // Correct the file path
+                                chatBox.append(`
+                        <div class="message">
+                            <a href="${fileUrl}" class="file-link" target="_blank">File</a>
+                            <div class="timestamp">${item.created_at}</div>  <!-- Display H:M only -->
+                        </div>
+                    `);
+                            } else {
+                                // Render text message
+                                const messageClass = item.is_assistant ? 'assistant' : 'customer';
+                                chatBox.append(`
+                        <div class="message ${messageClass}">
+                            <div class="firstname">${item.first_name}</div>
+                            <div class="text">${item.message_text}</div>
+                            <div class="timestamp">${item.created_at}</div>  <!-- Display H:M only -->
+                        </div>
+                    `);
+                            }
                         });
-            
-                        // Append files with their created_at timestamps
-                        response.files.forEach(file => {
-                            chatBox.append(`
-                                <div class="message">
-                                    <a href="${file.file_path}" class="file-link" target="_blank">${file.file_path}</a>
-                                    <div class="timestamp">${file.created_at}</div>
-                                </div>
-                            `);
-                        });
-            
+
                         chatBox.scrollTop(chatBox[0].scrollHeight); // Auto-scroll to bottom
                     },
                     error: function (xhr, status, error) {
@@ -394,6 +401,7 @@
                     }
                 });
             }
+
 
             // Function to mark messages as read
             function markMessagesAsRead() {

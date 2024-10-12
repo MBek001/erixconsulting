@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import logging
+import shutil
 from datetime import datetime
 from django.http import JsonResponse
 from django.utils import timezone
@@ -20,7 +21,6 @@ from erixconsulting import settings
 TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
 CHAT_ID = os.getenv('CHAT_ID')
 
-# Set up logging
 logger = logging.getLogger(__name__)
 
 @user_passes_test(lambda u: u.is_staff, login_url='/login/')
@@ -52,37 +52,31 @@ def chat_page(request):
     return render(request, 'chat_page.html', {'messages': messages, 'users': users})
 
 
-
-
 @csrf_exempt
 def send_message_to_bot(request):
     """
     Sends a message to the Telegram bot and saves it to the corresponding chat file as 'assistant'.
     """
     if request.method == 'POST':
-        message_text = request.POST.get('message')  # Change variable name to avoid confusion
-        chat_id = request.POST.get('chat_id')  # Get the chat ID from the request
-        first_name = request.POST.get('first_name')  # Get the first name from the request
+        message_text = request.POST.get('message')
+        chat_id = request.POST.get('chat_id')
+        first_name = request.POST.get('first_name')
 
         if message_text and chat_id and first_name:
             # Prepare the data to be sent to the bot
             payload = {
                 'chat_id': chat_id,
-                'text': message_text,  # Use the updated variable name
+                'text': message_text,
             }
-
-            logger.debug(f"Sending message to Telegram: {payload}")  # Log the payload
-
+            logger.debug(f"Sending message to Telegram: {payload}")
             try:
-                # Send the message to the bot
                 response = requests.post(TELEGRAM_API_URL, json=payload)
-                logger.debug(f"Telegram response status code: {response.status_code}")  # Log status code
-                logger.debug(f"Telegram response text: {response.text}")  # Log response text
+                logger.debug(f"Telegram response status code: {response.status_code}")
+                logger.debug(f"Telegram response text: {response.text}")
 
-                # Check if the response from Telegram is successful
                 if response.status_code == 200:
                     response_data = response.json()
-                    logger.debug(f"Response data: {response_data}")  # Log full response data
+                    logger.debug(f"Response data: {response_data}")
 
                     if response_data.get('ok'):
                         # Update the message status
@@ -103,9 +97,9 @@ def send_message_to_bot(request):
 
                         # Append the assistant message to the file
                         with open(file_path, 'a') as file:
-                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()}\n')  # Use updated variable name
+                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()}\n')
 
-                        logger.info(f"Message saved to file: {file_path}")  # Log the success
+                        logger.info(f"Message saved to file: {file_path}")
                         return JsonResponse({'status': 'success'}, status=200)
                     else:
                         error_message = response_data.get('description', 'Unknown error')
@@ -123,8 +117,6 @@ def send_message_to_bot(request):
 
     return JsonResponse({'status': 'invalid method'}, status=405)
 
-
-
 def fetch_messages(request):
     chat_id = request.GET.get('chat_id')
     first_name = request.GET.get('first_name')
@@ -137,13 +129,12 @@ def fetch_messages(request):
         return JsonResponse({"error": "Chat file does not exist"}, status=404)
 
     messages = []
-    files = []  # Fayl yo'llarini saqlash uchun
+    files = []
 
     try:
         with open(file_path, 'r') as file:
             lines = file.readlines()
 
-            # Ensure there are an even number of lines (message and created_at)
             if len(lines) % 2 != 0:
                 return JsonResponse({"error": "Error reading file: file format is incorrect"}, status=400)
 
@@ -154,41 +145,39 @@ def fetch_messages(request):
                 if len(message_line) < 2 or len(created_at_line) < 2:
                     return JsonResponse({"error": "Error reading file: data format is incorrect"}, status=400)
 
-                message_sender = message_line[0].lower()  # Either 'customer' or 'assistant'
-                message_text = message_line[1]  # Get message text
-                created_at_raw = created_at_line[1]  # Get the raw created_at timestamp
+                message_sender = message_line[0].lower()
+                message_text = message_line[1]
+                created_at_raw = created_at_line[1]
 
-                # Format the created_at timestamp (YYYY-MM-DD HH:MM)
                 try:
-                    created_at = datetime.strptime(created_at_raw, '%Y-%m-%d %H:%M:%S.%f').strftime('%Y-%m-%d %H:%M')
+                    full_created_at = datetime.strptime(created_at_raw, '%Y-%m-%d %H:%M:%S.%f')
+                    created_at_display = full_created_at.strftime('%Y-%m-%d %H:%M')  # Display H:M only
                 except ValueError:
-                    created_at = created_at_raw
+                    created_at_display = created_at_raw
+                    full_created_at = None
 
-                is_assistant = (message_sender == 'assistant')
-
-                messages.append({
-                    "first_name": first_name if not is_assistant else 'Assistant',
-                    "message_text": message_text,
-                    "created_at": created_at,
-                    "is_assistant": is_assistant,# Fayl xabarini ajratish
-                })
-
-                # Fayl yo'lini olish
-                if message_text.startswith('file:'):
-                    file_path_value = message_text.split(': ', 1)[1]  # Fayl yo'lini olish
-                    file_created_at = created_at  # Faylning created_at vaqtini olish
+                if message_text.startswith('media/'):
                     files.append({
-                        "file_path": file_path_value,
-                        "created_at": file_created_at  # Faylning created_at vaqtini qo'shish
+                        "file_path": message_text,
+                        "created_at": created_at_display,
+                        "full_created_at": created_at_raw
+                    })
+                else:
+                    is_assistant = (message_sender == 'assistant')
+
+                    messages.append({
+                        "first_name": first_name if not is_assistant else 'Assistant',
+                        "message_text": message_text,
+                        "created_at": created_at_display,
+                        "full_created_at": created_at_raw,
+                        "is_assistant": is_assistant,
                     })
 
     except Exception as e:
         logger.error(f"Error reading file: {str(e)}")
         return JsonResponse({"error": f"Error reading file: {str(e)}"}, status=500)
 
-    # Return the result
     return JsonResponse({"messages": messages, "files": files})
-
 
 
 def fetch_users(request):
@@ -205,9 +194,7 @@ def fetch_users(request):
         }
         for user in users
     ]
-
     return JsonResponse({"users": user_list})
-
 
 
 @csrf_exempt
@@ -229,9 +216,7 @@ def close_chat(request):
     if request.method == 'POST':
         if request.user.is_authenticated and request.user.is_staff:
             try:
-                # Find the messages related to the logged-in staff
                 messages = TelegramUserMessage.objects.filter(staff=request.user, status='open')
-
 
                 if messages.exists():
                     chat_id = request.POST.get('chat_id')
@@ -241,17 +226,20 @@ def close_chat(request):
                     message = "Your chat is closed. Please press /start button for new request !"
                     asyncio.run(notify_customer(chat_id, message))
 
-                    # Get the request_user from ChatRequest table
                     request_user = ChatRequest.objects.filter(chat_id=chat_id).first()
 
                     if not request_user:
                         return JsonResponse({'success': False, 'error': 'Chat request not found.'}, status=404)
 
-                    # Remove message file if exists
+                    # conversation fayllarni o'chirish
                     filename = f'{first_name}_{chat_id}.txt'
                     file_path = os.path.join('media/messages', filename)
                     if os.path.exists(file_path):
                         os.remove(file_path)
+                    #saqlangan fayllar direktoriyasini o'chirish
+                    user_directory = f'media/messages/{first_name}_{chat_id}'
+                    if os.path.exists(user_directory):
+                        shutil.rmtree(user_directory)
 
                     # Add to request history table
                     RequestHistory.objects.create(

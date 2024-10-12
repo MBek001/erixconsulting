@@ -3,15 +3,13 @@ from django.http import JsonResponse, HttpResponse
 from django.views import View
 import os
 import openai
-
 from ERRORS import send_error_to_telegram
 from erixconsulting import settings
-from .models import CharAi
+from accounts.models import CharAi
 
 import logging
 
 API_KEY = os.getenv("API_KEY")
-
 
 class ChatWithBotView(View):
 
@@ -53,7 +51,6 @@ class ChatWithBotView(View):
         # Save user's message in the text file
         with open(file_path, 'a') as file:
             file.write(f"User: {user_message}\n")
-
         # Saving file in the database (for authenticated users)
         if user.is_authenticated:
             chat_entry = CharAi(user=user, text_file_url=file_path)
@@ -75,15 +72,12 @@ class ChatWithBotView(View):
                     {"role": "user", "content": user_message},
                 ]
             )
-
             bot_response = response['choices'][0]['message']['content']
-
         except Exception as e:
             error_message = f"Error communicating with OpenAI: {str(e)}"
             logging.error(error_message)
             send_error_to_telegram(error_message)
             bot_response = "Sorry, there was an error processing your request."
-
         # Save bot's response in the text file
         with open(file_path, 'a') as file:
             file.write(f"Bot: {bot_response}\n")

@@ -1,6 +1,4 @@
-# urls.py
 from django.urls import path
-
 from accounts.request import request_page
 from accounts.status import check_chat_status
 from accounts.web_bot import close_chat

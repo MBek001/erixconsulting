@@ -1,10 +1,9 @@
 from django.urls import path
 
-from .aiview import ChatWithBotView
-from .request import save_message
-from .request_view import request_messages
-from .views import *
-from .web_bot import  chat_page, send_message_to_bot, fetch_messages, fetch_users, mark_messages_as_read
+from accounts.aiview import ChatWithBotView
+from accounts.request import save_message
+from accounts.views import *
+from accounts.web_bot import  chat_page, send_message_to_bot, fetch_messages, fetch_users, mark_messages_as_read
 
 urlpatterns = [
     path('', home_view, name='home'),
@@ -17,7 +16,6 @@ urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
-    path('test/', test_view, name='test_view'),  # error sending bot function url
     path('chat-bot', ChatWithBotView.as_view(), name='chat_with_bot'),
     path('save-message', save_message, name='save_message'),
     path('chat/', chat_page, name='chat_page'),

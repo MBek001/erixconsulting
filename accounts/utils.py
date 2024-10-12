@@ -25,14 +25,11 @@ def send_mail_for_contact_us(email: str, phone_number: str, subject: str, messag
         # Set up the SMTP server
         with smtplib.SMTP_SSL(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
             server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-
-            # Create the email
             email_msg = MIMEMultipart('alternative')
             email_msg['From'] = settings.DEFAULT_FROM_EMAIL
             email_msg['To'] = settings.CONTACT_US_EMAIL
             email_msg['Subject'] = subject
 
-            # Create HTML email body
             html_body = f"""
             <html>
             <head>
@@ -100,32 +97,24 @@ def send_mail_for_contact_us(email: str, phone_number: str, subject: str, messag
             </html>
             """
 
-            # Attach the HTML message
             email_msg.attach(MIMEText(html_body, 'html'))
-
-            # Send the email
             server.send_message(email_msg)
-
-        print(f"Contact Us email sent to {settings.CONTACT_US_EMAIL}")
 
     except smtplib.SMTPException as e:
         print(f"Failed to send email. SMTP error: {str(e)}")
-
     except Exception as e:
         print(f"Failed to send email. Error: {str(e)}")
 
 
-
 def unread_messages(request):
     if request.user.is_authenticated:
-        # Check if the current user has unread messages
         has_unread_messages = TelegramUserMessage.objects.filter(staff_id=request.user.id, is_read=False).exists()
         return {'has_unread_messages': has_unread_messages}
     return {'has_unread_messages': False}
 
+
 def open_requests(request):
     if request.user.is_authenticated and request.user.is_staff:
-        # Check if there are open requests
         open_requests = ChatRequest.objects.filter(status='open').exists()
         return {'open_requests': open_requests}
     return {'open_requests': False}

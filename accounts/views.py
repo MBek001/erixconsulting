@@ -1,29 +1,21 @@
-import logging
-from traceback import print_tb
-
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.utils.html import format_html
 from django.views import View
-from django.contrib.auth import authenticate, login,logout
+from django.contrib.auth import login,logout
 
 from accounts.forms import LoginForm, CommentForm
-from .models import User, Service, TeamMembership, Comment, BlogPost
-from .utils import EmailBackend, send_mail_for_contact_us, open_requests, unread_messages
-
-
+from accounts.models import User, Service, TeamMembership, Comment, BlogPost
+from accounts.utils import EmailBackend, send_mail_for_contact_us, open_requests, unread_messages
 
 
 def about_view(request):
     team_members = TeamMembership.objects.select_related('user').all()
 
-    # Call context processor functions
     open_reqs_context = open_requests(request)
     unread_mess_context = unread_messages(request)
 
@@ -53,7 +45,6 @@ def blog_view(request):
 def service_list(request):
     services = Service.objects.all()
 
-    # Call context processor functions
     open_reqs_context = open_requests(request)
     unread_mess_context = unread_messages(request)
     context = {
@@ -66,7 +57,6 @@ def service_list(request):
 
 
 def contact_us(request):
-    # Call context processor functions
     open_reqs_context = open_requests(request)
     unread_mess_context = unread_messages(request)
     context = {'active_page': 'contact',
@@ -75,12 +65,10 @@ def contact_us(request):
                }
     if request.method == 'POST':
         if request.user.is_authenticated:
-            # For authenticated users
             user_name = f"{request.user.first_name} {request.user.last_name}"
             email = request.user.email
             phone_number = User.objects.get(email=email).phone_number
         else:
-            # For unauthenticated users
             user_name = request.POST.get('name')
             email = request.POST.get('email')
             phone_number = request.POST.get('phone_number')
@@ -88,7 +76,6 @@ def contact_us(request):
         subject = request.POST.get('subject')
         message = request.POST.get('message')
 
-        # Call the custom send_mail function
         send_mail_for_contact_us(email, phone_number, subject, message, user_name)
         response = format_html('''
             <html>
@@ -121,16 +108,12 @@ def contact_us(request):
 
         return HttpResponse(response)
 
-    # Render the contact form template for GET requests
     return render(request, 'contact_us.html',context)
 
 
-
 def home_view(request):
-    # Fetch all comments and pass them to the home page
     comments = Comment.objects.select_related('user').order_by('-created_at')
 
-    # Call context processor functions
     open_reqs_context = open_requests(request)
     unread_mess_context = unread_messages(request)
 
@@ -138,15 +121,12 @@ def home_view(request):
         if request.user.is_authenticated:
             form = CommentForm(request.POST)
             if form.is_valid():
-                # Create a new comment and associate it with the current user
                 comment = form.save(commit=False)
                 comment.user = request.user
                 comment.save()
                 return redirect('home')
         else:
-            # If not authenticated, redirect to login page or show a message
             return redirect('login')
-
     else:
         form = CommentForm()
 
@@ -158,7 +138,6 @@ def home_view(request):
         'has_unread_messages': unread_mess_context['has_unread_messages'],
     }
     return render(request, 'index_en.html', context)
-
 
 
 class RegisterView(View):
@@ -285,14 +264,11 @@ class Profile(LoginRequiredMixin, View):
         return redirect('profile',)
 
 
-
-
 @login_required
 def delete_profile_picture(request):
-    user = request.user  # This fetches the current logged-in user
+    user = request.user
     try:
         if user.profile_picture:
-            # Delete the profile picture
             user.profile_picture.delete(save=False)
             user.profile_picture = None
             user.save()
@@ -304,6 +280,3 @@ def delete_profile_picture(request):
         messages.warning(request, "Profile does not exist.")
 
     return redirect('profile')
-
-def test_view(request):
-    raise Exception("This is a test exception to check Telegram error reporting.")

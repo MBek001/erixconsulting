@@ -9,37 +9,35 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
 
+from ERRORS import send_error_to_telegram
 from config import API_TOKEN
 
-# Set the Django URLs
-DJANGO_SAVE_URL = 'http://localhost:8000/save-message'
-CHECK_CHAT_STATUS_URL = 'http://localhost:8000/check-chat-status/'  # Check chat status in Django
 
-# Configure logging
+
+
 logging.basicConfig(level=logging.INFO)
 
-# Initialize bot and dispatcher with state storage
 bot = Bot(token=API_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-# Define states
 class Form(StatesGroup):
     waiting_for_reason = State()
     waiting_for_message = State()
 
-# Create inline keyboard
+
 def main_menu_keyboard() -> InlineKeyboardMarkup:
     """Creates the main menu inline keyboard."""
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [
-            InlineKeyboardButton(text="Write to Assistant", callback_data='write_to_assistant'),
-            InlineKeyboardButton(text="Question & Answer", callback_data='question_answer')
+            InlineKeyboardButton(text="Aloqa", callback_data='write_to_assistant'),
+            InlineKeyboardButton(text="Savol va Javoblar", callback_data='question_answer')
         ]
     ])
     return keyboard
 
-async def check_chat_status(chat_id: str) -> str:
+
+async def check_chat_status(chat_id: int) -> str:
     """Check the chat status (open, closed, etc.) by calling the backend API."""
     async with aiohttp.ClientSession() as session:
         params = {'chat_id': chat_id}
@@ -47,115 +45,161 @@ async def check_chat_status(chat_id: str) -> str:
             if response.status == 200:
                 data = await response.json()
                 return data['status']
-            return "closed"  # Default to closed if there's an issue
+            return "closed"
+
 
 @dp.message(Command("start"))
 async def start_command(message: Message, state: FSMContext):
-    chat_id = message.chat.id
-    status = await check_chat_status(chat_id)
+    await message.reply("Xush Kelibsiz😊 Iltimos kerakli bo'lgan bo'limni tanlang:", reply_markup=main_menu_keyboard())
 
-    if status == "open":
-        await message.reply("Your chat is open. You can continue your conversation.", reply_markup=main_menu_keyboard())
-        await state.clear()  # Clear any previous state
-    else:
-        await message.reply("Welcome! Please provide the reason for your message using the inline keyboard.", reply_markup=main_menu_keyboard())
 
 @dp.callback_query()
 async def handle_inline_buttons(callback: types.CallbackQuery, state: FSMContext):
     if callback.data == 'write_to_assistant':
-        await callback.message.reply("Please provide the reason for your message.")
-        await state.set_state(Form.waiting_for_reason)  # Set state to waiting for reason
-    elif callback.data == 'question_answer':
-        await callback.message.reply("Please type your question.")
+        chat_id = callback.message.chat.id
+        status = await check_chat_status(chat_id)
+
+        if status == "open":
+            await callback.message.reply("Siz mutaxassis bilan aloqadasiz xabaringizni yozishingiz mumkin 😊.")
+            await state.set_state(Form.waiting_for_message)
+        if status == "new":
+            await callback.message.reply("Mutaxassis bilan bog'lanish uchun avval iltimos arizangiz sababini kiriting! ")
+            await state.set_state(Form.waiting_for_reason)
+        if status == "closed":
+            await callback.message.reply("Avvalgi aloqa mutaxassis tomonidan yopilgan. Iltimos arizangiz sababini kiriting!")
+            await state.set_state(Form.waiting_for_reason)  # Set state to waiting for reason
+        elif callback.data == 'question_answer':
+            law_info = (
+                "O'zbekiston Respublikasining qonunlari:\n"
+                "1. O'zbekiston Respublikasining Fuqarolik Kodeksi.\n"
+                "2. O'zbekiston Respublikasining Jinoyat Kodeksi.\n"
+                "3. O'zbekiston Respublikasining Ma'muriy Kodeksi.\n"
+                "4. O'zbekiston Respublikasining Mehnat Kodeksi.\n"
+                "Savollaringiz bo'lsa, iltimos, ularni yozing."
+            )
+        await callback.message.reply(law_info)
+
 
 @dp.message(Form.waiting_for_reason)
 async def ask_reason(message: types.Message, state: FSMContext):
-    # Store the reason and ask for the actual message
     await state.update_data(reason=message.text)
-    logging.info(f"Stored reason: {message.text}")
+    await message.reply("Rahmat! Endi, iltimos, xabaringizni yuboring.")
+    await state.set_state(Form.waiting_for_message)
 
-    await message.reply("Thank you! Now, please send your message.")
-    await state.set_state(Form.waiting_for_message)  # Move to waiting for the message
+
 
 @dp.message(Form.waiting_for_message)
 async def receive_text_message(message: types.Message, state: FSMContext):
     user_data = await state.get_data()
-    reason = user_data.get('reason')
+    reason = user_data.get('reason', None)  # Get reason if available
 
     if message.text:
         await save_message(message, reason, state)
     elif message.document:
         await save_file(message, reason, state)
+    elif message.video:
+        await save_video(message, reason, state)
+    elif message.photo:
+        await save_photo(message, reason, state)
     else:
-        await message.reply("Please send a valid text message or file.")
+        await message.reply("Iltimos to'g'ri matn, rasm, video yoki fayl jo'nating")
+
+
+async def save_photo(message: types.Message, reason: str, state: FSMContext):
+    first_name = message.from_user.first_name
+    username = message.from_user.username or "Unknown"
+    chat_id = message.chat.id
+
+    if message.photo:
+        photo_id = message.photo[-1].file_id
+        photo_info = await bot.get_file(photo_id)
+
+        user_directory = f'media/messages/{first_name}_{chat_id}'
+        if not os.path.exists(user_directory):
+            os.makedirs(user_directory)
+
+        photo_path = os.path.join(user_directory, f"photo_{photo_id}.jpg")
+
+        await bot.download_file(photo_info.file_path, photo_path)
+        logging.info(f"Photo saved at: {photo_path}")
+
+        await process_file_to_backend(first_name, username, chat_id, photo_path, reason)
+
+        await message.reply("Suratingiz yuborildi va saqlandi. Iltimos, mutaxassis javobini kuting.")
+        if state:
+            await state.clear()
+    else:
+        await message.reply("RAsm topilmadi!!")
+
+
+async def save_video(message: types.Message, reason: str, state: FSMContext):
+    first_name = message.from_user.first_name
+    username = message.from_user.username or "Unknown"
+    chat_id = message.chat.id
+
+    if message.video:
+        video_id = message.video.file_id
+        video_info = await bot.get_file(video_id)
+
+        user_directory = f'media/messages/{first_name}_{chat_id}'
+        if not os.path.exists(user_directory):
+            os.makedirs(user_directory)
+
+        video_path = os.path.join(user_directory, f"{message.video.file_name or 'video.mp4'}")
+
+
+        await bot.download_file(video_info.file_path, video_path)
+        logging.info(f"Video saved at: {video_path}")
+
+        await process_file_to_backend(first_name, username, chat_id, video_path, reason)
+
+        await message.reply("Videongiz yuborildi va saqlandi. Iltimos, mutaxassis javobini kuting.")
+        await state.clear()
+    else:
+        await message.reply("Video topilmadi!!")
+
 
 
 async def save_message(message: types.Message, reason: str, state: FSMContext):
     first_name = message.from_user.first_name
     username = message.from_user.username or "Unknown"
     chat_id = message.chat.id
-
-    if reason and message.text:
-        # Send the message to the backend
-        await process_message_to_backend(first_name, username, chat_id, message.text, reason)
-        await message.reply("Your message has been sent. Please wait for an assistant to respond.")
-        if state:
-            await state.clear()
-    else:
-        await message.reply("Please provide a reason before sending your message.")
+    await process_message_to_backend(first_name, username, chat_id, message.text, reason)
+    await message.reply("Xabaringiz Yuborildi Iltimos Mutaxassis Javobini Kuting!")
+    if state is not None:
+        await state.clear()
 
 
 async def save_file(message: types.Message, reason: str, state: FSMContext):
-    """
-    Save the file sent by the user to the user's directory and send its path to the backend.
-
-    Args:
-        message (types.Message): The incoming message containing a file.
-        reason (str): Reason for sending the file.
-        state (FSMContext): Finite state machine context for managing states.
-    """
     first_name = message.from_user.first_name
     username = message.from_user.username or "Unknown"
     chat_id = message.chat.id
 
-    # Check if the message contains a document (file)
     if message.document:
         file_id = message.document.file_id
+        file_name = message.document.file_name
+        logging.info(f"Received file: {file_name}")
 
-        # Get the file info using the file_id
         file_info = await bot.get_file(file_id)
+        logging.info(f"File info: {file_info}")
 
-        # Define the user directory path
         user_directory = f'media/messages/{first_name}_{chat_id}'
-
-        # Check if the directory exists, create it if it doesn't
         if not os.path.exists(user_directory):
-            os.makedirs(user_directory)  # Create directory if not exists
-            print(f'Created directory: {user_directory}')
-        else:
-            print(f'Directory already exists: {user_directory}')
+            os.makedirs(user_directory)
 
-        # Determine the local path where the file should be saved
-        file_path = os.path.join(user_directory, file_info.file_path.split('/')[-1])
+        file_path = os.path.join(user_directory, file_name)
 
-        # Download the file from Telegram servers and save it to the user directory
         await bot.download_file(file_info.file_path, file_path)
+        logging.info(f"File saved at: {file_path}")
 
-        # Notify user that the file is being processed
-        await message.reply("Thank you! Your file is being processed and sent to the assistant.")
-
-        # Send the file path and details to the backend
         await process_file_to_backend(first_name, username, chat_id, file_path, reason)
 
-        # Notify the user that the file has been successfully sent
-        await message.reply(
-            f"Your file has been sent and saved. Please wait for an assistant to respond.")
-
-        # Clear the state if it is provided
+        await message.reply("Faylingiz yuborildi va saqlandi. Iltimos, mutaxassis javobini kuting.")
         if state:
             await state.clear()
     else:
-        await message.reply("No file detected. Please send a valid document or file.")
+        await message.reply("Fayl topilmadi. Iltimos, yaroqli hujjat yoki fayl yuboring.")
+
 
 async def process_message_to_backend(first_name, username, chat_id, message_text, reason):
     """Send the message to the backend."""
@@ -173,10 +217,12 @@ async def process_message_to_backend(first_name, username, chat_id, message_text
                 response_text = await response.text()
                 logging.info(f'Response status: {response.status}, Response text: {response_text}')
         except Exception as e:
+            send_error_to_telegram(str(e))
             logging.error(f"Error occurred while sending data to Django: {e}")
 
+
 async def process_file_to_backend(first_name, username, chat_id, file_path, reason):
-    """Send the file information to the backend."""
+    """Send the file (photo or video) information to the backend."""
     async with aiohttp.ClientSession() as session:
         data = {
             'first_name': first_name,
@@ -191,22 +237,59 @@ async def process_file_to_backend(first_name, username, chat_id, file_path, reas
                 response_text = await response.text()
                 logging.info(f'Response status: {response.status}, Response text: {response_text}')
         except Exception as e:
+            send_error_to_telegram(str(e))
             logging.error(f"Error occurred while sending file data to Django: {e}")
+
+
 
 @dp.message()
 async def handle_non_command_message(message: types.Message, state: FSMContext):
     chat_id = message.chat.id
-    status = await check_chat_status(chat_id)
+    user_data = await state.get_data()
+
+    # Check the chat status
+    status = user_data.get('chat_status', await check_chat_status(chat_id))
 
     if status == 'closed':
-        # If the chat is closed and user sends a message without starting, inform them to use /start
-        await message.reply("Your chat is closed. Please press /start to begin a new request.")
-    else:
-        # If chat is open, handle the message and send it to the backend
-        await save_message(message, reason="Ongoing Conversation", state=None)
+        await message.reply(
+            "Sizning arizangiz mutaxassis tomonidan yopilgan. Iltimos qayta ariza qoldirish uchun /start tugmasini bosing.")
+
+    elif status == 'open':
+        # Handle different message types during ongoing conversation
+        if message.text:
+            await save_message(message, reason="Ongoing Conversation", state=None)
+        elif message.photo:
+            await save_photo(message, reason="Ongoing Conversation", state=None)
+        elif message.video:
+            await save_video(message, reason="Ongoing Conversation", state=None)
+        elif message.document:
+            await save_file(message, reason="Ongoing Conversation", state=None)
+        else:
+            await message.reply("Please send a valid text message, photo, file, or video.")
+
+    elif status == 'new':
+        await message.reply("Xush kelibsiz! Iltimos, arizangiz sababini kiriting:")
+        await state.set_state(Form.waiting_for_reason)  # Set the state to wait for the reason
+
+    elif status == 'waiting':
+        # Optionally handle the 'waiting' status if needed
+        await message.reply("Sizning arizangiz hali ko'rib chiqilmoqda.")
+        if message.text:
+            await save_message(message, reason="Ongoing Conversation", state=None)
+        elif message.photo:
+            await save_photo(message, reason="Ongoing Conversation", state=None)
+        elif message.video:
+            await save_video(message, reason="Ongoing Conversation", state=None)
+        elif message.document:
+            await save_file(message, reason="Ongoing Conversation", state=None)
+        else:
+            await message.reply("Iltimos to'g'ri matn, rasm, video yoki fayl jo'nating!!")
+
+
 
 async def main():
     await dp.start_polling(bot)
+
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -1,13 +1,9 @@
 from datetime import timezone, datetime
-
 import django
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.db.models import CASCADE
-
-from erixconsulting import settings
-
 
 class UserManager(BaseUserManager):
     def create_user(self, first_name, email, last_name=None, password=None, phone_number=None, role=None):
@@ -15,7 +11,6 @@ class UserManager(BaseUserManager):
             raise ValueError('The Email field is required')
         if not first_name:
             raise ValueError('The First Name field is required')
-
         email = self.normalize_email(email)
         user = self.model(
             first_name=first_name,
@@ -23,7 +18,6 @@ class UserManager(BaseUserManager):
             email=email,
             phone_number=phone_number,
         )
-
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -143,18 +137,6 @@ class CharAi(models.Model):
     text_file_url = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
 
-
-# class TelegramUserMessage(models.Model):
-#     username = models.CharField(max_length=100)
-#     first_name = models.CharField(max_length=100, null=True, blank=True)
-#     chat_id = models.CharField(max_length=100, null=True, blank=True)
-#     message_file = models.FileField(upload_to='messages/')
-#     is_read = models.BooleanField(default=False)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#
-#     def __str__(self):
-#         return f'{self.first_name or self.username} ({self.chat_id})'
-
 class TelegramUserMessage(models.Model):
     STATUS_CHOICES = [
         ('open', 'Open'),
@@ -199,9 +181,9 @@ class RequestHistory(models.Model):
     created_at = models.DateTimeField(datetime,blank=True,null=True)
     closed_at = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self):
         return f"{self.first_name or self.username} ({self.chat_id})"
+
 
 class ChatFile(models.Model):
     chat_id = models.CharField(max_length=255)
