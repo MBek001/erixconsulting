@@ -9,7 +9,7 @@ from accounts.models import CharAi
 
 import logging
 
-API_KEY = os.getenv("API_KEY")
+API_KEY = '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'
 
 class ChatWithBotView(View):
 
