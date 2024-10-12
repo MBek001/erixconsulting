@@ -18,8 +18,8 @@ from django.views.decorators.csrf import csrf_exempt
 from accounts.request import notify_customer
 from erixconsulting import settings
 
-TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
-CHAT_ID = os.getenv('CHAT_ID')
+TELEGRAM_API_URL ='https://api.telegram.org/bot7925201164:AAH_9eHCfFIxPv6SaivvSoBY9SVUB0LFF3g/sendMessage'
+CHAT_ID ='497640654'
 
 logger = logging.getLogger(__name__)
 
