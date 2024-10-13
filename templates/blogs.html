@@ -69,13 +69,14 @@
         }
 
     </style>
+    
     <style>
         /* Chat icon */
         #chat-icon {
             position: fixed; /* Fixed position */
             bottom: 40px; /* Adjusted to ensure chat icon is visible */
             left: 50px; /* Positioned on the left */
-            font-size: 24px; /* Icon size */
+            font-size: 20px; /* Icon size */
             cursor: pointer;
             z-index: 1000; /* Ensure it is above other content */
             background-color: #007bff; /* Icon background color */
@@ -93,104 +94,92 @@
 
         /* Chat window */
         #chat-window {
-        {#display: none;#} position: fixed;
-            bottom: 95px;
-            left: 50px; /* Align with the left side of the viewport */
-            width: 300px;
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 350px;
             height: 500px;
-            background-color: #c2bfbf;
-            border-radius: 25px;
-            box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            z-index: 1000;
             display: flex;
             flex-direction: column;
-            z-index: 1000;
         }
 
         /* Chat header */
         #chat-header {
-            background-color: rgba(0, 123, 255, 0.9);
+            background-color: #007bff;
             color: white;
-            padding: 10px;
-            border-radius: 25px 25px 0 0;
+            padding: 15px;
+            border-radius: 15px 15px 0 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        /* Close button */
-        #chat-close-button {
-            cursor: pointer;
-            background-color: #dc1030;
-            border-radius: 50px;
-            color: white;
-            font-size: 24px; /* Adjusted to fit design */
-        }
-
-        /* Chat messages container */
+        /* Chat messages */
         #chat-messages {
-            flex: 1;
-            overflow-y: auto;
             padding: 10px;
-            word-wrap: break-word; /* Break long words to avoid horizontal scroll */
+            overflow-y: scroll;
+            flex: 1; /* Allow chat messages to grow and take available space */
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Message styling */
+        /* Messages */
         .message {
-            max-width: 80%; /* Limit width to avoid stretching */
-            margin-bottom: 10px; /* Space between messages */
+            margin-bottom: 10px;
             padding: 10px;
             border-radius: 10px;
-            line-height: 1.5; /* Space between lines */
+            max-width: 80%;
+            display: inline-block;
+            clear: both;
         }
 
-        /* User message */
         .user-message {
-            align-self: flex-end; /* Align to the right */
-            margin-left: 100px;
-            font-size: 15px;
-            background-color: #007bff; /* Blue background for user messages */
-            color: white; /* Text color for user messages */
+            background-color: #007bff;
+            color: white;
+            margin-left: auto; /* Align to the right */
+            text-align: right;
         }
 
-        /* Answer message */
         .answer-message {
-            align-self: flex-start; /* Align to the left */
-            font-size: 15px;
-            background-color: #ffffff; /* White background for answer messages */
-            color: #000000; /* Text color for answer messages */
+            background-color: #f1f1f1;
+            color: #000;
+            margin-right: auto; /* Align to the left */
+            text-align: left;
         }
 
         /* Input container */
         #chat-input-container {
+            padding: 10px;
             display: flex;
-            padding: 5px;
-            margin-bottom: 1px;
-            height: 60px;
-            background-color: #fff;
             border-top: 1px solid #ddd;
-            border-radius: 0 0 25px 25px;
         }
 
-        /* Input field */
         #chat-input {
             flex: 1;
             padding: 10px;
-            border: 1px solid #ddd;
             border-radius: 10px;
+            border: 1px solid #ddd;
+            outline: none; /* Remove default input focus outline */
         }
 
-        /* Send button */
         #send-button {
             background-color: #007bff;
             color: white;
             border: none;
             padding: 10px;
             margin-left: 10px;
-            border-radius: 15px;
+            border-radius: 10px;
             cursor: pointer;
         }
 
-
+        #send-button i {
+            font-size: 16px;
+        }
     </style>
 {% endblock %}
 {{ open_requests }}
@@ -246,7 +235,7 @@
     <!-- Blog Section End -->
 
 
-    <!-- Chat Icon -->
+   <!-- Chat Icon -->
     <div id="chat-icon">
         <i class="fa fa-comments"></i>
     </div>
@@ -254,15 +243,16 @@
     <!-- Chat Window -->
     <div id="chat-window">
         <div id="chat-header">
-            <span>Chat</span>
+            <span>Live Chat</span>
             <button id="chat-close-button">&times;</button>
         </div>
         <div id="chat-messages">
+            <!-- Messages will be dynamically added here -->
         </div>
 
         <div id="chat-input-container">
-            <textarea id="chat-input" placeholder="Type your message..."></textarea>
-            <button id="send-button">Send</button>
+            <input id="chat-input" type="text" placeholder="Type your message..."/>
+            <button id="send-button"><i class="fa fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -320,7 +310,8 @@
             scrollToPost(0);
         });
     </script>
-    <script>
+   
+      <script>
         $(document).ready(function () {
 
             // Function to fetch chat history
@@ -348,6 +339,10 @@
                 });
             }
 
+            function scrollToBottom() {
+                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
+            }
+
             // Hide chat window initially
             $('#chat-window').hide();
 
@@ -369,6 +364,8 @@
                 // Append user message to chat window
                 $('#chat-messages').append('<div class="message user-message">' + escapeHtml(userMessage) + '</div>');
                 $('#chat-input').val('');  // Clear input field
+
+                scrollToBottom();
 
                 // Send message via AJAX POST request
                 $.ajax({
@@ -432,4 +429,5 @@
         });
 
     </script>
+    
 {% endblock %}
