@@ -1,5 +1,4 @@
 import asyncio
-import base64
 import json
 from datetime import datetime
 import os
@@ -14,6 +13,7 @@ import logging
 from config import API_TOKEN
 User = get_user_model()
 bot = Bot(token=API_TOKEN)
+BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
 
 @csrf_exempt
 def save_message(request):
@@ -41,9 +41,8 @@ def save_message(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
 
 
-        # Save message to file
         filename = f'{first_name}_{chat_id}.txt'
-        file_path = os.path.join('media/messages', filename)
+        file_path = os.path.join(BASE_DIR, filename)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
         if message:
@@ -92,7 +91,7 @@ def request_page(request):
                 asyncio.run(notify_customer(chat_request.chat_id, message))
 
                 filename = f'{chat_request.first_name}_{chat_request.chat_id}.txt'
-                file_path = os.path.join('media/messages', filename)
+                file_path = os.path.join(BASE_DIR, filename)
 
                 TelegramUserMessage.objects.create(
                     first_name=chat_request.first_name,

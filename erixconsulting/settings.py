@@ -108,10 +108,10 @@ WSGI_APPLICATION = 'erixconsulting.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Mbek2001$default',
-        'USER': 'Mbek2001',
-        'PASSWORD': 'erixconsulting',
-        'HOST': 'Mbek2001.mysql.pythonanywhere-services.com',
+        'NAME': 'tuya$erixconsulting',
+        'USER': 'tuya',
+        'PASSWORD': 'tuyadatabases',
+        'HOST': 'tuya.mysql.pythonanywhere-services.com',
         'PORT': '3306',
     }
 }

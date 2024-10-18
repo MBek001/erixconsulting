@@ -1,0 +1,10 @@
+customer: Manga prava kerak
+created_at: 2024-10-15 23:47:55.338623
+assistant: Салом. 
+created_at: 2024-10-15 23:53:47.793722
+customer: Assalomu Alaikum
+created_at: 2024-10-15 23:53:55.079251
+assistant: Сизга қандай ёрдам керак.
+created_at: 2024-10-15 23:54:07.995303
+file: /home/tuya/erixconsulting/media/messages/Muhammad Ali_5836341412/photo_AgACAgEAAxkBAAIDwGcPAAHnch1jcDE_qG22AAFOPGFKju8AAu6sMRtXg3hElR3tLjKObqgBAAMCAAN5AAM2BA.jpg
+created_at: 2024-10-15 23:55:20.462985
