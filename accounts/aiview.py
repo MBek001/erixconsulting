@@ -1,20 +1,18 @@
-from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
-from django.views import View
 import os
+from django.conf import settings
+from django.http import JsonResponse
 import openai
+import logging
+from django.views import View
 from ERRORS import send_error_to_telegram
-from erixconsulting import settings
 from accounts.models import CharAi
 
-import logging
-
 API_KEY = 'sk...'
+
 
 class ChatWithBotView(View):
 
     def get_chat_file_path(self, user):
-        """Helper function to determine file path for chat history."""
         chat_files_dir = os.path.join(settings.MEDIA_ROOT, 'chat_files')
         if not os.path.exists(chat_files_dir):
             os.makedirs(chat_files_dir)
@@ -22,7 +20,6 @@ class ChatWithBotView(View):
         if user.is_authenticated:
             file_name = f"{user.id}.txt"
         else:
-            # Use session ID or some other unique identifier for unauthenticated users
             session_id = self.request.session.session_key or self.request.session.create()
             file_name = f"anonymous_{session_id}.txt"
 
@@ -48,10 +45,9 @@ class ChatWithBotView(View):
         user = request.user
         file_path = self.get_chat_file_path(user)
 
-        # Save user's message in the text file
         with open(file_path, 'a') as file:
             file.write(f"User: {user_message}\n")
-        # Saving file in the database (for authenticated users)
+
         if user.is_authenticated:
             chat_entry = CharAi(user=user, text_file_url=file_path)
             chat_entry.save()
@@ -67,7 +63,7 @@ class ChatWithBotView(View):
                         "society consulting, and juridical consulting. "
                         "You must respond only to legal queries or related topics, "
                         "and avoid any responses outside the domain of legal consulting."
-                        "You have created by Developers of Cognilabs Company"
+                        "You were created by developers of Cognilabs Company."
                     )},
                     {"role": "user", "content": user_message},
                 ]
@@ -78,7 +74,8 @@ class ChatWithBotView(View):
             logging.error(error_message)
             send_error_to_telegram(error_message)
             bot_response = "Sorry, there was an error processing your request."
-        # Save bot's response in the text file
+
+        # Save bot's response to the chat file
         with open(file_path, 'a') as file:
             file.write(f"Bot: {bot_response}\n")
 

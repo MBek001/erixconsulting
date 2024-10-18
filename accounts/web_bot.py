@@ -1,11 +1,11 @@
 import asyncio
-import json
 import os
 import logging
 import shutil
 from datetime import datetime
 from django.http import JsonResponse
 from django.utils import timezone
+from erixconsulting.settings import MEDIA_ROOT
 
 from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory
 import requests
@@ -16,10 +16,12 @@ from django.utils.timezone import now
 from django.views.decorators.csrf import csrf_exempt
 
 from accounts.request import notify_customer
-from erixconsulting import settings
 
-TELEGRAM_API_URL ='https://api.telegram.org/bot7925201164:AAH_9eHCfFIxPv6SaivvSoBY9SVUB0LFF3g/sendMessage'
-CHAT_ID ='497640654'
+# Set the BASE_DIR for messages
+BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
+
+TELEGRAM_API_URL = 'https://api.telegram.org/bot7925201164:AAH_9eHCfFIxPv6SaivvSoBY9SVUB0LFF3g/sendMessage'
+CHAT_ID = '497640654'
 
 logger = logging.getLogger(__name__)
 
@@ -28,11 +30,10 @@ def chat_page(request):
     messages = []
     users = TelegramUserMessage.objects.filter(staff=request.user).values('first_name', 'chat_id').distinct()
 
-    # Fetch messages assigned to the logged-in staff member
     staff_messages = TelegramUserMessage.objects.filter(staff=request.user)
 
     for chat in staff_messages:
-        file_path = os.path.join(settings.MEDIA_ROOT, chat.message_file.name)
+        file_path = os.path.join(BASE_DIR, chat.message_file.name)
         if os.path.exists(file_path):
             try:
                 with open(file_path, 'r') as file:
@@ -54,9 +55,6 @@ def chat_page(request):
 
 @csrf_exempt
 def send_message_to_bot(request):
-    """
-    Sends a message to the Telegram bot and saves it to the corresponding chat file as 'assistant'.
-    """
     if request.method == 'POST':
         message_text = request.POST.get('message')
         chat_id = request.POST.get('chat_id')
@@ -84,18 +82,14 @@ def send_message_to_bot(request):
                             query = TelegramUserMessage.objects.filter(first_name=first_name)
                             query.update(is_read=True)
                         except Exception as e:
-                            # Log an error instead of using message.error
                             logger.error(f"Database update error: {str(e)}")
                             return JsonResponse({'status': 'error', 'message': 'An error occurred while updating the message status.'}, status=500)
 
-                        # Save the message to the file with the 'assistant' label
                         filename = f'{first_name}_{chat_id}.txt'
-                        file_path = os.path.join('media/messages', filename)
+                        file_path = os.path.join(BASE_DIR, filename)
 
-                        # Create the 'messages' directory if it doesn't exist
                         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
-                        # Append the assistant message to the file
                         with open(file_path, 'a') as file:
                             file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()}\n')
 
@@ -117,12 +111,13 @@ def send_message_to_bot(request):
 
     return JsonResponse({'status': 'invalid method'}, status=405)
 
+
 def fetch_messages(request):
     chat_id = request.GET.get('chat_id')
     first_name = request.GET.get('first_name')
 
     filename = f"{first_name}_{chat_id}.txt"
-    file_path = os.path.join('media/messages', filename)
+    file_path = os.path.join(BASE_DIR, filename)
 
     if not os.path.exists(file_path):
         logger.error(f"Chat file does not exist for {chat_id}")
@@ -151,14 +146,15 @@ def fetch_messages(request):
 
                 try:
                     full_created_at = datetime.strptime(created_at_raw, '%Y-%m-%d %H:%M:%S.%f')
-                    created_at_display = full_created_at.strftime('%Y-%m-%d %H:%M')  # Display H:M only
+                    created_at_display = full_created_at.strftime('%Y-%m-%d %H:%M')
                 except ValueError:
                     created_at_display = created_at_raw
                     full_created_at = None
 
-                if message_text.startswith('media/'):
+                if message_text.startswith('/home/tuya/erixconsulting/media/'):
+                    relative_path = message_text.replace('/home/tuya/erixconsulting/media/', '')
                     files.append({
-                        "file_path": message_text,
+                        "file_path": relative_path,
                         "created_at": created_at_display,
                         "full_created_at": created_at_raw
                     })
@@ -178,6 +174,7 @@ def fetch_messages(request):
         return JsonResponse({"error": f"Error reading file: {str(e)}"}, status=500)
 
     return JsonResponse({"messages": messages, "files": files})
+
 
 
 def fetch_users(request):
@@ -204,12 +201,12 @@ def mark_messages_as_read(request):
         first_name = request.POST.get('first_name')
 
         if chat_id and first_name:
-            updated_count = TelegramUserMessage.objects.filter(chat_id=chat_id, first_name=first_name,
-                                                               is_read=False).update(is_read=True)
+            updated_count = TelegramUserMessage.objects.filter(chat_id=chat_id, first_name=first_name, is_read=False).update(is_read=True)
             return JsonResponse({'success': True, 'updated_count': updated_count})
         return JsonResponse({'success': False, 'error': 'Missing chat_id or first_name'}, status=400)
 
     return JsonResponse({'success': False, 'error': 'Invalid method'}, status=405)
+
 
 @csrf_exempt
 def close_chat(request):
@@ -222,8 +219,7 @@ def close_chat(request):
                     chat_id = request.POST.get('chat_id')
                     first_name = request.POST.get('first_name')
 
-                    # send to tg bot customer
-                    message = "Your chat is closed. Please press /start button for new request !"
+                    message = "Your chat is closed. Please press /start button for new request!"
                     asyncio.run(notify_customer(chat_id, message))
 
                     request_user = ChatRequest.objects.filter(chat_id=chat_id).first()
@@ -231,31 +227,26 @@ def close_chat(request):
                     if not request_user:
                         return JsonResponse({'success': False, 'error': 'Chat request not found.'}, status=404)
 
-                    # conversation fayllarni o'chirish
                     filename = f'{first_name}_{chat_id}.txt'
-                    file_path = os.path.join('media/messages', filename)
+                    file_path = os.path.join(BASE_DIR, filename)
                     if os.path.exists(file_path):
                         os.remove(file_path)
-                    #saqlangan fayllar direktoriyasini o'chirish
-                    user_directory = f'media/messages/{first_name}_{chat_id}'
+
+                    user_directory = os.path.join(BASE_DIR, f'{first_name}_{chat_id}')
                     if os.path.exists(user_directory):
                         shutil.rmtree(user_directory)
 
-                    # Add to request history table
                     RequestHistory.objects.create(
                         chat_id=chat_id,
                         first_name=request_user.first_name,
                         username=request_user.username,
-                        reason=request_user.reason,  # Use 'reason', not 'request'
+                        reason=request_user.reason,
                         staff_id=request.user.id,
                         created_at=request_user.created_at,
                         closed_at=timezone.now(),
                     )
 
-                    # Delete from telegramusermessage table
-                    messages.filter(chat_id=chat_id).delete()
-
-                    # Delete customer from ChatRequest table
+                    TelegramUserMessage.objects.filter(chat_id=chat_id).delete()
                     ChatRequest.objects.filter(chat_id=chat_id).delete()
 
                     return JsonResponse({'success': True}, status=200)
@@ -263,9 +254,9 @@ def close_chat(request):
                     return JsonResponse({'success': False, 'error': 'No open messages found for the current staff.'}, status=404)
 
             except Exception as e:
+                logger.error(f"Error occurred while closing the chat: {str(e)}")
                 return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
         return JsonResponse({'success': False, 'error': 'User not authenticated or not staff'}, status=403)
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
-

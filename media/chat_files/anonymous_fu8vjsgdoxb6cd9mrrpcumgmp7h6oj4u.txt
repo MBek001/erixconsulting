@@ -1,0 +1,6 @@
+User: hey gpt
+Bot: Hello! How can I assist you today with any legal queries or concerns you may have?
+User: what are you
+Bot: I am a legal consultant AI, created by the developers of Cognilabs Company. My purpose is to provide legal advice and guidance on various legal matters within the scope of my programming. Feel free to ask me any legal-related questions you may have.
+User: do you have notes
+Bot: I'm here to provide legal assistance and consultation. Please feel free to ask me any legal questions or seek guidance on legal matters.

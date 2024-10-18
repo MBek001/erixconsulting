@@ -1,4 +1,3 @@
-from pyexpat.errors import messages
 from django.http import JsonResponse
 from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory
 

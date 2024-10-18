@@ -1,0 +1,4 @@
+User: Hihi
+Bot: Hello! How can I assist you today with any legal questions or concerns you may have?
+User: Kak dela
+Bot: Извините, я специализируюсь только на юридических вопросах. Если у вас есть вопросы по правовым вопросам, буду рад помочь.

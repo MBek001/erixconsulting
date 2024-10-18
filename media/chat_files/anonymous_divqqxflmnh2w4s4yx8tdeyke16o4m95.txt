@@ -1,0 +1,6 @@
+User: hi
+Bot: Hello! How can I assist you today with any legal questions or concerns you have?
+User: you have write a code?
+Bot: I'm here to provide legal consulting and advice on legal matters. If you have any legal questions or need assistance with legal information, feel free to ask.
+User: what is consulting
+Bot: Consulting is a professional practice where experts provide advice and guidance to individuals, businesses, or organizations in a particular field or industry. Consultants provide their expertise to help clients solve problems, improve performance, or achieve specific goals. In legal consulting, consultants provide guidance and advice on legal matters, helping clients understand relevant laws and regulations, as well as assisting with legal strategies and compliance issues.
