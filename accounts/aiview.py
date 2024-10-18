@@ -7,8 +7,8 @@ from django.views import View
 from ERRORS import send_error_to_telegram
 from accounts.models import CharAi
 
+API_KEY = 'sk...'
 
-API_KEY = 'sk-s7jTdw-MiBdud9rKany49YpkR4ZYMCZPliD4BXOuflT3BlbkFJdr6YhCk9u8FlK_s56f56IScJZbZqfQog3lld8zMIkA'
 
 class ChatWithBotView(View):
 
