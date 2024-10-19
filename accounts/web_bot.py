@@ -2,34 +2,28 @@ import asyncio
 import os
 import logging
 import shutil
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.utils import timezone
-from erixconsulting.settings import MEDIA_ROOT
-
+from flask.cli import load_dotenv
+from ERRORS import send_error_to_telegram
+from accounts.message_sending import notify_customer
 from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory
 import requests
-
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render, get_object_or_404
-from django.utils.timezone import now
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+load_dotenv()
 
-from accounts.request import notify_customer
 
-# Set the BASE_DIR for messages
 BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
-
-TELEGRAM_API_URL = 'https://api.telegram.org/bot7925201164:AAH_9eHCfFIxPv6SaivvSoBY9SVUB0LFF3g/sendMessage'
-CHAT_ID = '497640654'
-
+TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
 logger = logging.getLogger(__name__)
 
 @user_passes_test(lambda u: u.is_staff, login_url='/login/')
 def chat_page(request):
     messages = []
     users = TelegramUserMessage.objects.filter(staff=request.user).values('first_name', 'chat_id').distinct()
-
     staff_messages = TelegramUserMessage.objects.filter(staff=request.user)
 
     for chat in staff_messages:
@@ -69,15 +63,11 @@ def send_message_to_bot(request):
             logger.debug(f"Sending message to Telegram: {payload}")
             try:
                 response = requests.post(TELEGRAM_API_URL, json=payload)
-                logger.debug(f"Telegram response status code: {response.status_code}")
-                logger.debug(f"Telegram response text: {response.text}")
-
                 if response.status_code == 200:
                     response_data = response.json()
                     logger.debug(f"Response data: {response_data}")
 
                     if response_data.get('ok'):
-                        # Update the message status
                         try:
                             query = TelegramUserMessage.objects.filter(first_name=first_name)
                             query.update(is_read=True)
@@ -91,8 +81,7 @@ def send_message_to_bot(request):
                         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
                         with open(file_path, 'a') as file:
-                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()}\n')
-
+                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
                         logger.info(f"Message saved to file: {file_path}")
                         return JsonResponse({'status': 'success'}, status=200)
                     else:
@@ -103,6 +92,7 @@ def send_message_to_bot(request):
                     logger.error(f"Failed to send message to Telegram bot: {response.text}")
                     return render(request, 'chat_page.html')
             except Exception as e:
+                send_error_to_telegram(e)
                 logger.error(f"Exception occurred while sending message: {str(e)}")
                 return render(request, 'chat_page.html')
         else:
@@ -125,7 +115,6 @@ def fetch_messages(request):
 
     messages = []
     files = []
-
     try:
         with open(file_path, 'r') as file:
             lines = file.readlines()
@@ -168,7 +157,6 @@ def fetch_messages(request):
                         "full_created_at": created_at_raw,
                         "is_assistant": is_assistant,
                     })
-
     except Exception as e:
         logger.error(f"Error reading file: {str(e)}")
         return JsonResponse({"error": f"Error reading file: {str(e)}"}, status=500)
@@ -219,8 +207,9 @@ def close_chat(request):
                     chat_id = request.POST.get('chat_id')
                     first_name = request.POST.get('first_name')
 
-                    message = "Your chat is closed. Please press /start button for new request!"
-                    asyncio.run(notify_customer(chat_id, message))
+                    # Notify the customer about the closure
+                    message = "Chat mutaxassis tomonidan yopildi iltimos qayta ariza qoldirish uchun /start tugmasini bosing"
+                    notify_customer(chat_id, message)
 
                     request_user = ChatRequest.objects.filter(chat_id=chat_id).first()
 

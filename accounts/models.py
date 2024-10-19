@@ -147,7 +147,7 @@ class TelegramUserMessage(models.Model):
     chat_id = models.CharField(max_length=100, null=True, blank=True)
     message_file = models.FileField(upload_to='messages/')
     is_read = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=False,blank=True,null=True)
     staff = models.ForeignKey(User, null=True, blank=True, on_delete=CASCADE)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='open')
 
@@ -178,20 +178,10 @@ class RequestHistory(models.Model):
     chat_id = models.CharField(max_length=100, null=True, blank=True)
     reason = models.CharField(max_length=100, null=True, blank=True)
     staff = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name='assigned_chats_history')
-    created_at = models.DateTimeField(datetime,blank=True,null=True)
-    closed_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
+    closed_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return f"{self.first_name or self.username} ({self.chat_id})"
 
-
-class ChatFile(models.Model):
-    chat_id = models.CharField(max_length=255)
-    first_name = models.CharField(max_length=100, null=True, blank=True)
-    username = models.CharField(max_length=100, null=True, blank=True)
-    file = models.FileField(upload_to='chat_files_2/')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.username} - {self.chat_id} - {self.file.name}"
 

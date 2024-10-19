@@ -12,6 +12,55 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
     <style>
+        .message-container {
+            position: absolute;
+            top: 46%; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            z-index: 1000;
+            text-align: center;
+            pointer-events: none; /* Prevent interactions with the message (e.g., clicks) */
+        }
+
+        .message-box {
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+            pointer-events: all; /* Allow interaction with the message itself */
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error, .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+
         .table th, .table td {
             vertical-align: middle;
         }
@@ -39,6 +88,17 @@
 {% endblock %}
 
 {% block content %}
+    <!-- Display messages -->
+    {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} message-box">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <div class="container mt-5">
         <h2 class="text-center mb-4">Request Page</h2>
 
@@ -50,7 +110,6 @@
                     <th>Username</th>
                     <th>Reason</th>
                     <th>Opened</th>
-                    <th>Closed</th>
                     <th>Assigned Staff</th>
                 </tr>
                 </thead>
@@ -61,13 +120,11 @@
                         <td>{{ request.username }}</td>
                         <td>{{ request.reason }}</td>
                         <td>{{ request.created_at }}</td>
-                        <td>{{ request.closed_at }}</td>
                         <td>
                             {% if request.staff_id %}
                                 <span class="assigned">Assigned to: <span
                                         class="staff-name">{{ request.staff_id.first_name }} {{ request.staff_id.last_name }}</span></span>
                             {% else %}
-
                                 <form method="POST" class="assign-form" data-request-id="{{ request.id }}">
                                     {% csrf_token %}
                                     <select name="staff_id" class="form-control" required>
@@ -86,7 +143,44 @@
             </table>
         </div>
         <div class="table-responsive mt-5">
-            <h3>Closed Requests History</h3>
+            <h3>Delayed Requests</h3>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>Customer Name</th>
+                    <th>Username</th>
+                    <th>Assigned to</th>
+                    <th>Created at</th>
+                    <th>Send to Channel</th> <!-- Add a column for the individual button -->
+                </tr>
+                </thead>
+                <tbody>
+                {% for delayed in delayed_requests %}
+                    <tr>
+                        <td>{{ delayed.first_name }}</td>
+                        <td>{{ delayed.username }}</td>
+                        <td>{{ delayed.staff.first_name }} {{ delayed.staff.last_name }}</td>
+                        <td>{{ delayed.created_at }}</td>
+                        <td>
+                            <!-- Add individual send button -->
+                            <button type="button" class="btn btn-primary send-to-channel-btn"
+                                    data-delayed-id="{{ delayed.id }}">Send to Channel
+                            </button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <form method="POST" id="sendToChannelForm" style="display: none;">
+                {% csrf_token %}
+                <input type="hidden" name="delayed_request_id" id="delayedRequestId">
+                <input type="hidden" name="send_to_channel" value="1">
+            </form>
+        </div>
+
+        <div class="table-responsive mt-5">
+            <h3>Closed Requests</h3>
             <table class="table table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -128,6 +222,29 @@
 
     <!-- Template JavaScript -->
     <script src="{% static 'js/main.js' %}"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageBoxes = document.querySelectorAll('.message-box');
+
+            messageBoxes.forEach(box => {
+                setTimeout(() => {
+                    box.style.display = 'none';
+                }, 5000);  // Message will disappear after 5 seconds
+            });
+        });
+        // Handle Send to Channel button click for each delayed request
+        const sendButtons = document.querySelectorAll('.send-to-channel-btn');
+        sendButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const delayedRequestId = this.dataset.delayedId;
+
+                // Set the hidden input value and submit the form
+                document.getElementById('delayedRequestId').value = delayedRequestId;
+                document.getElementById('sendToChannelForm').submit();
+            });
+        });
+    </script>
     <script>
         const forms = document.querySelectorAll('.assign-form');
         forms.forEach(form => {

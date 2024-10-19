@@ -252,18 +252,17 @@
     <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
     <script type="text/javascript">
-    var MEDIA_URL = '{{ MEDIA_URL }}';
+        var MEDIA_URL = '{{ MEDIA_URL }}';
     </script>
-
-
+    
     <script>
         $(document).ready(function () {
             $.ajaxSetup({
-        beforeSend: function(xhr, settings) {
-            if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) {
-                xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-            }
-            }
+                beforeSend: function (xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/.test(settings.type)) {
+                        xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                    }
+                }
             });
             let selectedChatId = null;
             let selectedFirstName = null;
@@ -363,64 +362,59 @@
             });
 
 
-function fetchMessages() {
-    if (!selectedChatId || !selectedFirstName) return;
+            function fetchMessages() {
+                if (!selectedChatId || !selectedFirstName) return;
 
-    $.ajax({
-        url: "{% url 'fetch_messages' %}",
-        type: "GET",
-        data: {
-            chat_id: selectedChatId,
-            first_name: selectedFirstName
-        },
-        success: function (response) {
-            const chatBox = $('.chat-box');
-            chatBox.empty();  // Clear previous messages
+                $.ajax({
+                    url: "{% url 'fetch_messages' %}",
+                    type: "GET",
+                    data: {
+                        chat_id: selectedChatId,
+                        first_name: selectedFirstName
+                    },
+                    success: function (response) {
+                        const chatBox = $('.chat-box');
+                        chatBox.empty();  // Clear previous messages
 
-            // Combine messages and files into one array
-            let combinedMessages = [...response.messages, ...response.files];
+                        // Combine messages and files into one array
+                        let combinedMessages = [...response.messages, ...response.files];
 
-            // Sort combined array by full_created_at timestamp (including seconds)
-            combinedMessages.sort((a, b) => new Date(a.full_created_at) - new Date(b.full_created_at));
+                        // Sort combined array by full_created_at timestamp (including seconds)
+                        combinedMessages.sort((a, b) => new Date(a.full_created_at) - new Date(b.full_created_at));
 
-            // Append messages and files in sorted order
-            combinedMessages.forEach(item => {
-                if (item.file_path) {
-                    // Construct the file URL using MEDIA_URL and the relative file path
-                    const fileUrl = `/media/${item.file_path}`;  // Use the relative path
+                        // Append messages and files in sorted order
+                        combinedMessages.forEach(item => {
+                            if (item.file_path) {
+                                // Construct the file URL using MEDIA_URL and the relative file path
+                                const fileUrl = `/media/${item.file_path}`;  // Use the relative path
 
-                    chatBox.append(`
+                                chatBox.append(`
                         <div class="message">
                             <a href="${fileUrl}" class="file-link" target="_blank">File</a> <!-- Clickable link with "File" text -->
                             <div class="timestamp">${item.created_at}</div>  <!-- Display H:M only -->
                         </div>
                     `);
-                } else {
-                    // Render text message
-                    const messageClass = item.is_assistant ? 'assistant' : 'customer';
-                    chatBox.append(`
+                            } else {
+                                // Render text message
+                                const messageClass = item.is_assistant ? 'assistant' : 'customer';
+                                chatBox.append(`
                         <div class="message ${messageClass}">
                             <div class="firstname">${item.first_name}</div>
                             <div class="text">${item.message_text}</div>
                             <div class="timestamp">${item.created_at}</div>  <!-- Display H:M only -->
                         </div>
                     `);
-                }
-            });
+                            }
+                        });
 
-            chatBox.scrollTop(chatBox[0].scrollHeight); // Auto-scroll to bottom
-        },
-        error: function (xhr, status, error) {
-            console.error("Error fetching messages:", error);
-        }
-    });
-}
-
-
-
-
-
-            // Function to mark messages as read
+                        chatBox.scrollTop(chatBox[0].scrollHeight); // Auto-scroll to bottom
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching messages:", error);
+                    }
+                });
+            }
+            
             function markMessagesAsRead() {
                 if (selectedChatId === null || selectedFirstName === null) return;
 

@@ -13,9 +13,9 @@
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
 {% endblock %}
-
+ {{ open_requests }} {{ has_unread_messages }}
 {% block content %}
-    {{ open_requests }} {{ has_unread_messages }}
+   
     <!-- Display messages -->
 {% if messages %}
     <div class="messages">

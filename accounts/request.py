@@ -1,16 +1,19 @@
-import asyncio
 import json
-from datetime import datetime
-import os
-from aiogram import Bot
+from datetime import datetime, timedelta
+from django.contrib import messages
+
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
-from django.http import JsonResponse
-from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory, ChatFile
+from django.http import JsonResponse, HttpResponseRedirect
+from django.utils.timezone import now
+
+from accounts.message_sending import *
+from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 import logging
 from config import API_TOKEN
+
 User = get_user_model()
 bot = Bot(token=API_TOKEN)
 BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
@@ -40,17 +43,17 @@ def save_message(request):
             logging.error('Invalid data received')
             return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
 
-
         filename = f'{first_name}_{chat_id}.txt'
         file_path = os.path.join(BASE_DIR, filename)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
 
         if message:
             with open(file_path, 'a') as file_handle:
-                file_handle.write(f'customer: {message}\ncreated_at: {datetime.now()}\n')
+                file_handle.write(f'customer: {message}\ncreated_at: {datetime.utcnow() + timedelta(hours=5)}\n')
         if file:
             with open(file_path, 'a') as file_handle:
                 file_handle.write(f'file: {file}\ncreated_at: {datetime.now()}\n')
+
         TelegramUserMessage.objects.filter(chat_id=chat_id, is_read=True).update(is_read=False)
         existing_request = ChatRequest.objects.filter(chat_id=chat_id).first()
         if not existing_request:
@@ -74,7 +77,33 @@ def request_page(request):
     staff_members = User.objects.filter(is_staff=True)
     request_history = RequestHistory.objects.all()
 
-    if request.method == 'POST':
+    three_days_ago = now() - timedelta(days=3)
+    delayed_requests = TelegramUserMessage.objects.filter(created_at__lt=three_days_ago, status='open')
+
+    if request.method == 'POST' and 'send_to_channel' in request.POST:
+        delayed_request_id = request.POST.get('delayed_request_id')
+        if delayed_request_id:
+            delayed_request = TelegramUserMessage.objects.filter(id=delayed_request_id).first()
+
+            if delayed_request:
+                chat_request = ChatRequest.objects.filter(chat_id=delayed_request.chat_id).first()
+                staff_member = delayed_request.staff
+
+                if chat_request and staff_member:
+                    channel_message = (
+                        f"#DelayedRequest\n"
+                        f"Customer: {chat_request.first_name} \n"
+                        f"Assigned to: {staff_member.first_name} {staff_member.last_name}\n"
+                        f"Created at: {delayed_request.created_at.strftime('%Y-%m-%d %H:%M:%S')}"
+                    )
+                    send_info_to_channel(channel_message)
+                    messages.success(request, 'Message has been sent successfully.')
+                return HttpResponseRedirect(request.path_info)
+            return JsonResponse({'status': 'error', 'message': 'Delayed request not found.'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'No delayed request ID provided.'})
+
+    if request.method == 'POST' and 'request_id' in request.POST and 'staff_id' in request.POST:
         request_id = request.POST.get('request_id')
         staff_id = request.POST.get('staff_id')
 
@@ -82,13 +111,12 @@ def request_page(request):
             try:
                 chat_request = ChatRequest.objects.get(id=request_id)
                 staff_member = User.objects.get(id=staff_id)
-
                 chat_request.staff_id = staff_member
                 chat_request.status = 'assigned'
                 chat_request.save()
 
-                message = f"You have been connected to assistant {staff_member.first_name} {staff_member.last_name}."
-                asyncio.run(notify_customer(chat_request.chat_id, message))
+                message = f"Sizga {staff_member.first_name} {staff_member.last_name} ulandi murojat qilishingiz mumkin."
+                notify_customer(chat_request.chat_id, message)
 
                 filename = f'{chat_request.first_name}_{chat_request.chat_id}.txt'
                 file_path = os.path.join(BASE_DIR, filename)
@@ -101,21 +129,26 @@ def request_page(request):
                     staff=staff_member,
                     status='open'
                 )
+
+                channel_message2 = (
+                    f"#NewAssignment\n"
+                    f"Customer: {chat_request.first_name} \n"
+                    f"Assigned to: {staff_member.first_name} {staff_member.last_name}\n"
+                    f"Please do not forget to contact your customer!"
+                )
+                send_info_to_channel(channel_message2)
+
                 return JsonResponse(
-                    {'status': 'success', 'assigned_to': f'{staff_member.first_name} {staff_member.last_name}'})
+                    {'status': 'success', 'assigned_to': f'{staff_member.first_name} {staff_member.last_name}'}
+                )
             except ChatRequest.DoesNotExist:
                 return JsonResponse({'status': 'error', 'message': 'Chat request not found.'}, status=404)
             except User.DoesNotExist:
                 return JsonResponse({'status': 'error', 'message': 'Staff member not found.'}, status=404)
-    return render(request, 'requests.html', {'requests': requests, 'staff_members': staff_members, 'request_history': request_history})
 
-
-async def notify_customer(chat_id, message):
-    """Send notification message to the customer"""
-    try:
-        await bot.send_message(chat_id, message)
-    except Exception as e:
-        logging.error(f"Error sending notification to customer: {e}")
-
-
-
+    return render(request, 'requests.html', {
+        'requests': requests,
+        'staff_members': staff_members,
+        'request_history': request_history,
+        'delayed_requests': delayed_requests
+    })

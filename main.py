@@ -8,17 +8,20 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message
-
+from dotenv import load_dotenv
 from ERRORS import send_error_to_telegram
 from config import *
 
+load_dotenv()
+
 logging.basicConfig(level=logging.INFO)
 
+API_TOKEN=os.getenv('BOT_TOKEN')
 bot = Bot(token=API_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
 
-BASE_DIR = '/home/tuya/erixconsulting/media/messages/'  # Change 'tuya' to your actual username
+BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
 
 class Form(StatesGroup):
     waiting_for_reason = State()
@@ -67,11 +70,24 @@ async def handle_inline_buttons(callback: types.CallbackQuery, state: FSMContext
             await state.set_state(Form.waiting_for_reason)
     elif callback.data == 'question_answer':
         law_info = (
-            "O'zbekiston Respublikasining qonunlari:\n"
-            "1. O'zbekiston Respublikasining Fuqarolik Kodeksi.\n"
-            "2. O'zbekiston Respublikasining Jinoyat Kodeksi.\n"
-            "3. O'zbekiston Respublikasining Ma'muriy Kodeksi.\n"
-            "4. O'zbekiston Respublikasining Mehnat Kodeksi.\n"
+            "O'zbekiston qonunlari bo'yicha tez-tez so'raladigan savollar:\n\n"
+
+            "1. **Fuqarolik Kodeksi**:\n"
+            "Savol: Kimlar fuqarolik huquqlaridan foydalanishi mumkin?\n"
+            "Javob: Fuqarolar, yuridik shaxslar va davlat fuqarolik huquqlaridan foydalanishlari mumkin.\n\n"
+
+            "2. **Jinoyat Kodeksi**:\n"
+            "Savol: Jinoyat javobgarligi necha yoshdan boshlanadi?\n"
+            "Javob: Jinoyat javobgarligi umumiy holatda 16 yoshdan boshlanadi, ammo ba'zi jinoyatlar uchun 14 yoshdan.\n\n"
+
+            "3. **Ma'muriy Kodeks**:\n"
+            "Savol: Ma'muriy huquqbuzarlik uchun qanday jazolar beriladi?\n"
+            "Javob: Ma'muriy javobgarlik jarima, ogohlantirish yoki boshqa choralarni o'z ichiga olishi mumkin.\n\n"
+
+            "4. **Mehnat Kodeksi**:\n"
+            "Savol: Yoshi nechadan ishlashga ruxsat etiladi?\n"
+            "Javob: O'zbekistonda 16 yoshdan ishlashga ruxsat beriladi, lekin 15 yoshdan qisman ishlash mumkin.\n\n"
+
             "Savollaringiz bo'lsa, iltimos, ularni yozing."
         )
         await callback.message.reply(law_info)
@@ -116,10 +132,7 @@ async def save_photo(message: types.Message, reason: str, state: FSMContext):
         photo_path = os.path.join(user_directory, f"photo_{photo_id}.jpg")
 
         await bot.download_file(photo_info.file_path, photo_path)
-        logging.info(f"Photo saved at: {photo_path}")
-
         await process_file_to_backend(first_name, username, chat_id, photo_path, reason)
-
         await message.reply("Suratingiz yuborildi va saqlandi. Iltimos, mutaxassis javobini kuting.")
         await state.clear()
     else:
@@ -141,10 +154,7 @@ async def save_video(message: types.Message, reason: str, state: FSMContext):
         video_path = os.path.join(user_directory, f"{message.video.file_name or 'video.mp4'}")
 
         await bot.download_file(video_info.file_path, video_path)
-        logging.info(f"Video saved at: {video_path}")
-
         await process_file_to_backend(first_name, username, chat_id, video_path, reason)
-
         await message.reply("Videongiz yuborildi va saqlandi. Iltimos, mutaxassis javobini kuting.")
         await state.clear()
     else:
@@ -172,12 +182,10 @@ async def save_file(message: types.Message, reason: str, state: FSMContext):
 
         file_info = await bot.get_file(file_id)
 
-        # Define the directory to save the file
         user_directory = os.path.join(BASE_DIR, f'{first_name}_{chat_id}')
         os.makedirs(user_directory, exist_ok=True)
 
         file_path = os.path.join(user_directory, file_name)
-
         await bot.download_file(file_info.file_path, file_path)
         logging.info(f"File saved at: {file_path}")
 
