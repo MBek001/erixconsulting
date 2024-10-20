@@ -16,7 +16,7 @@ load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 
-API_TOKEN=os.getenv('BOT_TOKEN')
+API_TOKEN=BOT_TOKEN
 bot = Bot(token=API_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)

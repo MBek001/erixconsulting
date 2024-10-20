@@ -1,21 +1,22 @@
 import json
+import datetime
 from datetime import datetime, timedelta
 from django.contrib import messages
-
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils.timezone import now
-
 from accounts.message_sending import *
 from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 import logging
-from config import API_TOKEN
+from accounts.message_sending import BOT_TOKEN
+load_dotenv()
+
 
 User = get_user_model()
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=BOT_TOKEN)
 BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
 
 @csrf_exempt
@@ -49,10 +50,10 @@ def save_message(request):
 
         if message:
             with open(file_path, 'a') as file_handle:
-                file_handle.write(f'customer: {message}\ncreated_at: {datetime.utcnow() + timedelta(hours=5)}\n')
+                file_handle.write(f'customer: {message}\n created_at: {datetime.utcnow() + timedelta(hours=5)}\n')
         if file:
             with open(file_path, 'a') as file_handle:
-                file_handle.write(f'file: {file}\ncreated_at: {datetime.now()}\n')
+                file_handle.write(f'file: {file}\n created_at: {datetime.now() + timedelta(hours=5)}\n')
 
         TelegramUserMessage.objects.filter(chat_id=chat_id, is_read=True).update(is_read=False)
         existing_request = ChatRequest.objects.filter(chat_id=chat_id).first()

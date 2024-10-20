@@ -3,13 +3,14 @@ import os
 import requests
 from aiogram import Bot
 from flask.cli import load_dotenv
+from config import *
 
 load_dotenv()
 logger = logging.getLogger(__name__)
 
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-CHANNEL_INFO_BOT = os.getenv('CHANNEL_INFO_BOT')
-INFO_CHANNEL_ID = os.getenv("INFO_CHANNEL_ID")
+BOT_TOKEN = BOT_TOKEN
+CHANNEL_INFO_BOT = CHANNEL_INFO_BOT
+INFO_CHANNEL_ID = INFO_CHANNEL_ID
 
 bot = Bot(token=BOT_TOKEN)
 delayed_bot = Bot(token=CHANNEL_INFO_BOT)

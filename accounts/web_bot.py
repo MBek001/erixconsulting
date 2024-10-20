@@ -14,10 +14,11 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 load_dotenv()
+from config import *
 
 
 BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
-TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
+TELEGRAM_API_URL = TELEGRAM_API_URL
 logger = logging.getLogger(__name__)
 
 @user_passes_test(lambda u: u.is_staff, login_url='/login/')
