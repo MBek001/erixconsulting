@@ -128,6 +128,8 @@
         }
     </style>
 
+
+
 {% endblock %}
 {{ open_requests }} {{ has_unread_messages }}
 
@@ -146,8 +148,12 @@
                                 <div class="col-12 col-lg-6">
                                     <h1 class="display-3 text-dark mb-4 animated slideInDown">The Best Jurisdiction
                                         Begins Here</h1>
-                                    <p class="fs-5 text-body mb-5">Keeping your peace of mind is our priority...</p>
-                                    <a href="{% url 'about' %}" class="btn btn-primary py-3 px-5">More Details</a>
+                                    <p class="fs-5 text-body mb-5">We specialize in
+                                        providing expert legal consultation and services tailored to
+                                        individuals and businesses navigating the complexities of U.S. law.
+                                        Whether you need assistance with corporate formation, immigration,
+                                        compliance, or litigation, our team is dedicated to offering precise,
+                                        reliable, and strategic legal guidance every step of the way.</p>
                                 </div>
                             </div>
                         </div>
@@ -161,8 +167,17 @@
                                 <div class="col-12 col-lg-6">
                                     <h1 class="display-3 text-dark mb-4 animated slideInDown">The Best Jurisdiction
                                         Begins Here</h1>
-                                    <p class="fs-5 text-body mb-5">Keeping your peace of mind is our priority...</p>
-                                    <a href="{% url 'about' %}" class="btn btn-primary py-3 px-5">More Details</a>
+                                    <p class="fs-5 text-body mb-5 text-dar">14 Years of Expertise in U.S. Legal
+                                        Consulting
+                                        With over a decade of experience in legal consulting, we specialize
+                                        in guiding
+                                        clients
+                                        through complex legal processes, offering expert advice on everything from
+                                        business formation to
+                                        immigration,
+                                        tax, and compliance issues. Our extensive knowledge ensures that you're in
+                                        capable hands for
+                                        every legal challenge."</p>>
                                 </div>
                             </div>
                         </div>
@@ -292,123 +307,133 @@
     </div>
     <!-- Features End -->
 
-
-    <!-- Service Start -->
-    <div class="container-xxl py-5">
+    <!-- About Us Section Start -->
+    <div class="about-us container-fluid py-5">
         <div class="container">
-            <div class="text-center mx-auto" style="max-width: 500px;">
-                <h1 class="display-6 mb-5">We Provide professional juridical Services</h1>
-            </div>
-            <div class="row g-4 justify-content-center">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item rounded h-100 p-5">
-                        <div class="d-flex align-items-center ms-n5 mb-4">
-                            <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
-
-                                <img class="img-fluid" src="{% static '/img/icon/icon-10-light.png' %}"
-                                     alt="Icon 10 Light">
-
-
-                            </div>
-                            <h4 class="mb-0">Life</h4>
-                        </div>
-                        <p class="mb-4">Life Insurance is one of the most important ways to provide financial protection
-                            for your family in case of unforeseen circumstances.</p>
-                        <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item rounded h-100 p-5">
-                        <div class="d-flex align-items-center ms-n5 mb-4">
-                            <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
-
-                                <img class="img-fluid" src="{% static '/img/icon/icon-01-light.png' %}"
-                                     alt="Icon 01 Light">
-
-
-                            </div>
-                            <h4 class="mb-0">Health</h4>
-                        </div>
-                        <p class="mb-4">Health Jurisdiction plays a key role in ensuring access to quality medical care
-                            in the event of illness or accidents.</p>
-                        <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item rounded h-100 p-5">
-                        <div class="d-flex align-items-center ms-n5 mb-4">
-                            <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
-
-                                <img class="img-fluid" src="{% static '/img/icon/icon-05-light.png' %}"
-                                     alt="Icon 05 Light">
-
-
-                            </div>
-                            <h4 class="mb-0">House</h4>
-                        </div>
-                        <p class="mb-4">Owning a house or apartment is a big investment that is important to
-                            protect.</p>
-                        <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="service-item rounded h-100 p-5">
-                        <div class="d-flex align-items-center ms-n5 mb-4">
-                            <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
-
-
-                                <img class="img-fluid" src="{% static '/img/icon/icon-08-light.png' %}"
-                                     alt="Icon 08 Light">
-
-
-                            </div>
-                            <h4 class="mb-0">Vehicle</h4>
-                        </div>
-                        <p class="mb-4">Vehicle Jurisdiction is an important part of ensuring road safety and protecting
-                            your car from various risks.</p>
-                        <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="service-item rounded h-100 p-5">
-                        <div class="d-flex align-items-center ms-n5 mb-4">
-                            <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
-
-                                <img class="img-fluid" src="{% static '/img/icon/icon-07-light.png' %}"
-                                     alt="Icon 07 Light">
-
-
-                            </div>
-                            <h4 class="mb-0">Business</h4>
-                        </div>
-                        <p class="mb-4">Business Jurisdiction plays an important role in ensuring financial stability
-                            and protecting your business from various risks.</p>
-                        <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="service-item rounded h-100 p-5">
-                        <div class="d-flex align-items-center ms-n5 mb-4">
-                            <div class="service-icon flex-shrink-0 bg-primary rounded-end me-4">
-
-
-                                <img class="img-fluid" src="{% static '/img/icon/icon-06-light.png' %}"
-                                     alt="Icon 06 Light">
-
-
-                            </div>
-                            <h4 class="mb-0">Property</h4>
-                        </div>
-                        <p class="mb-4">Property Jurisdiction is a key element in ensuring that your property is
-                            protected from various risks such as fire, theft, natural disasters and other unforeseen
-                            events.</p>
-                        <a class="btn btn-light px-3" href="{% url 'service' %}">Read More</a>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="about-content">
+                        <h2 class="about-title">About Us</h2>
+                        <p class="about-text">
+                            Eric's Consulting LLC was established on March 3, 2023, in Loveland, Ohio, USA.
+                            The purpose of creating this company is to provide civil services to the members of the
+                            Uzbek community living in America and to the brotherly peoples from the Central Asian
+                            region.
+                            This includes forming business entities, streamlining trucking company operations, and
+                            providing
+                            a wide range of services including placement assistance, license acquisition, loan support,
+                            tax advice,
+                            housing services, visa consultations, childcare, and school placement services.
+                        </p>
+                        <p class="about-text">
+                            Our main goal is to offer affordable and high-quality services to Uzbek citizens living in
+                            the USA!
+                            The founder and head of the institution is lawyer Erkinbai Abdullaev, who brings 14 years of
+                            experience from
+                            various ministries and agencies of the republic, and 2 years of experience working in the
+                            branch of a German
+                            logistics company in Poland.
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Service End -->
+    <!-- About Us Section End -->
+
+
+    <!-- Team Start -->
+    <div class="container-fluid pt-5">
+        <div class="container py-5">
+            <div class="row align-items-end mb-4">
+                <div class="col-lg-6">
+                    <h6 class="text-mine font-weight-semi-bold text-uppercase mb-3">Meet Our Team</h6>
+                    <h1 class="section-title mb-3">Meet Our Highly Experienced Team</h1>
+                </div>
+                <div class="col-lg-6">
+                    <h4 class="font-weight-normal text-muted mb-3">
+                        Our team is not only skilled but also dedicated to providing the best service possible. We value
+                        professionalism and expertise in every aspect of our work.
+                    </h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="owl-carousel team-carousel">
+                        {% for member in team_members %}
+                            <div class="team d-flex flex-column text-center rounded overflow-hidden">
+                                <div class="position-relative team-member">
+                                    <div class="team-img">
+                                        {% if member.user.profile_picture %}
+                                            <img class="img" src="{{ member.user.profile_picture.url }}"
+                                                 alt="{{ member.user.first_name }} {{ member.user.last_name }}">
+                                        {% else %}
+                                            <img class="img-fluid" src="{% static 'img/logo-white.png' %}"
+                                                 alt="Default Profile Picture">
+                                        {% endif %}
+                                    </div>
+                                    <div class="team-overlay">
+                                        <div class="team-social flex-column justify-content-center">
+                                            {% if member.twitter is not None %}
+                                                <a class="btn btn-secondary btn-social mb-2"
+                                                   href="{{ member.twitter }}"><i class="fab fa-x"></i></a>
+                                            {% else %}
+                                                <a class="btn btn-secondary btn-social mb-2"
+                                                   href="https://www.twitter.com/"><i class="fab fa-x"></i></a>
+                                            {% endif %}
+                                            {% if member.instagram is not None %}
+                                                <a class="btn btn-secondary btn-social mb-2"
+                                                   href="{{ member.instagram }}"><i class="fab fa-instagram"></i></a>
+                                            {% else %}
+                                                <a class="btn btn-secondary btn-social mb-2"
+                                                   href="https://www.instagram.com/"><i
+                                                        class="fab fa-instagram"></i></a>
+                                            {% endif %}
+                                            {% if member.facebook is not None %}
+                                                <a class="btn btn-secondary btn-social mb-2"
+                                                   href="{{ member.facebook }}"><i class="fab fa-facebook-f"></i></a>
+                                            {% else %}
+                                                <a class="btn btn-secondary btn-social mb-2"
+                                                   href="https://www.facebook.com/"><i class="fab fa-facebook"></i></a>
+                                            {% endif %}
+                                            {% if member.linkedin is not None %}
+                                                <a class="btn btn-secondary btn-social" href="{{ member.linkedin }}"><i
+                                                        class="fab fa-linkedin-in"></i></a>
+                                            {% else %}
+                                                <a class="btn btn-secondary btn-social mb-2"
+                                                   href="https://www.linkedin.com/"><i class="fab fa-linkedin"></i></a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" bg-primary text-center py-1">
+                                    <h5 class="font-weight-bold"
+                                        style="color: rgb(255,255,255)">{{ member.user.first_name }} {{ member.user.last_name }}</h5>
+                                    <p class=" m-0" style="color: #989898">{{ member.role }}</p>
+                                </div>
+                                <!-- Description Section -->
+                                <div class="team-description p-3">
+                                    {% if member.description %}
+                                        <p>{{ member.description }}</p>
+                                    {% else %}
+                                        <p>"Bringing a fresh perspective and innovative approach,
+                                            <span class="team-member-name">{{ member.user.first_name }} {{ member.user.last_name }}</span>
+                                            is instrumental in developing creative strategies and solutions.
+                                            Their ability to think outside the box leads to effective problem-solving
+                                            and improved processes."
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Team End -->
+
+
 
     {#Comment Start ----->#}
 
@@ -417,7 +442,7 @@
         <div class="row g-5">
             <div class="col-lg-8 mx-auto">
                 <!-- Testimonial Carousel -->
-                <div class="team-carousel owl-carousel">  <!-- Corrected class name -->
+                <div class="team-carousel owl-carousel" id="testimonial-carousel">  <!-- Added id for carousel -->
                     {% for comment in comments %}
                         <div class="testimonial-item text-center p-4 d-flex flex-column justify-content-between"
                              style="border-radius: 15px; background-color: #dadada; box-shadow: 5px 4px 15px rgba(0, 0, 0, 0.1); height: 300px;">
@@ -444,9 +469,9 @@
                             </div>
                         </div>
                     {% empty %}
-                        <p>No comments yet. Be the first to leave a comment!</p>
                     {% endfor %}
                 </div>
+
 
                 <!-- Comment Form for authenticated users -->
                 {% if request.user.is_authenticated %}
@@ -528,20 +553,21 @@
             smartSpeed: 1000,
             responsive: {
                 0: {
-                    items: 1
+                    items: 1  // Display 1 item at all screen sizes
                 },
                 576: {
-                    items: 1
+                    items: 1  // Display 1 item at all screen sizes
                 },
                 992: {
-                    items: 3
+                    items: 3 // Display only 1 item instead of 3
                 }
             }
         });
+    </script>
 
-
+    <script>
         $(document).ready(function () {
-            $('.counter-up').counterUp({
+            $('[data-toggle="counter-up"]').counterUp({
                 delay: 10,
                 time: 1000
             });
@@ -551,17 +577,15 @@
     <script>
         $(document).ready(function () {
 
-            // Function to fetch chat history
             function fetchChatHistory() {
                 $.ajax({
-                    url: '{% url "chat_with_bot" %}',  // URL to the Django view for chat history
+                    url: '{% url "chat_with_bot" %}',
                     method: 'GET',
                     success: function (response) {
-                        console.log('Chat history response:', response); // Debugging log
+                        console.log('Chat history response:', response);
 
-                        $('#chat-messages').empty(); // Clear the existing messages
+                        $('#chat-messages').empty();
 
-                        // Loop through chat history and append messages
                         response.chat_history.forEach(function (message) {
                             var messageClass = message.sender === 'user' ? 'user-message' : 'answer-message';
                             $('#chat-messages').append('<div class="message ' + messageClass + '">' + escapeHtml(message.text) + '</div>');

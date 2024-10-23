@@ -113,6 +113,7 @@ def contact_us(request):
 
 def home_view(request):
     comments = Comment.objects.select_related('user').order_by('-created_at')
+    team_members = TeamMembership.objects.all()
 
     open_reqs_context = open_requests(request)
     unread_mess_context = unread_messages(request)
@@ -132,6 +133,7 @@ def home_view(request):
 
     context = {
         'comments': comments,
+        'team_members': team_members,
         'form': form,
         'active_page': 'home',
         'open_requests': open_reqs_context['open_requests'],

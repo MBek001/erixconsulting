@@ -7,9 +7,9 @@ from accounts.web_bot import  chat_page, send_message_to_bot, fetch_messages, fe
 
 urlpatterns = [
     path('', home_view, name='home'),
-    path('about', about_view, name='about'),
+    # path('about', about_view, name='about'),
     path('service', service_list, name='service'),
-    path('blog', blog_view, name='blog'),
+    # path('blog', blog_view, name='blog'),
     path('profile', Profile.as_view(), name='profile'),
     path('delete-profile-picture/', delete_profile_picture, name='delete_profile_picture'),
     path('contact', contact_us, name='contact'),

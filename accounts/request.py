@@ -17,7 +17,8 @@ load_dotenv()
 
 User = get_user_model()
 bot = Bot(token=BOT_TOKEN)
-BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
+BASE_DIR = Base_Dir
+
 
 @csrf_exempt
 def save_message(request):
@@ -46,11 +47,15 @@ def save_message(request):
 
         filename = f'{first_name}_{chat_id}.txt'
         file_path = os.path.join(BASE_DIR, filename)
+        admin_path = os.path.join(Admin_Dir,filename)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        os.makedirs(os.path.dirname(admin_path), exist_ok=True)
 
         if message:
             with open(file_path, 'a') as file_handle:
                 file_handle.write(f'customer: {message}\n created_at: {datetime.utcnow() + timedelta(hours=5)}\n')
+            with open(admin_path, 'a') as file_hand:
+                file_hand.write(f'customer: {message}\n created_at: {datetime.utcnow() + timedelta(hours=5)}\n')
         if file:
             with open(file_path, 'a') as file_handle:
                 file_handle.write(f'file: {file}\n created_at: {datetime.now() + timedelta(hours=5)}\n')

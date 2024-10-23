@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from django.http import JsonResponse
 from django.utils import timezone
 from flask.cli import load_dotenv
+from pydantic.v1.datetime_parse import parse_time
+
 from ERRORS import send_error_to_telegram
 from accounts.message_sending import notify_customer
 from accounts.models import TelegramUserMessage, ChatRequest, RequestHistory
@@ -17,8 +19,8 @@ load_dotenv()
 from config import *
 
 
-BASE_DIR = '/home/tuya/erixconsulting/media/messages/'
-TELEGRAM_API_URL = TELEGRAM_API_URL
+BASE_DIR =Base_Dir
+TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
 logger = logging.getLogger(__name__)
 
 @user_passes_test(lambda u: u.is_staff, login_url='/login/')
@@ -43,7 +45,7 @@ def chat_page(request):
             except Exception as e:
                 logger.error(f"Error reading {file_path}: {e}")
 
-    messages = sorted(messages, key=lambda x: x['created_at'], reverse=True)
+    messages = sorted(messages, key=lambda x: (x['created_at'] is None, x['created_at']), reverse=True)
 
     return render(request, 'chat_page.html', {'messages': messages, 'users': users})
 
@@ -54,6 +56,12 @@ def send_message_to_bot(request):
         message_text = request.POST.get('message')
         chat_id = request.POST.get('chat_id')
         first_name = request.POST.get('first_name')
+        try:
+            assistant_user_message = TelegramUserMessage.objects.select_related('staff').get(
+                chat_id=chat_id)
+            assistant_name = assistant_user_message.staff.first_name
+        except TelegramUserMessage.DoesNotExist:
+            assistant_name = "Assistant"
 
         if message_text and chat_id and first_name:
             # Prepare the data to be sent to the bot
@@ -78,12 +86,15 @@ def send_message_to_bot(request):
 
                         filename = f'{first_name}_{chat_id}.txt'
                         file_path = os.path.join(BASE_DIR, filename)
+                        admin_path = os.path.join(Admin_Dir,filename)
 
                         os.makedirs(os.path.dirname(file_path), exist_ok=True)
+                        os.makedirs(os.path.dirname(admin_path), exist_ok=True)
 
                         with open(file_path, 'a') as file:
                             file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
-                        logger.info(f"Message saved to file: {file_path}")
+                        with open(admin_path, 'a') as admin_file:
+                            admin_file.write(f'{assistant_name}: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
                         return JsonResponse({'status': 'success'}, status=200)
                     else:
                         error_message = response_data.get('description', 'Unknown error')
