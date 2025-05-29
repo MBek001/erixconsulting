@@ -70,7 +70,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'error_middleware.ErrorReportingMiddleware',
-    # 'accounts.mid.AdminOnlyMiddleware',
+    'erixconsulting.middleware.PaymentCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'erixconsulting.urls'
@@ -113,7 +113,15 @@ DATABASES = {
         'PASSWORD': 'tuyadatabases',
         'HOST': 'tuya.mysql.pythonanywhere-services.com',
         'PORT': '3306',
-    }
+    },
+    'cims': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'cims$default',
+        'USER': 'cims',
+        'PASSWORD': '5498603Ma.',
+        'HOST': 'cims.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+    },
 }
 
 
@@ -170,5 +178,5 @@ EMAIL_USE_SSL = True  # Enable SSL
 EMAIL_HOST_USER = 'bek0010311@gmail.com'
 EMAIL_HOST_PASSWORD = 'ukokmhdrbiiyerxj'
 DEFAULT_FROM_EMAIL = 'bek0010311@gmail.com'
-CONTACT_US_EMAIL = 'mmm857436@gmail.com'
+CONTACT_US_EMAIL = 'cognilabsco@gmail.com'
 
