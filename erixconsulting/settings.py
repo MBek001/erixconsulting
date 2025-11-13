@@ -180,3 +180,8 @@ EMAIL_HOST_PASSWORD = 'ukokmhdrbiiyerxj'
 DEFAULT_FROM_EMAIL = 'bek0010311@gmail.com'
 CONTACT_US_EMAIL = 'cognilabsco@gmail.com'
 
+# Authentication URLs
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
