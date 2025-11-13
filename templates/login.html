@@ -1,69 +1,341 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %}Login - Eric's Consulting{% endblock %}
+
 {% block css %}
-    <!-- Local Libraries Stylesheet -->
-    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
-    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+<style>
+    .auth-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+        padding: 60px 0;
+    }
 
-    <!-- Local Customized Bootstrap Stylesheet -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    .auth-card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        max-width: 1000px;
+        width: 100%;
+    }
 
-    <!-- Local Template Stylesheet -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    .auth-image {
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        padding: 60px 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .auth-image::before {
+        content: '';
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        top: -100px;
+        right: -100px;
+    }
+
+    .auth-image::after {
+        content: '';
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        bottom: -50px;
+        left: -50px;
+    }
+
+    .auth-image-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .auth-image h2 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: white;
+    }
+
+    .auth-image p {
+        font-size: 1.125rem;
+        opacity: 0.95;
+        line-height: 1.7;
+    }
+
+    .auth-form-wrapper {
+        padding: 60px 50px;
+    }
+
+    .auth-form-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: var(--dark);
+    }
+
+    .auth-form-subtitle {
+        color: var(--gray-600);
+        margin-bottom: 40px;
+        font-size: 1.0625rem;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.9375rem;
+    }
+
+    .form-control-modern {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 1rem;
+        border: 2px solid var(--gray-300);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        background: var(--light);
+    }
+
+    .form-control-modern:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .password-wrapper {
+        position: relative;
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--gray-500);
+        cursor: pointer;
+        font-size: 1.125rem;
+        padding: 0;
+        transition: color 0.2s ease;
+    }
+
+    .password-toggle:hover {
+        color: var(--primary);
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 16px;
+        font-size: 1.0625rem;
+        font-weight: 600;
+        background: var(--gradient-primary);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+    }
+
+    .divider {
+        text-align: center;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .divider::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: 1px;
+        background: var(--gray-300);
+    }
+
+    .divider span {
+        background: white;
+        padding: 0 15px;
+        color: var(--gray-500);
+        position: relative;
+        z-index: 1;
+        font-size: 0.875rem;
+    }
+
+    .register-link {
+        text-align: center;
+        margin-top: 24px;
+        color: var(--gray-600);
+    }
+
+    .register-link a {
+        color: var(--primary);
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .register-link a:hover {
+        color: var(--primary-dark);
+    }
+
+    .alert-modern {
+        padding: 16px 20px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        border: none;
+        background: #fee2e2;
+        color: #991b1b;
+        font-size: 0.9375rem;
+    }
+
+    @media (max-width: 767px) {
+        .auth-image {
+            padding: 40px 30px;
+        }
+
+        .auth-image h2 {
+            font-size: 1.75rem;
+        }
+
+        .auth-form-wrapper {
+            padding: 40px 30px;
+        }
+
+        .auth-form-title {
+            font-size: 1.75rem;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-    <body>
-        <!-- Display messages -->
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="alert alert-danger" role="alert">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-        {% endif %}
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="auth-card wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="row g-0">
+                        <!-- Image Side -->
+                        <div class="col-lg-5 d-none d-lg-block">
+                            <div class="auth-image h-100">
+                                <div class="auth-image-content">
+                                    <i class="fas fa-user-circle mb-4" style="font-size: 5rem;"></i>
+                                    <h2>Welcome Back!</h2>
+                                    <p>Sign in to continue to your account and access our professional legal services.</p>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="container py-5">
-            <div class="row justify-content-center">
-                <div class="col-md-8 col-lg-6">
-                    <div class="login-box">
-                        <h2>Login</h2>
-                        <form method="POST">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="text" id="email" name="email" class="form-control" required>
+                        <!-- Form Side -->
+                        <div class="col-lg-7">
+                            <div class="auth-form-wrapper">
+                                <h1 class="auth-form-title">Sign In</h1>
+                                <p class="auth-form-subtitle">Enter your credentials to access your account</p>
+
+                                <!-- Display messages -->
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert-modern">
+                                            <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+
+                                <form method="POST" action="">
+                                    {% csrf_token %}
+
+                                    <div class="form-group">
+                                        <label for="email">
+                                            <i class="fas fa-envelope me-1"></i>Email Address
+                                        </label>
+                                        <input type="email"
+                                               id="email"
+                                               name="email"
+                                               class="form-control-modern"
+                                               placeholder="Enter your email"
+                                               required
+                                               autocomplete="email">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="password">
+                                            <i class="fas fa-lock me-1"></i>Password
+                                        </label>
+                                        <div class="password-wrapper">
+                                            <input type="password"
+                                                   id="password"
+                                                   name="password"
+                                                   class="form-control-modern"
+                                                   placeholder="Enter your password"
+                                                   required
+                                                   autocomplete="current-password">
+                                            <button type="button" class="password-toggle" onclick="togglePassword()">
+                                                <i class="fas fa-eye" id="toggleIcon"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn-login">
+                                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                                    </button>
+
+                                    <div class="register-link">
+                                        Don't have an account?
+                                        <a href="{% url 'register' %}">Create one now</a>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" id="password" name="password" class="form-control" required>
-                            </div>
-                            <p></p>
-                            <div class="form-group text-center">
-                                <button type="submit" class="btn btn-primary btn-register">Login</button>
-                            </div>
-                            <div class="login-link text-center">
-                                <p>You do not have an account yet? <a href="{% url 'register' %}"> Register here </a></p>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</div>
 {% endblock %}
 
 {% block js %}
-    <!-- Local JavaScript Libraries -->
-    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
-    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
-    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
-    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+<script>
+    function togglePassword() {
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
 
-    <!-- Template JavaScript -->
-    <script src="{% static 'js/main.js' %}"></script>
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    }
+</script>
 {% endblock %}

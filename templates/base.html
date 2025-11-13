@@ -3,233 +3,341 @@
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
-    <title>{% block title %}{% endblock %}</title>
+    <title>{% block title %}Eric's Consulting - Professional Legal & Business Services{% endblock %}</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
+    <meta content="Legal consulting, Business formation, Immigration services" name="keywords">
+    <meta content="Professional legal and business consulting services for individuals and organizations" name="description">
 
-    <!-- Preconnect to Google Fonts -->
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{% static 'img/icon/icon-02-primary.png' %}">
+
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Poppins:wght@600;700&display=swap"
-          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- External Icon Fonts Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!-- Icon Fonts -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Libraries CSS -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Modern Custom CSS -->
+    <link href="{% static 'css/modern-style.css' %}" rel="stylesheet">
+
     {% block css %}{% endblock %}
 
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light sticky-top px-4 px-lg-5">
-        <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center">
-            <h1 class="m-0">
-                <img class="img-fluid me-3" src="{% static 'img/icon/icon-02-primary.png' %}" alt="Icon 02 Primary">
-            </h1>
-        </a>
+    <style>
+        /* Additional page-specific styles */
+        body {
+            padding-top: 0;
+        }
+    </style>
+</head>
 
-        <!-- Navbar toggler for mobile view -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
-                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
 
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav mx-auto bg-light rounded pe-4 py-3 py-lg-0">
-                <a href="{% url 'home' %}" class="nav-item nav-link {% if active_page == 'home' %}active{% endif %}">Main
-                    {#                    page</a>#}
-                    {#                <a href="{% url 'about' %}" class="nav-item nav-link {% if active_page == 'about' %}active{% endif %}">About#}
-                    {#                    us</a>#}
-                    {#                    <a href="{% url 'blog' %}"#}
-                    {#                       class="nav-item nav-link {% if active_page == 'blog' %}active{% endif %}">Blog#}
-                    {#                        Posts</a>#}
-                    <a href="{% url 'service' %}"
-                       class="nav-item nav-link {% if active_page == 'services' %}active{% endif %}">Our services</a>
-                    <a href="{% url 'contact' %}"
-                       class="nav-item nav-link {% if active_page == 'contact' %}active{% endif %}">Contact us</a>
-                    <ul class="navbar-nav">
-                        {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_staff %}
-                            <li class="nav-item">
-                                <a href="{% url 'chat_page' %}"
-                                   class="nav-link {% if active_page == 'chat1' %}active{% endif %}">
-                                    Private Chat
-                                    {% if has_unread_messages %}
-                                        <span class="unread-indicator"></span>
-                                    {% endif %}
-                                </a>
-                            </li>
-                        {% endif %}
-                        {% if request.user.is_authenticated and request.user.is_superuser %}
-                            <li class="nav-item">
-                                <a href="{% url 'request_messages' %}"
-                                   class="nav-link {% if active_page == 'chat2' %}active{% endif %}">
-                                    Requests
-                                    {% if open_requests %}
-                                        <span class="unread-indicator"></span>
-                                    {% endif %}
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{% url 'chat_history' %}"
-                                   class="nav-link {% if active_page == 'chat_history' %}active{% endif %}">
-                                    Chats History
-                                </a>
-                            </li>
-                        {% endif %}
-
-                    </ul>
-                    <div class="nav-item dropdown">
-                        {% if request.user.is_authenticated %}
-                            <a href="#" class="nav-link dropdown-toggle" id="profileDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">Profile</a>
-                            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
-                                <li><a href="{% url 'profile' %}"
-                                       class="dropdown-item{% if active_page == 'profile' %} active{% endif %}">Manage
-                                    Account</a></li>
-                                <li><a href="{% url 'logout' %}" class="dropdown-item">Logout</a></li>
-                            </ul>
-                        {% else %}
-                            <a href="{% url 'login' %}" class="nav-item nav-link">Login</a>
-                        {% endif %}
+    <!-- Modern Topbar Start -->
+    <div class="modern-topbar d-none d-lg-block">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex flex-wrap">
+                        <span class="topbar-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <a href="tel:+14698330078" style="color: inherit;">+1 469 833 0078</a>
+                        </span>
+                        <span class="topbar-item">
+                            <i class="fas fa-envelope"></i>
+                            <a href="mailto:erkinbay@erixconsulting.com" style="color: inherit;">erkinbay@erixconsulting.com</a>
+                        </span>
+                        <span class="topbar-item">
+                            <i class="fas fa-clock"></i>
+                            Mon - Fri: 09 AM - 09 PM
+                        </span>
                     </div>
-                </a>
+                </div>
+                <div class="col-lg-4">
+                    <div class="social-links text-end">
+                        <a href="https://www.facebook.com/erix_consulting" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.twitter.com/erix_consulting" target="_blank" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://t.me/Ohio_uz" target="_blank" aria-label="Telegram">
+                            <i class="fab fa-telegram"></i>
+                        </a>
+                        <a href="https://www.instagram.com/erix_consulting" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modern Topbar End -->
+
+    <!-- Modern Navbar Start -->
+    <nav class="navbar navbar-expand-lg modern-navbar">
+        <div class="container">
+            <a href="{% url 'home' %}" class="navbar-brand">
+                <img src="{% static 'img/icon/icon-02-primary.png' %}" alt="Eric's Consulting Logo">
+                <span class="d-none d-md-inline">Eric's Consulting</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item">
+                        <a href="{% url 'home' %}" class="nav-link {% if active_page == 'home' %}active{% endif %}">
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'service' %}" class="nav-link {% if active_page == 'services' %}active{% endif %}">
+                            Services
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'contact' %}" class="nav-link {% if active_page == 'contact' %}active{% endif %}">
+                            Contact
+                        </a>
+                    </li>
+
+                    {% if request.user.is_authenticated and request.user.is_superuser or request.user.is_staff %}
+                        <li class="nav-item position-relative">
+                            <a href="{% url 'chat_page' %}" class="nav-link {% if active_page == 'chat1' %}active{% endif %}">
+                                Chat
+                                {% if has_unread_messages %}
+                                    <span class="unread-indicator"></span>
+                                {% endif %}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if request.user.is_authenticated and request.user.is_superuser %}
+                        <li class="nav-item position-relative">
+                            <a href="{% url 'request_messages' %}" class="nav-link {% if active_page == 'chat2' %}active{% endif %}">
+                                Requests
+                                {% if open_requests %}
+                                    <span class="unread-indicator"></span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'chat_history' %}" class="nav-link {% if active_page == 'chat_history' %}active{% endif %}">
+                                History
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% if request.user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle me-1"></i>
+                                {{ request.user.first_name|default:"Profile" }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                                <li>
+                                    <a href="{% url 'profile' %}" class="dropdown-item">
+                                        <i class="fas fa-user me-2"></i>Manage Account
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a href="{% url 'logout' %}" class="dropdown-item text-danger">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a href="{% url 'login' %}" class="btn btn-primary btn-sm ms-lg-3">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         </div>
     </nav>
+    <!-- Modern Navbar End -->
 
-    {% block lang %} {% endblock %}
+    {% block navbar %}{% endblock %}
 
-</head>
-<body>
-<!-- Spinner Start-->
-<div id="spinner"
-     class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-    <div class="spinner-grow text-primary" role="status"></div>
-</div>
-<!--Spinner End -->
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
 
-
-<!-- Topbar Start -->
-<div class="container-fluid bg-dark text-white-50 py-2 px-0 d-none d-lg-block">
-    <div class="row gx-0 align-items-center">
-        <div class="col-lg-7 px-5 text-start">
-            <div class="h-100 d-inline-flex align-items-center me-4">
-                <small class="fa fa-phone-alt me-2"></small>
-                <small>+1 469 833 0078</small>
-            </div>
-            <div class="h-100 d-inline-flex align-items-center me-4">
-                <small class="far fa-envelope-open me-2"></small>
-                <small>erkinbay@erixconsulting.com</small>
-            </div>
-            <div class="h-100 d-inline-flex align-items-center me-4">
-                <small class="far fa-clock me-2"></small>
-                <small>Mon - Fri : 09 AM - 09 PM</small>
-            </div>
-
-        </div>
-        <div class="col-lg-5 px-5 text-end">
-            <div class="h-100 d-inline-flex align-items-center">
-                <a class="text-white-50 ms-4" href="https://www.facebook.com/erix_consulting"><i
-                        class="fab fa-facebook-f"></i></a>
-                <a class="text-white-50 ms-4" href="https://www.twitter.co/erix_consulting"><i
-                        class="fab fa-twitter"></i></a>
-                <a class="text-white-50 ms-4" href="https://t.me/Ohio_uz"><i class="fab fa-telegram"></i></a>
-                <a class="text-white-50 ms-4" href="https://www.instagram.com/erix_consulting"><i
-                        class="fab fa-instagram"></i></a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Topbar End -->
-
-{% block navbar %}{% endblock %}
-
-{% block content %}{% endblock %}
-
-
-<!-- Footer Start -->
-<div class="container-fluid bg-dark footer mt-3 pt-5 wow fadeIn" data-wow-delay="0.1s">
-    <div class="container py-1">
-        <div class="row g-1">
-            <div class="col-lg-3 col-md-6">
-                <h2 class="text-white mb-4"><img class="img-fluid me-3" src="/static/img/icon/logo-white.png"
-                                                 height=auto, width=60% alt="Icon 02 Light"></h2>
-
-                <p>Helping in protection against potential risks by purchasing a jurisdiction policy.</p>
-                <div class="d-flex pt-2">
-                    <a class="btn btn-square me-1" href="https://www.twitter.co/erix_consulting"><i
-                            class="fab fa-twitter"></i></a>
-                    <a class="btn btn-square me-1" href="https://www.facebook.com/erix_consulting"><i
-                            class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-square me-1" href="https://www.instagram.com/erix_consulting/"><i
-                            class="fab fa-instagram"></i></a>
-                    <a class="btn btn-square me-0" href="https://t.me/Ohio_uz"><i class="fab fa-telegram"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5 class="text-light mb-4">Address</h5>
-                <i class="fa fa-map-marker-alt me-3"></i>
-                <a href="https://www.google.com/maps/search/?api=1&query=7577+Central+Parke+Blvd,+Mason,+OH+45040"
-                   target="_self" style="color: #ffffff; font-size: small">7577 Central Parke Blvd Mason, OH 45040</a>
-                <p></p>
-                <i class="fa fa-phone-alt me-3"></i>
-                <a href="tel:+14698330078" style="color: #ffffff;">+1 469 833 0078</a>
-                <p></p>
-                <i class="fa fa-envelope me-3"></i>
-                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=erkinbay@erixconsulting.com" target="_blank"
-                   style="color: #ffffff;">erkinbay@erixconsulting.com</a>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5 class="text-light mb-4">Quick Links</h5>
-                <a class="btn btn-link" href="{% url 'contact' %}">Contact Us</a>
-                <a class="btn btn-link" href="{% url 'service' %}">Our Services</a>
-                <a class="btn btn-link" href="{% url 'home' %}">Terms & Condition</a>
-                <a class="btn btn-link" href="{% url 'contact' %}">Support</a>
-            </div>
-            <div class="col-lg-3 col-md-6">
-                <h5 class="text-light mb-4"> Thurgood Marshall</h5>
-                <p>"Laws are a necessary framework within which society functions, but they are not flawless.
-                    Every legal system is an evolving set of principles that must be continually refined, questioned,
-                    and adapted to reflect the conscience of a just society. For without justice, the law is but a set
-                    of
-                    rules imposed without meaning."</p>
-            </div>
-            <div></div>
-            <div>
-                <h5 class="text-light mb-4"></h5>
-
-            </div>
-        </div>
-    </div>
-    <div class="container-fluid copyright">
+    <!-- Modern Footer Start -->
+    <footer class="modern-footer">
         <div class="container">
-            <div class="row">
-                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                    &copy; <a href="https://erixconsulting.com">Eric's Consulting</a>, All Right Reserved.
+            <div class="row g-5">
+                <!-- About Column -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-about">
+                        <img src="{% static 'img/icon/logo-white.png' %}" alt="Eric's Consulting Logo" style="height: 60px; margin-bottom: 1.5rem;">
+                        <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8;">
+                            Professional legal and business consulting services helping you navigate complex legal processes with expertise and care.
+                        </p>
+                        <div class="social-links d-flex gap-2 mt-3">
+                            <a href="https://www.twitter.com/erix_consulting" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.facebook.com/erix_consulting" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.instagram.com/erix_consulting/" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="https://t.me/Ohio_uz" target="_blank"><i class="fab fa-telegram"></i></a>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 text-center text-md-end">
-                    <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                    Designed By <a href="https://cognilabs.org">Cognilabs Company</a>
+
+                <!-- Quick Links Column -->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title">Quick Links</h5>
+                    <div class="d-flex flex-column">
+                        <a href="{% url 'home' %}" class="footer-link">Home</a>
+                        <a href="{% url 'service' %}" class="footer-link">Our Services</a>
+                        <a href="{% url 'contact' %}" class="footer-link">Contact Us</a>
+                        <a href="{% url 'contact' %}" class="footer-link">Support</a>
+                    </div>
+                </div>
+
+                <!-- Contact Column -->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title">Contact Info</h5>
+                    <div class="d-flex flex-column gap-3">
+                        <div class="d-flex align-items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1" style="color: var(--secondary);"></i>
+                            <a href="https://www.google.com/maps/search/?api=1&query=7577+Central+Parke+Blvd,+Mason,+OH+45040"
+                               target="_blank" class="footer-link" style="padding: 0;">
+                                7577 Central Parke Blvd<br>Mason, OH 45040
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fas fa-phone-alt" style="color: var(--secondary);"></i>
+                            <a href="tel:+14698330078" class="footer-link" style="padding: 0;">+1 469 833 0078</a>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fas fa-envelope" style="color: var(--secondary);"></i>
+                            <a href="mailto:erkinbay@erixconsulting.com" class="footer-link" style="padding: 0;">erkinbay@erixconsulting.com</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quote Column -->
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title">Thurgood Marshall</h5>
+                    <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.8; font-style: italic;">
+                        "Laws are a necessary framework within which society functions, but they are not flawless. Every legal system must be continually refined to reflect the conscience of a just society."
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start">
+                        &copy; <a href="https://erixconsulting.com" style="color: var(--secondary);">Eric's Consulting</a>,
+                        All Rights Reserved.
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        Designed by <a href="https://cognilabs.org" style="color: var(--secondary);">Cognilabs Company</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- Footer End -->
+    </footer>
+    <!-- Modern Footer End -->
 
+    <!-- Back to Top -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="bi bi-arrow-up"></i>
+    </a>
 
-<!-- Back to Top -->
-<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
 
-<!-- Внешние JavaScript библиотеки -->
-<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="/static/lib/counterup/counterup.min.js"
+    <!-- Template JavaScript -->
+    <script>
+        (function ($) {
+            "use strict";
 
+            // Spinner
+            var spinner = function () {
+                setTimeout(function () {
+                    if ($('#spinner').length > 0) {
+                        $('#spinner').removeClass('show');
+                    }
+                }, 1);
+            };
+            spinner();
 
-{% block js %}{% endblock %}
+            // Sticky Navbar
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 45) {
+                    $('.modern-navbar').addClass('scrolled shadow-lg');
+                } else {
+                    $('.modern-navbar').removeClass('scrolled shadow-lg');
+                }
+            });
+
+            // Back to top button
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 300) {
+                    $('#backToTop').addClass('show');
+                } else {
+                    $('#backToTop').removeClass('show');
+                }
+            });
+
+            $('#backToTop').click(function (e) {
+                e.preventDefault();
+                $('html, body').animate({scrollTop: 0}, 800, 'easeInOutExpo');
+                return false;
+            });
+
+            // WOW.js initialization
+            new WOW().init();
+
+            // Counter Up
+            if ($('[data-toggle="counter-up"]').length) {
+                $('[data-toggle="counter-up"]').counterUp({
+                    delay: 10,
+                    time: 2000
+                });
+            }
+
+            // Auto-close navbar on mobile after clicking a link
+            $('.navbar-nav a').on('click', function () {
+                if ($(window).width() < 992) {
+                    $('.navbar-collapse').collapse('hide');
+                }
+            });
+
+        })(jQuery);
+    </script>
+
+    {% block js %}{% endblock %}
 </body>
 </html>

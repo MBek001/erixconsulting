@@ -1,387 +1,111 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block css %}
-    <!-- Local Libraries Stylesheet -->
-    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
-    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+{% block title %}Our Services - Eric's Consulting{% endblock %}
 
-    <!-- Local Customized Bootstrap Stylesheet -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-
-    <!-- Local Template Stylesheet -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-
-    <style>
-        /* General Styles */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f9;
-            color: #444;
-            margin: 0;
-            padding: 0;
-        }
-
-        h1 {
-            font-size: 32px;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-            text-transform: uppercase;
-        }
-
-        /* Service Grid Styling */
-        .service-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-
-        .service-container {
-            flex: 0 1 calc(25% - 20px); /* Ensures 4 items per row */
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        /* Hover Effect for Service Container */
-        .service-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Service Title */
-        .service-name {
-            font-size: 26px;
-            color: rgba(19, 58, 96, 0.9);
-            font-weight: 600;
-            margin-bottom: 10px;
-            text-transform: capitalize;
-        }
-
-        /* Description Label */
-        .description-label {
-            font-size: 14px;
-            color: #888;
-            margin-bottom: 5px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        /* Enhanced Service Description Styling */
-        .service-description {
-            font-size: 16px;
-            color: #333; /* Dark gray text */
-            background-color: #e0f7fa; /* Light blue background */
-            padding: 15px;
-            border-radius: 8px;
-            line-height: 1.8;
-            font-style: italic;
-            border: 1px solid #b2ebf2; /* Light blue border */
-            margin-bottom: 15px;
-        }
-
-
-        /* Service Creation Date */
-        .service-created {
-            font-size: 14px;
-            color: #aaa;
-        }
-
-        /* Members List */
-        .members-list {
-            margin-top: 20px;
-            padding-left: 0;
-            list-style: none;
-        }
-
-        .member-item {
-            display: flex;
-            align-items: center; /* Align items vertically */
-            margin-bottom: 20px; /* Space between members */
-            font-size: 18px;
-            position: relative; /* To position the horizontal line */
-            padding-bottom: 20px; /* Space for the horizontal line */
-        }
-
-        .member-item img {
-            border-radius: 50%;
-            margin-right: 15px; /* Space between image and text */
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-        }
-
-        .member-details {
-            display: flex;
-            flex-direction: column; /* Stack name and role vertically */
-            margin-right: 15px; /* Space between details and social links */
-        }
-
-        .member-info {
-            display: flex; /* Display name in a row */
-            align-items: center;
-            gap: 10px; /* Space between elements */
-        }
-
-        .member-info .first-name,
-        .member-info .last-name {
-            font-size: 16px; /* Slightly larger text for name */
-            color: #333;
-        }
-
-        .contact-wrap {
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            height: 400px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .contact-wrap .contact-overlay {
-            position: absolute;
-            background-repeat: no-repeat;
-            background-size: cover; /* Make sure the background covers the whole container */
-            background-position: center center; /* Center the background image */
-            background-image: url("{% static 'img/our-service.jpg' %}");
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .contact-wrap .slider-text {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-
-        /* Media query for better responsiveness on mobile devices */
-        @media (max-width: 768px) {
-            .contact-wrap {
-                height: 200px; /* Reduce height for mobile screens */
-            }
-
-            .contact-wrap .contact-overlay {
-                background-size: cover; /* Ensure the image always covers the screen */
-                background-position: center top; /* Align image more towards the top */
-            }
-
-            .contact-wrap .slider-text {
-                font-size: 1.2rem; /* Adjust font size for smaller screens */
-                padding: 10px; /* Add padding for better readability */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .contact-wrap {
-                height: 150px; /* Further reduce the height for very small screens */
-            }
-
-            .contact-wrap .slider-text {
-                font-size: 1rem; /* Smaller font size for mobile */
-            }
-        }
-
-
-        .role-box {
-            display: inline-block;
-            padding: 5px 10px;
-            border: 1px solid #27ae60; /* Green border */
-            border-radius: 6px; /* Rounded corners */
-            background-color: #eafaf1; /* Light green background */
-            color: #27ae60; /* Text color matching the border */
-            font-size: 14px; /* Slightly smaller text */
-            font-weight: 600; /* Bold text */
-            margin-top: 5px; /* Space between label and role */
-        }
-
-        /* Social Media Links Styling */
-        .social-links {
-            display: flex; /* Display links in a row */
-            gap: 10px; /* Space between icons */
-            margin-top: 10px; /* Add space above social links */
-        }
-
-        .social-links a {
-            font-size: 20px; /* Adjust the size of the icons */
-            color: #3498db; /* Default color for the icons */
-        }
-
-        .social-links a:hover {
-            color: #2980b9; /* Change color on hover */
-        }
-
-        /* Horizontal Divider */
-        .member-divider {
-            width: 100%;
-            height: 1px;
-            background-color: #ddd;
-            margin-top: 10px;
-            position: absolute;
-            bottom: 0;
-        }
-
-        /* Media query for smaller screens (2 services per row) */
-        @media (max-width: 768px) {
-            .service-container {
-                flex: 0 1 calc(50% - 20px); /* 2 items per row */
-            }
-        }
-
-        /* Media query for mobile screens (1 service per row) */
-        @media (max-width: 576px) {
-            .service-container {
-                flex: 0 1 100%; /* 1 item per row */
-            }
-        }
-
-    </style>
-    
-
-
-{% endblock %}
-
-  {{ open_requests }} {{ has_unread_messages }}
 {% block content %}
-    
-    <section class="contact-wrap">
-        <div class="contact-overlay">
+
+<!-- Page Header -->
+<section class="modern-hero" style="padding: 100px 0; background: var(--gradient-primary);">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center wow fadeIn Up" data-wow-delay="0.1s">
+                <h1 class="text-white mb-3" style="font-size: clamp(2.5rem, 5vw, 3.5rem);">Our Services</h1>
+                <p class="text-white" style="font-size: 1.25rem; opacity: 0.95;">
+                    Comprehensive legal and business consulting services tailored to your needs
+                </p>
+            </div>
         </div>
-        <div class="slider-text">
-        </div>
-    </section>
-    <p>
-    </p>
+    </div>
+</section>
 
-    <h1>All Services</h1>
+<!-- Services Section -->
+<section class="section-padding">
+    <div class="container">
+        {% if services %}
+            <div class="row g-4">
+                {% for service in services %}
+                    <div class="col-lg-6 col-md-12 wow fadeInUp" data-wow-delay="{{ forloop.counter|mul:0.1 }}s">
+                        <div class="modern-card" style="height: 100%;">
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="card-icon" style="width: 60px; height: 60px; flex-shrink: 0;">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <h3 class="ms-3 mb-0" style="font-size: 1.75rem;">{{ service.name }}</h3>
+                            </div>
 
-    <div class="service-grid">
-        {% for service in services %}
-            <div class="service-container">
-                <h2 class="service-name">{{ service.name }}</h2>
+                            <p class="card-text mb-4">
+                                {{ service.description|default:"Professional service tailored to meet your specific needs." }}
+                            </p>
 
-                <!-- Description Label -->
-                <p class="description-label">Description:</p>
-
-                <!-- Enhanced Service Description -->
-                <p class="service-description">{{ service.description|default:"No description available." }}</p>
-
-                <p class="service-created">Created on: {{ service.created_at }}</p>
-
-                <h3>Members:</h3>
-                <ul class="members-list">
-                    {% if service.members.all %}
-                        {% for member in service.members.all %}
-                            <li class="member-item">
-                                {% if member.user.profile_picture %}
-                                    <img src="{{ member.user.profile_picture.url }}"
-                                         alt="{{ member.user.first_name }} {{ member.user.last_name }}">
-                                {% else %}
-                                    <img src="{% static 'images/default_profile_picture.png' %}"
-                                         alt="Default Profile Picture">
-                                {% endif %}
-
-                                <!-- Member Details Section -->
-                                <div class="member-details">
-                                    <!-- Display first name and last name on the same line -->
-                                    <div class="member-info">
-                                        <div class="first-name">Firstname: {{ member.user.first_name }}</div>
-                                        <div class="last-name">Lastname: {{ member.user.last_name }}</div>
-                                    </div>
-
-                                    <!-- Role Label and Role Box -->
-                                    <div class="role-box">{{ member.role }}</div>
-
-                                    <!-- Social Media Links -->
-                                    <div class="social-links">
-                                        {% if member.instagram %}
-                                            <a href="{{ member.instagram }}" target="_blank">
-                                                <i class="fab fa-instagram"></i>
-                                            </a>
-                                        {% else %}
-                                            <a href="https://www.instagram.com" target="_blank">
-                                                <i class="fab fa-instagram"></i>
-                                            </a>
-                                        {% endif %}
-                                        {% if member.twitter %}
-                                            <a href="{{ member.twitter }}" target="_blank">
-                                                <i class="fab fa-twitter"></i>
-                                            </a>
-                                        {% else %}
-                                            <a href="https://www.twitter.com" target="_blank">
-                                                <i class="fab fa-twitter"></i>
-                                            </a>
-                                        {% endif %}
-                                        {% if member.facebook %}
-                                            <a href="{{ member.facebook }}" target="_blank">
-                                                <i class="fab fa-facebook"></i>
-                                            </a>
-                                        {% else %}
-                                            <a href="https://www.facebook.com" target="_blank">
-                                                <i class="fab fa-facebook"></i>
-                                            </a>
-                                        {% endif %}
-                                        {% if member.youtube %}
-                                            <a href="{{ member.youtube }}" target="_blank">
-                                                <i class="fab fa-youtube"></i>
-                                            </a>
-                                        {% else %}
-                                            <a href="https://www.youtube.com" target="_blank">
-                                                <i class="fab fa-youtube"></i>
-                                            </a>
-                                        {% endif %}
-                                        {% if member.linkedin %}
-                                            <a href="{{ member.linkedin }}" target="_blank">
-                                                <i class="fab fa-linkedin"></i>
-                                            </a>
-                                        {% else %}
-                                            <a href="https://www.linkedin.com" target="_blank">
-                                                <i class="fab fa-linkedin"></i>
-                                            </a>
-                                        {% endif %}
+                            {% if service.members.all %}
+                                <div class="mt-4 pt-4" style="border-top: 2px solid var(--gray-200);">
+                                    <h5 class="mb-3" style="color: var(--dark);">
+                                        <i class="fas fa-users me-2"></i>Team Members
+                                    </h5>
+                                    <div class="row g-3">
+                                        {% for member in service.members.all %}
+                                            <div class="col-md-6">
+                                                <div class="d-flex align-items-center p-3" style="background: var(--gray-100); border-radius: 12px;">
+                                                    {% if member.user.profile_picture %}
+                                                        <img src="{{ member.user.profile_picture.url }}"
+                                                             alt="{{ member.user.first_name }}"
+                                                             style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 12px;">
+                                                    {% else %}
+                                                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                                                            <i class="fas fa-user" style="color: white;"></i>
+                                                        </div>
+                                                    {% endif %}
+                                                    <div class="flex-grow-1">
+                                                        <div style="font-weight: 600; color: var(--dark); font-size: 0.9375rem;">
+                                                            {{ member.user.first_name }} {{ member.user.last_name }}
+                                                        </div>
+                                                        <div style="font-size: 0.8125rem; color: var(--primary); font-weight: 500;">
+                                                            {{ member.role }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
+                            {% endif %}
 
-                                <!-- Horizontal Divider Line -->
-                                <div class="member-divider"></div>
-                            </li>
-                        {% endfor %}
-                    {% else %}
-                        <p>No members available for this service.</p>
-                    {% endif %}
-                </ul>
-
+                            <div class="mt-4">
+                                <small class="text-muted">
+                                    <i class="far fa-calendar me-1"></i>
+                                    Created: {{ service.created_at|date:"F d, Y" }}
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-briefcase mb-4" style="font-size: 4rem; color: var(--gray-400);"></i>
+                <h3 style="color: var(--gray-600);">No Services Available</h3>
+                <p style="color: var(--gray-500);">Please check back later for our service offerings.</p>
+            </div>
+        {% endif %}
     </div>
-    
+</section>
 
-{% endblock %}
-
-
-
-
-{% block js %}
-    <!-- Local JavaScript Libraries -->
-    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
-    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
-    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
-    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
-
-    <!-- Template JavaScript -->
-    <script src="{% static 'js/main.js' %}"></script>
-
-
+<!-- Call to Action -->
+<section class="section-padding bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h2 class="section-title mb-4">Need Our Services?</h2>
+                <p class="section-subtitle mb-4">
+                    Get in touch with us today to discuss how we can help you achieve your goals
+                </p>
+                <a href="{% url 'contact' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-phone me-2"></i>Contact Us Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
 {% endblock %}
