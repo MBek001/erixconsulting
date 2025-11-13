@@ -28,9 +28,9 @@
                     </div>
                     <div class="mb-4">
                         <label class="form-label fw-bold">Assign Team Members</label>
-                        <select name="team_members" class="form-select" multiple size="5">
+                        <select name="members" class="form-select" multiple size="5">
                             {% for member in team_members %}
-                            <option value="{{ member.id }}" {% if is_edit and member in service.team_members.all %}selected{% endif %}>
+                            <option value="{{ member.id }}" {% if is_edit and member in service.members.all %}selected{% endif %}>
                                 {{ member.user.first_name }} {{ member.user.last_name }} - {{ member.role }}
                             </option>
                             {% endfor %}

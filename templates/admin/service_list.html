@@ -27,7 +27,7 @@
             <tr>
                 <td><strong>{{ service.name }}</strong></td>
                 <td>{{ service.description|truncatewords:15 }}</td>
-                <td><span class="badge-modern badge-staff">{{ service.team_members.count }} members</span></td>
+                <td><span class="badge-modern badge-staff">{{ service.members.count }} members</span></td>
                 <td>
                     <a href="{% url 'service_edit' service.pk %}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a>
                     <form method="POST" action="{% url 'service_delete' service.pk %}" style="display: inline;" onsubmit="return confirm('Delete?');">

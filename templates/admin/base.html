@@ -193,7 +193,7 @@
                 <a href="{% url 'user_list_admin' %}" class="nav-link {% if 'user' in request.path %}active{% endif %}">
                     <i class="bi bi-person-fill"></i> Users
                 </a>
-                <a href="{% url 'message_list' %}" class="nav-link {% if 'message' in request.path %}active{% endif %}">
+                <a href="{% url 'message_list_admin' %}" class="nav-link {% if 'message' in request.path %}active{% endif %}">
                     <i class="bi bi-envelope-fill"></i> Messages
                 </a>
                 <a href="{% url 'comment_list_admin' %}" class="nav-link {% if 'comment' in request.path %}active{% endif %}">
@@ -218,6 +218,18 @@
                     <span class="text-muted">Welcome, <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></span>
                 </div>
             </div>
+
+            {% if messages %}
+            <div class="messages-container">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
             {% block content %}{% endblock %}
         </div>
     </div>
