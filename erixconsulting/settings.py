@@ -70,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'error_middleware.ErrorReportingMiddleware',
+    'erixconsulting.middleware.PaymentCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'erixconsulting.urls'
@@ -97,31 +98,31 @@ WSGI_APPLICATION = 'erixconsulting.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'tuya$erixconsulting',
-#         'USER': 'tuya',
-#         'PASSWORD': 'tuyadatabases',
-#         'HOST': 'tuya.mysql.pythonanywhere-services.com',
-#         'PORT': '3306',
-#     },
-#     'cims': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'cims$default',
-#         'USER': 'cims',
-#         'PASSWORD': '5498603Ma.',
-#         'HOST': 'cims.mysql.pythonanywhere-services.com',
-#         'PORT': '3306',
-#     },
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'tuya$erixconsulting',
+        'USER': 'tuya',
+        'PASSWORD': 'tuyadatabases',
+        'HOST': 'tuya.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+    },
+    'cims': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'cims$default',
+        'USER': 'cims',
+        'PASSWORD': '5498603Ma.',
+        'HOST': 'cims.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+    },
+}
 
 
 # Password validation
@@ -179,6 +180,8 @@ EMAIL_HOST_PASSWORD = 'ukokmhdrbiiyerxj'
 DEFAULT_FROM_EMAIL = 'bek0010311@gmail.com'
 CONTACT_US_EMAIL = 'cognilabsco@gmail.com'
 
+# Authentication URLs
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
