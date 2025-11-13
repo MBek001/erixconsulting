@@ -33,6 +33,22 @@
         z-index: 2;
     }
 
+    @media (max-width: 991px) {
+        .modern-hero {
+            min-height: auto !important;
+            padding: 80px 0 60px;
+        }
+        .hero-image img {
+            height: 350px !important;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .hero-image img {
+            height: 300px !important;
+        }
+    }
+
     /* Feature Cards */
     .feature-card {
         background: white;
@@ -203,7 +219,7 @@
 {% block content %}
 
 <!-- Modern Hero Section -->
-<section class="modern-hero">
+<section class="modern-hero" style="min-height: 700px; display: flex; align-items: center;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 mb-5 mb-lg-0">
@@ -225,8 +241,11 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="hero-image wow fadeInRight" data-wow-delay="0.3s">
-                    <img src="{% static 'img/carousel-1.jpg' %}" alt="Legal Consulting" class="img-fluid" style="border-radius: 24px; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);">
+                <div class="hero-image wow fadeInRight" data-wow-delay="0.3s" style="position: relative;">
+                    <div style="position: relative; overflow: hidden; border-radius: 24px; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); transform: perspective(1000px) rotateY(-5deg);">
+                        <img src="{% static 'img/carousel-1.jpg' %}" alt="Legal Consulting" class="img-fluid" style="width: 100%; height: 500px; object-fit: cover; display: block; border-radius: 24px;">
+                        <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%); border-radius: 24px;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -421,7 +440,8 @@
                         <div class="testimonial-card text-center">
                             <img class="testimonial-avatar"
                                  src="{% if comment.user.profile_picture %}{{ comment.user.profile_picture.url }}{% else %}{% static 'img/icon/logo-white.png' %}{% endif %}"
-                                 alt="{{ comment.user.first_name }}">
+                                 alt="{{ comment.user.first_name }}"
+                                 style="width: 80px !important; height: 80px !important; border-radius: 50% !important; object-fit: cover !important; object-position: center !important;">
                             <p class="testimonial-content">"{{ comment.content }}"</p>
                             <h5 class="testimonial-author">{{ comment.user.first_name }} {{ comment.user.last_name }}</h5>
                             <p class="testimonial-date">{{ comment.created_at|date:"F d, Y" }}</p>
@@ -521,11 +541,21 @@
             }
         });
 
-        // Counter Up
+        // Counter Up with Waypoints
         if ($('[data-toggle="counter-up"]').length) {
-            $('[data-toggle="counter-up"]').counterUp({
-                delay: 10,
-                time: 2000
+            $('[data-toggle="counter-up"]').each(function() {
+                var $this = $(this);
+                var waypoint = new Waypoint({
+                    element: this,
+                    handler: function() {
+                        $this.counterUp({
+                            delay: 10,
+                            time: 2000
+                        });
+                        this.destroy();
+                    },
+                    offset: '80%'
+                });
             });
         }
 

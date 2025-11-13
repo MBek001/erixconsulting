@@ -25,7 +25,7 @@
         {% if services %}
             <div class="row g-4">
                 {% for service in services %}
-                    <div class="col-lg-6 col-md-12 wow fadeInUp" data-wow-delay="{{ forloop.counter|mul:0.1 }}s">
+                    <div class="col-lg-6 col-md-12 wow fadeInUp" data-wow-delay="0.{{ forloop.counter }}s">
                         <div class="modern-card" style="height: 100%;">
                             <div class="d-flex align-items-center mb-4">
                                 <div class="card-icon" style="width: 60px; height: 60px; flex-shrink: 0;">
