@@ -1,69 +1,368 @@
-/* custom_admin.css */
+/* Custom Admin Panel Styling for Eric's Consulting */
 
-/* General Styles */
-body {
-    font-family: 'Arial', sans-serif;
+/* ========== General Admin Improvements ========== */
+#header {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%) !important;
+    border-bottom: 3px solid #1e40af;
 }
 
-/* Button Styles */
-.btn {
-    background-color: #007bff; /* Bootstrap primary color */
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    transition: background-color 0.3s ease;
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+    color: #ffffff !important;
+    font-weight: 700;
+    font-size: 1.75rem;
 }
 
-.btn:hover {
-    background-color: #0056b3; /* Darker shade on hover */
+#user-tools {
+    padding: 1rem;
+    color: rgba(255, 255, 255, 0.95) !important;
 }
 
-/* Card and Section Styles */
-.dashboard-header,
+#user-tools a {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+}
+
+#user-tools a:hover {
+    color: #ffffff !important;
+}
+
+/* ========== Breadcrumbs ========== */
+div.breadcrumbs {
+    background: #f8fafc !important;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 15px 20px;
+    font-size: 14px;
+}
+
+div.breadcrumbs a {
+    color: #2563eb !important;
+    font-weight: 500;
+}
+
+div.breadcrumbs a:hover {
+    color: #1e40af !important;
+}
+
+/* ========== Module Styling ========== */
 .module {
-    background-color: #f8f9fa; /* Light gray background */
-    border-radius: 5px;
-    padding: 15px;
+    border-radius: 12px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    overflow: hidden;
     margin-bottom: 20px;
 }
 
-/* Table Styles */
-table {
-    border-collapse: collapse;
-    width: 100%;
+.module h2, .module caption {
+    background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%) !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    border-bottom: 2px solid #2563eb !important;
 }
 
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
+/* ========== Table Styling ========== */
+#result_list {
+    border-radius: 0 !important;
 }
 
-th {
-    background-color: #007bff; /* Table header background */
-    color: white;
+#result_list thead th {
+    background: #f1f5f9 !important;
+    color: #475569 !important;
+    font-weight: 600 !important;
+    padding: 12px 15px !important;
+    border-bottom: 2px solid #cbd5e1 !important;
 }
 
-/* Form Styles */
-fieldset {
-    border: 1px solid #007bff;
-    padding: 10px;
-    border-radius: 5px;
+#result_list tbody tr {
+    transition: all 0.2s ease;
 }
 
-h2 {
-    color: #007bff; /* Headings color */
+#result_list tbody tr:hover {
+    background-color: #f0f9ff !important;
 }
 
-/* Adjusting Inputs */
-input, select, textarea {
-    border: 1px solid #007bff;
-    border-radius: 5px;
-    padding: 10px;
+#result_list tbody th, #result_list tbody td {
+    padding: 12px 15px !important;
+    border-bottom: 1px solid #e5e7eb !important;
 }
 
-/* Customizing Alerts */
-.alert {
-    border-radius: 5px;
+#result_list tbody tr.alt {
+    background: #fafafa !important;
+}
+
+/* ========== Form Styling ========== */
+.form-row {
+    padding: 15px 20px !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+.form-row label {
+    font-weight: 600 !important;
+    color: #374151 !important;
+}
+
+input[type="text"], input[type="password"], input[type="email"],
+input[type="url"], input[type="number"], input[type="tel"],
+textarea, select, .vTextField, .vURLField {
+    border: 2px solid #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 10px 15px !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus,
+input[type="url"]:focus, input[type="number"]:focus, input[type="tel"]:focus,
+textarea:focus, select:focus, .vTextField:focus, .vURLField:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    outline: none !important;
+}
+
+/* ========== Button Styling ========== */
+.button, input[type="submit"], input[type="button"], .submit-row input, button {
+    background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 10px 20px !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3) !important;
+}
+
+.button:hover, input[type="submit"]:hover, input[type="button"]:hover,
+.submit-row input:hover, button:hover {
+    background: linear-gradient(135deg, #1e40af, #2563eb) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
+}
+
+.button.default, input[type="submit"].default, .submit-row input.default {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+
+.button.default:hover, input[type="submit"].default:hover {
+    background: linear-gradient(135deg, #059669, #047857) !important;
+}
+
+a.button.deletelink {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+a.button.deletelink:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+}
+
+/* ========== Change List Actions ========== */
+.actions {
+    background: #f8fafc !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    margin-bottom: 20px !important;
+}
+
+.actions select {
+    border: 2px solid #d1d5db !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+}
+
+.actions button {
+    margin-left: 10px !important;
+}
+
+/* ========== Filters ========== */
+#changelist-filter {
+    background: #ffffff !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, #f1f5f9, #e0e7ff) !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    margin: 0 !important;
+    border-bottom: 2px solid #2563eb !important;
+}
+
+#changelist-filter h3 {
+    font-weight: 600 !important;
+    color: #475569 !important;
+    padding: 12px 20px !important;
+    margin: 0 !important;
+    background: #fafafa !important;
+    border-bottom: 1px solid #e5e7eb !important;
+}
+
+#changelist-filter ul {
+    padding: 10px 0 !important;
+}
+
+#changelist-filter li {
+    padding: 8px 20px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+#changelist-filter li a {
+    color: #4b5563 !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
+}
+
+#changelist-filter li a:hover {
+    color: #2563eb !important;
+    padding-left: 5px !important;
+}
+
+#changelist-filter li.selected a {
+    color: #2563eb !important;
+    font-weight: 600 !important;
+}
+
+/* ========== Fieldsets ========== */
+.module .collapse {
+    border-radius: 8px !important;
+    overflow: hidden !important;
+}
+
+fieldset.module {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 12px !important;
+    padding: 0 !important;
+    margin-bottom: 20px !important;
+}
+
+fieldset.module h2 {
+    background: linear-gradient(135deg, #f8fafc, #e0e7ff) !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    padding: 15px 20px !important;
+    margin: 0 !important;
+    border-bottom: 2px solid #2563eb !important;
+}
+
+fieldset.module .description {
+    padding: 12px 20px !important;
+    background: #fffbeb !important;
+    border-bottom: 1px solid #fef3c7 !important;
+    color: #92400e !important;
+    font-size: 13px !important;
+}
+
+/* ========== Pagination ========== */
+.paginator {
+    background: #f8fafc !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.paginator a, .paginator span {
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    margin: 0 3px !important;
+    display: inline-block !important;
+    transition: all 0.2s ease !important;
+}
+
+.paginator a {
+    background: #ffffff !important;
+    color: #2563eb !important;
+    border: 1px solid #d1d5db !important;
+}
+
+.paginator a:hover {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+}
+
+.paginator .this-page {
+    background: #2563eb !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+/* ========== Success Messages ========== */
+.messagelist {
+    padding: 0 !important;
+    margin: 0 0 20px 0 !important;
+}
+
+.messagelist li {
+    padding: 15px 20px !important;
+    border-radius: 8px !important;
+    margin-bottom: 10px !important;
+    font-weight: 500 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.messagelist .success {
+    background: #d1fae5 !important;
+    color: #065f46 !important;
+    border-left: 4px solid #10b981 !important;
+}
+
+.messagelist .warning {
+    background: #fef3c7 !important;
+    color: #92400e !important;
+    border-left: 4px solid #f59e0b !important;
+}
+
+.messagelist .error {
+    background: #fee2e2 !important;
+    color: #991b1b !important;
+    border-left: 4px solid #ef4444 !important;
+}
+
+.messagelist .info {
+    background: #dbeafe !important;
+    color: #1e40af !important;
+    border-left: 4px solid #3b82f6 !important;
+}
+
+/* ========== Dashboard ========== */
+#content-main {
+    padding: 20px !important;
+}
+
+.dashboard .module {
+    transition: all 0.3s ease !important;
+}
+
+.dashboard .module:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dashboard #content-main a {
+    color: #2563eb !important;
+    font-weight: 500 !important;
+}
+
+.dashboard #content-main a:hover {
+    color: #1e40af !important;
+}
+
+/* ========== Search Bar ========== */
+#searchbar {
+    border: 2px solid #d1d5db !important;
+    border-radius: 24px !important;
+    padding: 10px 20px !important;
+    font-size: 14px !important;
+    transition: all 0.3s ease !important;
+}
+
+#searchbar:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+    outline: none !important;
 }
