@@ -125,7 +125,6 @@ class TeamMembershipAdmin(admin.ModelAdmin):
     search_fields = ('user__email', 'user__first_name', 'user__last_name', 'role', 'description')
     ordering = ('user__first_name',)
     list_per_page = 20
-    filter_horizontal = ('service_set',)
     autocomplete_fields = ['user']
 
     def member_info(self, obj):
