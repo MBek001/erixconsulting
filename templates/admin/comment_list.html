@@ -1,0 +1,43 @@
+{% extends 'admin/base.html' %}
+{% block title %}Comments - Admin Panel{% endblock %}
+{% block page_title %}Comments & Testimonials{% endblock %}
+{% block content %}
+<div class="data-table">
+    <div class="data-table-header">
+        <h3 class="data-table-title">All Comments</h3>
+        <form method="GET" class="d-flex gap-2">
+            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ search_query }}">
+            <button type="submit" class="btn btn-secondary"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+    <table class="table table-modern">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Comment</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment in page_obj %}
+            <tr>
+                <td><strong>{{ comment.user.first_name }} {{ comment.user.last_name }}</strong></td>
+                <td>{{ comment.content|truncatewords:20 }}</td>
+                <td>{{ comment.created_at|date:"M d, Y" }}</td>
+                <td>
+                    <form method="POST" action="{% url 'comment_delete' comment.pk %}" style="display: inline;" onsubmit="return confirm('Delete?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-muted py-5">No comments found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

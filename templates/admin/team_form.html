@@ -1,0 +1,54 @@
+{% extends 'admin/base.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Add{% endif %} Team Member{% endblock %}
+{% block page_title %}{% if is_edit %}Edit{% else %}Add{% endif %} Team Member{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="data-table">
+            <div class="data-table-header">
+                <h3 class="data-table-title">{% if is_edit %}Edit{% else %}Add New{% endif %} Team Member</h3>
+            </div>
+            <div class="p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Select User</label>
+                        <select name="user" class="form-select" required>
+                            <option value="">Choose user...</option>
+                            {% for user in users %}
+                            <option value="{{ user.id }}" {% if is_edit and member.user.id == user.id %}selected{% endif %}>
+                                {{ user.first_name }} {{ user.last_name }} ({{ user.email }})
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Role</label>
+                        <input type="text" name="role" class="form-control" value="{% if is_edit %}{{ member.role }}{% endif %}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Facebook URL</label>
+                        <input type="url" name="facebook" class="form-control" value="{% if is_edit %}{{ member.facebook }}{% endif %}">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Twitter URL</label>
+                        <input type="url" name="twitter" class="form-control" value="{% if is_edit %}{{ member.twitter }}{% endif %}">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">LinkedIn URL</label>
+                        <input type="url" name="linkedin" class="form-control" value="{% if is_edit %}{{ member.linkedin }}{% endif %}">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Instagram URL</label>
+                        <input type="url" name="instagram" class="form-control" value="{% if is_edit %}{{ member.instagram }}{% endif %}">
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-2"></i>{% if is_edit %}Update{% else %}Add{% endif %}</button>
+                        <a href="{% url 'team_member_list' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

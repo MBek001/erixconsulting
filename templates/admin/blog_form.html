@@ -1,0 +1,38 @@
+{% extends 'admin/base.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Add{% endif %} Blog{% endblock %}
+{% block page_title %}{% if is_edit %}Edit{% else %}Add{% endif %} Blog Post{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="data-table">
+            <div class="data-table-header">
+                <h3 class="data-table-title">{% if is_edit %}Edit{% else %}Add New{% endif %} Blog Post</h3>
+            </div>
+            <div class="p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Theme/Title</label>
+                        <input type="text" name="theme" class="form-control" value="{% if is_edit %}{{ blog.theme }}{% endif %}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Content</label>
+                        <textarea name="content" class="form-control" rows="8">{% if is_edit %}{{ blog.content }}{% endif %}</textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">File/Image</label>
+                        <input type="file" name="file" class="form-control">
+                        {% if is_edit and blog.file %}
+                        <small class="text-muted">Current file: {{ blog.file.name }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-2"></i>{% if is_edit %}Update{% else %}Add{% endif %}</button>
+                        <a href="{% url 'blog_list_admin' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

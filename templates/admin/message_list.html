@@ -1,0 +1,48 @@
+{% extends 'admin/base.html' %}
+{% block title %}Messages - Admin Panel{% endblock %}
+{% block page_title %}Contact Messages{% endblock %}
+{% block content %}
+<div class="data-table">
+    <div class="data-table-header">
+        <h3 class="data-table-title">Contact Messages</h3>
+        <form method="GET" class="d-flex gap-2">
+            <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ search_query }}">
+            <button type="submit" class="btn btn-secondary"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+    <table class="table table-modern">
+        <thead>
+            <tr>
+                <th>From</th>
+                <th>Subject</th>
+                <th>Message</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in page_obj %}
+            <tr>
+                <td>
+                    <strong>{{ message.name }}</strong><br>
+                    <small class="text-muted">{{ message.email }}</small>
+                </td>
+                <td>{{ message.subject }}</td>
+                <td>{{ message.message|truncatewords:15 }}</td>
+                <td>{{ message.created_at|date:"M d, Y" }}</td>
+                <td>
+                    <form method="POST" action="{% url 'message_delete' message.pk %}" style="display: inline;" onsubmit="return confirm('Delete this message?');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center text-muted py-5">No messages found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

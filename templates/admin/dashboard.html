@@ -1,0 +1,104 @@
+{% extends 'admin/base.html' %}
+{% block title %}Dashboard - Admin Panel{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <h3>{{ total_users }}</h3>
+            <p>Total Users</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <i class="bi bi-person-badge-fill"></i>
+            </div>
+            <h3>{{ total_team_members }}</h3>
+            <p>Team Members</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                <i class="bi bi-briefcase-fill"></i>
+            </div>
+            <h3>{{ total_services }}</h3>
+            <p>Services</p>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="stats-card">
+            <div class="icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white;">
+                <i class="bi bi-envelope-fill"></i>
+            </div>
+            <h3>{{ total_messages }}</h3>
+            <p>Messages</p>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-lg-6">
+        <div class="data-table">
+            <div class="data-table-header">
+                <h3 class="data-table-title">Recent Users</h3>
+            </div>
+            <table class="table table-modern">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Joined</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in recent_users %}
+                    <tr>
+                        <td><strong>{{ user.first_name }} {{ user.last_name }}</strong></td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.join_date|date:"M d, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">No users yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="data-table">
+            <div class="data-table-header">
+                <h3 class="data-table-title">Recent Messages</h3>
+            </div>
+            <table class="table table-modern">
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for message in recent_messages %}
+                    <tr>
+                        <td><strong>{{ message.name }}</strong></td>
+                        <td>{{ message.subject|truncatewords:5 }}</td>
+                        <td>{{ message.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">No messages yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

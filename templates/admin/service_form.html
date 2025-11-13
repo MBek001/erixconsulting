@@ -1,0 +1,49 @@
+{% extends 'admin/base.html' %}
+{% block title %}{% if is_edit %}Edit{% else %}Add{% endif %} Service{% endblock %}
+{% block page_title %}{% if is_edit %}Edit{% else %}Add{% endif %} Service{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="data-table">
+            <div class="data-table-header">
+                <h3 class="data-table-title">{% if is_edit %}Edit{% else %}Add New{% endif %} Service</h3>
+            </div>
+            <div class="p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Service Name</label>
+                        <input type="text" name="name" class="form-control" value="{% if is_edit %}{{ service.name }}{% endif %}" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Description</label>
+                        <textarea name="description" class="form-control" rows="4" required>{% if is_edit %}{{ service.description }}{% endif %}</textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Icon/Image</label>
+                        <input type="file" name="icon" class="form-control">
+                        {% if is_edit and service.icon %}
+                        <small class="text-muted">Current icon: {{ service.icon.name }}</small>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Assign Team Members</label>
+                        <select name="team_members" class="form-select" multiple size="5">
+                            {% for member in team_members %}
+                            <option value="{{ member.id }}" {% if is_edit and member in service.team_members.all %}selected{% endif %}>
+                                {{ member.user.first_name }} {{ member.user.last_name }} - {{ member.role }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <small class="text-muted">Hold Ctrl/Cmd to select multiple</small>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-2"></i>{% if is_edit %}Update{% else %}Add{% endif %}</button>
+                        <a href="{% url 'service_list_admin' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
