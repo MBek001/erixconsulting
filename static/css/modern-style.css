@@ -7,25 +7,25 @@
     --primary-dark: #1e40af;
     --primary-light: #3b82f6;
     --secondary: #0ea5e9;
-    --accent: #8b5cf6;
+    --accent: #1e40af;
     --success: #10b981;
     --warning: #f59e0b;
     --danger: #ef4444;
 
     /* Neutrals */
-    --dark: #0f172a;
+    --dark: #ffffff;
     --dark-alt: #1e293b;
     --gray-900: #111827;
     --gray-800: #1f2937;
-    --gray-700: #374151;
+    --gray-700: #ffffff;
     --gray-600: #4b5563;
     --gray-500: #6b7280;
     --gray-400: #9ca3af;
     --gray-300: #d1d5db;
     --gray-200: #e5e7eb;
-    --gray-100: #f3f4f6;
+    --gray-100: #0d6efd;
     --light: #f8fafc;
-    --white: #ffffff;
+    --white: #2563eb;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
@@ -208,7 +208,7 @@ img {
     background: var(--gradient-dark);
     padding: 0.75rem 0;
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(37, 99, 235);
 }
 
 .topbar-item {

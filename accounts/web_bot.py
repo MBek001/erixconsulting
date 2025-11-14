@@ -15,11 +15,14 @@ import requests
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+
+from erixconsulting.settings import BASE_DIR
+
 load_dotenv()
 from config import *
 
 
-BASE_DIR =Base_Dir
+BASE_DIR =BASE_DIR
 TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
 logger = logging.getLogger(__name__)
 

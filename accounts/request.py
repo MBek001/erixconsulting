@@ -12,12 +12,14 @@ from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 import logging
 from accounts.message_sending import BOT_TOKEN
+from erixconsulting.settings import BASE_DIR
+
 load_dotenv()
 
 
 User = get_user_model()
 bot = Bot(token=BOT_TOKEN)
-BASE_DIR = Base_Dir
+BASE_DIR = BASE_DIR
 
 
 @csrf_exempt

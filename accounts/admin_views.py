@@ -7,7 +7,6 @@ from accounts.models import (
     User, TeamMembership, Service, Comment, ContactMessage,
     BlogPost, Conversation, ChatRequest
 )
-from accounts.forms import UserForm
 
 
 def is_admin(user):
