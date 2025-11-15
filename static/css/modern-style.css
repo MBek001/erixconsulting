@@ -13,19 +13,19 @@
     --danger: #ef4444;
 
     /* Neutrals */
-    --dark: #ffffff;
+    --dark: #0f172a;
     --dark-alt: #1e293b;
     --gray-900: #111827;
     --gray-800: #1f2937;
-    --gray-700: #ffffff;
+    --gray-700: #374151;
     --gray-600: #4b5563;
     --gray-500: #6b7280;
     --gray-400: #9ca3af;
     --gray-300: #d1d5db;
     --gray-200: #e5e7eb;
-    --gray-100: #0d6efd;
+    --gray-100: #f3f4f6;
     --light: #f8fafc;
-    --white: #2563eb;
+    --white: #ffffff;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
