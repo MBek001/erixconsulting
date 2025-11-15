@@ -579,7 +579,7 @@ img {
 }
 
 .team-info {
-    padding: 1.5rem;
+    padding: 10px;
     text-align: center;
     background: var(--gradient-primary);
     color: var(--white);
