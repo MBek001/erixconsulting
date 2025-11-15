@@ -67,7 +67,6 @@
 /* ========== Global Styles ========== */
 * {
     margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
@@ -1157,10 +1156,10 @@ textarea.form-control {
 }
 
 .chat-message {
-    max-width: 75%;
-    padding: 0.875rem 1.125rem;
+    max-width: 100%;
     border-radius: var(--radius-lg);
     word-wrap: break-word;
+    gap: 5px;
 }
 
 .chat-message.user {

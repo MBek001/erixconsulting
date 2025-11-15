@@ -5,8 +5,8 @@
 DJANGO_SAVE_URL = 'https:****'
 CHECK_CHAT_STATUS_URL = 'https:****'
 
-BOT_TOKEN='6548777750:AAE4rCWTaHD5uXyxpGO9dnNE2q9vg4d9RHA'
+BOT_TOKEN='***'
 INFO_CHANNEL_ID='****'
-CHANNEL_INFO_BOT='6548777750:AAE4rCWTaHD5uXyxpGO9dnNE2q9vg4d9RHA'
+CHANNEL_INFO_BOT='****'
 TELEGRAM_API_URL = 'https:***'
-Admin_Dir = "media"
+Admin_Dir = "accounts"

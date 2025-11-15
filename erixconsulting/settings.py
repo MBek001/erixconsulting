@@ -70,7 +70,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'error_middleware.ErrorReportingMiddleware',
-    'erixconsulting.middleware.PaymentCheckMiddleware'
 ]
 
 ROOT_URLCONF = 'erixconsulting.urls'

@@ -175,72 +175,89 @@
         margin-top: 40px;
     }
 
-    /* Chat Widget */
-    .chat-widget {
-        position: fixed;
-        bottom: 30px;
-        left: 30px;
-        z-index: 998;
-    }
+    /* ========================================
+       MODERN CHAT WIDGET - COMPLETELY REDESIGNED
+       ======================================== */
 
-    .chat-icon {
-        width: 65px;
-        height: 65px;
-        background: linear-gradient(135deg, #2563eb, #3b82f6);
+    /* Chat Toggle Button (Bottom Left) */
+    .chat-toggle-btn {
+        position: fixed;
+        bottom: 25px;
+        left: 25px;
+        width: 60px;
+        height: 60px;
+        background: #ffffff;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
-        font-size: 28px;
         cursor: pointer;
-        box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
         transition: all 0.3s ease;
-        position: relative;
     }
 
-    .chat-icon::before {
+    .chat-toggle-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .chat-toggle-btn i {
+        font-size: 28px;
+        color: #1e40af;
+    }
+
+    /* Pulsing animation for chat icon */
+    .chat-toggle-btn::before {
         content: '';
         position: absolute;
-        inset: -3px;
+        width: 100%;
+        height: 100%;
         border-radius: 50%;
-        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        background: #1e40af;
         opacity: 0;
         animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-        0%, 100% { opacity: 0; transform: scale(1); }
-        50% { opacity: 0.3; transform: scale(1.15); }
+        0% {
+            transform: scale(1);
+            opacity: 0.6;
+        }
+        50% {
+            transform: scale(1.3);
+            opacity: 0;
+        }
+        100% {
+            transform: scale(1.3);
+            opacity: 0;
+        }
     }
 
-    .chat-icon:hover {
-        transform: scale(1.1);
-        box-shadow: 0 12px 32px rgba(37, 99, 235, 0.5);
-    }
-
-    .chat-window {
-        display: none;
+    /* Main Chat Container */
+    .modern-chat-container {
         position: fixed;
-        bottom: 110px;
-        left: 30px;
-        width: 380px;
-        height: 550px;
-        background: white;
-        border-radius: 24px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        bottom: 100px;
+        left: 25px;
+        width: 400px;
+        max-width: calc(100vw - 50px);
+        height: 580px;
+        max-height: calc(100vh - 130px);
+        background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        display: none;
         flex-direction: column;
         overflow: hidden;
         z-index: 999;
-        border: 1px solid rgba(37, 99, 235, 0.1);
+        animation: slideIn 0.3s ease;
     }
 
-    .chat-window.show {
+    .modern-chat-container.active {
         display: flex;
-        animation: slideUp 0.3s ease-out;
     }
 
-    @keyframes slideUp {
+    @keyframes slideIn {
         from {
             opacity: 0;
             transform: translateY(20px);
@@ -251,96 +268,89 @@
         }
     }
 
-    .chat-header {
-        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
-        padding: 20px 25px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .chat-header h5 {
-        color: white;
-        font-weight: 700;
-        font-size: 1.1rem;
+    /* Chat Header */
+    .modern-chat-header {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        padding: 20px;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    .chat-header h5::before {
-        content: '';
-        width: 10px;
-        height: 10px;
-        background: #48bb78;
+    .chat-avatar {
+        width: 45px;
+        height: 45px;
         border-radius: 50%;
-        box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.3);
-        animation: statusPulse 2s infinite;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        flex-shrink: 0;
     }
 
-    @keyframes statusPulse {
-        0%, 100% { box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.3); }
-        50% { box-shadow: 0 0 0 6px rgba(72, 187, 120, 0.1); }
+    .chat-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
     }
 
-    .chat-close {
-        background: rgba(255, 255, 255, 0.2);
+    .chat-header-info {
+        flex: 1;
+    }
+
+    .chat-header-info h6 {
+        margin: 0;
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .chat-header-info p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+    }
+
+    .chat-close-btn {
+        background: none;
         border: none;
         color: white;
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        font-size: 1.5rem;
+        font-size: 24px;
         cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
-        line-height: 1;
+        opacity: 0.7;
+        transition: all 0.2s ease;
     }
 
-    .chat-close:hover {
-        background: rgba(255, 255, 255, 0.3);
+    .chat-close-btn:hover {
+        opacity: 1;
         transform: rotate(90deg);
     }
 
-    .chat-messages {
+    /* Chat Messages Area */
+    .modern-chat-messages {
         flex: 1;
-        padding: 20px;
+        padding: 20px 16px;
         overflow-y: auto;
-        background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%);
+        background: #f5f7fa;
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 16px;
     }
 
-    .chat-messages::-webkit-scrollbar {
-        width: 6px;
-    }
-
-    .chat-messages::-webkit-scrollbar-track {
-        background: #f1f5f9;
-        border-radius: 3px;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 3px;
-    }
-
-    .chat-messages::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-    }
-
+    /* Individual Message */
     .chat-message {
-        padding: 12px 16px;
-        border-radius: 16px;
-        max-width: 80%;
-        word-wrap: break-word;
-        font-size: 0.95rem;
-        line-height: 1.5;
-        animation: messageSlide 0.3s ease-out;
+        width: 100%;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 10px;
+        animation: messageSlide 0.3s ease;
     }
 
     @keyframes messageSlide {
@@ -354,168 +364,337 @@
         }
     }
 
-    .chat-message.user {
-        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    .chat-message.user-message {
+        justify-content: flex-start !important;    /* 🔥 qo‘shildi */
+        flex-direction: row-reverse !important;  /* 🔥 qo‘shildi */
+        text-align: right !important;
+    }
+
+    .chat-message.bot-message {
+        justify-content: flex-start !important;  /* 🔥 qo‘shildi */
+        flex-direction: row !important;          /* 🔥 qo‘shildi */
+        text-align: left !important;
+        align-items: flex-start !important;
+    }
+
+    .message-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        overflow: hidden;
+        flex-shrink: 0;
+        background: #e0e7ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .message-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .message-avatar i {
+        font-size: 14px;
+        color: #1e40af;
+    }
+
+    .message-bubble {
+    display: flex;              /* 🔥 qo‘shildi */
+    flex-direction: column;     /* 🔥 qo‘shildi */
+    max-width: 70%;             /* xavfsiz */
+    }
+
+    .message-content {
+        max-width: 100%;
+        padding: 12px 16px;
+        border-radius: 28px;
+        font-size: 14px;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+    .chat-message.bot-message .message-content {
+        background: white;
+        color: #374151;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .chat-message.user-message .message-content {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
         color: white;
-        align-self: flex-end;
-        border-bottom-right-radius: 4px;
+        border-top-left-radius: 18px;
+        border-top-right-radius: 18px;
+        border-bottom-left-radius: 18px;
+        border-bottom-right-radius: 0; /* o‘ng tomoni kesilgan radius */
         box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
     }
 
-    .chat-message.bot {
-        background: white;
-        color: #1e293b;
-        align-self: flex-start;
-        border: 1px solid #e2e8f0;
-        border-bottom-left-radius: 4px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    .message-time {
+        font-size: 11px;
+        color: #9ca3af;
+        margin-top: 4px;
+        padding: 0 4px;
     }
 
-    .chat-input-area {
-        padding: 18px 20px;
+    /* Chat Input Area */
+    .modern-chat-input {
         background: white;
-        border-top: 1px solid #e2e8f0;
+        padding: 15px 20px;
+        border-top: 1px solid #e5e7eb;
         display: flex;
         gap: 10px;
         align-items: center;
     }
 
-    .chat-input-area input {
+    .chat-input-field {
         flex: 1;
-        border: 2px solid #e2e8f0;
-        border-radius: 25px;
-        padding: 12px 20px;
-        font-size: 0.95rem;
+        padding: 12px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 24px;
+        font-size: 14px;
         outline: none;
         transition: all 0.3s ease;
+        background: #f9fafb;
     }
 
-    .chat-input-area input:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    .chat-input-field:focus {
+        border-color: #3b82f6;
+        background: white;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .chat-send-btn {
-        width: 45px;
-        height: 45px;
-        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
         border: none;
         border-radius: 50%;
         color: white;
-        font-size: 1.1rem;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
+        flex-shrink: 0;
         transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
     }
 
-    .chat-send-btn:hover {
-        transform: scale(1.1) rotate(15deg);
-        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+    .chat-send-btn:hover:not(:disabled) {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
 
-    .chat-send-btn:active {
-        transform: scale(0.95);
+    .chat-send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
     }
 
-    /* Mobile Responsive Chat Widget */
-    @media (max-width: 767px) {
-        .chat-widget {
+    .chat-send-btn i {
+        font-size: 16px;
+    }
+
+    /* Scrollbar Styling */
+    .modern-chat-messages::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .modern-chat-messages::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .modern-chat-messages::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+    }
+
+    .modern-chat-messages::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
+    /* ========================================
+       MOBILE RESPONSIVE
+       ======================================== */
+
+    /* Small tablets (768px and below) */
+    @media (max-width: 768px) {
+        .chat-toggle-btn {
             bottom: 20px;
             left: 20px;
-        }
-
-        .chat-icon {
             width: 55px;
             height: 55px;
-            font-size: 24px;
         }
 
-        .chat-window {
-            position: fixed;
+        .chat-toggle-btn i {
+            font-size: 26px;
+        }
+
+        .modern-chat-container {
             bottom: 90px;
             left: 15px;
             right: 15px;
-            width: calc(100% - 30px);
-            height: 400px;
-            max-height: 60vh;
+            width: auto;
+            max-width: 100%;
+            height: 75vh;
+            max-height: 600px;
+        }
+    }
+
+    /* Mobile phones (576px and below) */
+    @media (max-width: 576px) {
+        .chat-toggle-btn {
+            bottom: 15px;
+            left: 15px;
+            width: 52px;
+            height: 52px;
+        }
+
+        .chat-toggle-btn i {
+            font-size: 24px;
+        }
+
+        .modern-chat-container {
+            bottom: 80px;
+            left: 10px;
+            right: 10px;
+            width: auto;
+            height: 70vh;
+            max-height: 550px;
             border-radius: 20px;
         }
 
-        .chat-header {
-            padding: 16px 18px;
+        .modern-chat-header {
+            padding: 16px;
         }
 
-        .chat-header h5 {
-            font-size: 1rem;
+        .chat-avatar {
+            width: 40px;
+            height: 40px;
         }
 
-        .chat-messages {
-            padding: 15px;
-            gap: 10px;
+        .chat-header-info h6 {
+            font-size: 15px;
         }
 
-        .chat-message {
-            padding: 10px 14px;
-            font-size: 0.9rem;
-            max-width: 85%;
+        .chat-header-info p {
+            font-size: 12px;
         }
 
-        .chat-input-area {
+        .modern-chat-messages {
+            padding: 16px 12px;
+            gap: 14px;
+        }
+
+        .message-avatar {
+            width: 30px;
+            height: 30px;
+        }
+
+        .message-avatar i {
+            font-size: 15px;
+        }
+
+        .message-content {
+            max-width: 100%;
+            padding: 11px 15px;
+            font-size: 14px;
+            line-height: 1.45;
+        }
+
+        .message-time {
+            font-size: 11px;
+        }
+
+        .modern-chat-input {
             padding: 14px 16px;
         }
 
-        .chat-input-area input {
-            padding: 10px 16px;
-            font-size: 0.9rem;
+        .chat-input-field {
+            padding: 11px 16px;
+            font-size: 14px;
         }
 
         .chat-send-btn {
             width: 42px;
             height: 42px;
-            font-size: 1rem;
+        }
+
+        .chat-send-btn i {
+            font-size: 16px;
         }
     }
 
-    @media (max-width: 575px) {
-        .chat-icon {
-            width: 50px;
-            height: 50px;
+    /* Very small phones (380px and below) */
+    @media (max-width: 380px) {
+        .chat-toggle-btn {
+            width: 48px;
+            height: 48px;
+            bottom: 30px;
+            left: 12px;
+        }
+
+        .chat-toggle-btn i {
             font-size: 22px;
         }
 
-        .chat-window {
-            bottom: 80px;
-            left: 10px;
-            right: 10px;
-            width: calc(100% - 20px);
-            height: 380px;
-            max-height: 55vh;
+        .modern-chat-container {
+            bottom: 70px;
+            left: 8px;
+            right: 8px;
+            height: 65vh;
+            max-height: 500px;
+            border-radius: 18px;
         }
 
-        .chat-header {
-            padding: 14px 16px;
+        .modern-chat-header {
+            padding: 14px;
         }
 
-        .chat-header h5 {
-            font-size: 0.95rem;
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
         }
 
-        .chat-close {
-            width: 32px;
-            height: 32px;
-            font-size: 1.3rem;
+        .modern-chat-messages {
+            padding: 14px 10px;
         }
 
-        .chat-input-area {
-            padding: 12px 14px;
+        .message-avatar {
+            width: 28px;
+            height: 28px;
+        }
+
+        .message-avatar i {
+            font-size: 14px;
+        }
+
+        .message-content {
+            padding: 10px 14px;
+            font-size: 13px;
+            max-width: 100%;
+        }
+
+        .message-time {
+            font-size: 10px;
+        }
+
+        .chat-input-field {
+            padding: 10px 14px;
+            font-size: 13px;
         }
 
         .chat-send-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
+        }
+
+        .chat-send-btn i {
+            font-size: 15px;
         }
     }
 </style>
@@ -787,23 +966,60 @@
     </div>
 </section>
 
-<!-- Chat Widget -->
-<div class="chat-widget">
-    <div class="chat-icon" id="chat-icon">
-        <i class="fas fa-comments"></i>
+<!-- MODERN CHAT WIDGET -->
+<!-- Chat Toggle Button -->
+<div class="chat-toggle-btn" id="chatToggleBtn">
+    <i class="fas fa-comment-dots"></i>
+</div>
+
+<!-- Chat Container -->
+<div class="modern-chat-container" id="modernChatContainer">
+    <!-- Chat Header -->
+    <div class="modern-chat-header">
+        <div class="chat-avatar">
+            <img src="{% static 'img/icon/logo-white.png' %}" alt="Support">
+        </div>
+        <div class="chat-header-info">
+            <h6>Eric's Consulting</h6>
+            <p>Last seen recently</p>
+        </div>
+        <button class="chat-close-btn" id="chatCloseBtn">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
-    <div class="chat-window" id="chat-window">
-        <div class="chat-header">
-            <h5 class="mb-0">Live Chat</h5>
-            <button class="chat-close" id="chat-close-button">&times;</button>
+
+    <!-- Chat Messages -->
+    <div class="modern-chat-messages" id="modernChatMessages">
+        <!-- Welcome message (default) -->
+        <div class="chat-message bot-message">
+
+            <div class="message-avatar">
+                <i class="fas fa-user-tie"></i>
+            </div>
+
+            <!-- 🔥 TO‘G‘RILANGAN QISM -->
+            <div class="message-bubble">
+                <div class="message-content">
+                    Salom, sizga qanday yordam bera olaman?
+                </div>
+                <div class="message-time">Just now</div>
+            </div>
+            <!-- 🔥 TO‘G‘RILANGAN QISM TUGADI -->
+
         </div>
-        <div class="chat-messages" id="chat-messages"></div>
-        <div class="chat-input-area">
-            <input type="text" id="chat-input" placeholder="Type your message..." class="flex-grow-1">
-            <button class="chat-send-btn" id="send-button">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
+    </div>
+
+
+    <!-- Chat Input -->
+    <div class="modern-chat-input">
+        <input type="text"
+               class="chat-input-field"
+               id="chatInputField"
+               placeholder="Ask me anything..."
+               autocomplete="off">
+        <button class="chat-send-btn" id="chatSendBtn">
+            <i class="fas fa-paper-plane"></i>
+        </button>
     </div>
 </div>
 
@@ -865,77 +1081,77 @@
             });
         }
 
-        // Chat Widget Functions
-        function fetchChatHistory() {
-            $.ajax({
-                url: '{% url "chat_with_bot" %}',
-                method: 'GET',
-                success: function(response) {
-                    $('#chat-messages').empty();
-                    if (response.chat_history && response.chat_history.length > 0) {
-                        response.chat_history.forEach(function(message) {
-                            var messageClass = message.sender === 'user' ? 'user' : 'bot';
-                            $('#chat-messages').append(
-                                '<div class="chat-message ' + messageClass + '">' +
-                                escapeHtml(message.text) +
-                                '</div>'
-                            );
-                        });
-                    }
-                    scrollToBottom();
-                },
-                error: function(error) {
-                    console.error('Error fetching chat history:', error);
-                }
-            });
-        }
+        // ========================================
+        // MODERN CHAT WIDGET FUNCTIONALITY
+        // ========================================
 
-        function scrollToBottom() {
-            var chatMessages = document.getElementById('chat-messages');
-            if (chatMessages) {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+        const chatToggleBtn = $('#chatToggleBtn');
+        const chatContainer = $('#modernChatContainer');
+        const chatCloseBtn = $('#chatCloseBtn');
+        const chatMessages = $('#modernChatMessages');
+        const chatInput = $('#chatInputField');
+        const chatSendBtn = $('#chatSendBtn');
+
+        // Toggle chat window
+        chatToggleBtn.on('click', function() {
+            chatContainer.toggleClass('active');
+            if (chatContainer.hasClass('active')) {
+                fetchChatHistory();
+
+                // 🔥 Mobil brauzerlarda ishlashi uchun kechiktirib fokus berish
+                setTimeout(() => {
+                    chatInput.focus();
+                }, 150);
             }
-        }
+        });
 
-        function sendMessage(userMessage) {
-            $('#chat-messages').append(
-                '<div class="chat-message user">' + escapeHtml(userMessage) + '</div>'
-            );
-            $('#chat-input').val('');
-            scrollToBottom();
+        // Close chat window
+        chatCloseBtn.on('click', function() {
+            chatContainer.removeClass('active');
+        });
 
-            $.ajax({
-                url: '{% url "chat_with_bot" %}',
-                method: 'POST',
-                data: {
-                    'message': userMessage,
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                },
-                success: function(response) {
-                    if (response.messages) {
-                        response.messages.forEach(function(msg) {
-                            $('#chat-messages').append(
-                                '<div class="chat-message bot">' + escapeHtml(msg.text) + '</div>'
-                            );
-                        });
-                    }
-                    scrollToBottom();
-                },
-                error: function(error) {
-                    if (error.status === 401) {
-                        $('#chat-messages').append(
-                            '<div class="chat-message bot">Please log in or register to use the chatbot.</div>'
-                        );
-                    } else {
-                        console.error('Error sending message:', error);
-                    }
-                    scrollToBottom();
-                }
+        // Function to get current time
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
             });
         }
 
+        // Function to scroll to bottom
+        function scrollToBottom() {
+            chatMessages.scrollTop(chatMessages[0].scrollHeight);
+        }
+
+        // Function to add message to chat
+        function addMessage(text, isUser = false) {
+            const messageClass = isUser ? 'user-message' : 'bot-message';
+            const avatarIcon = isUser ? 'fa-user' : 'fa-user-tie';
+            const currentTime = getCurrentTime();
+
+            const messageHTML = `
+                <div class="chat-message ${messageClass}">
+                    <div class="message-avatar">
+                        <i class="fas ${avatarIcon}"></i>
+                    </div>
+                    <div>
+                        <div class="message-content">
+                            ${escapeHtml(text)}
+                        </div>
+                        <div class="message-time">${currentTime}</div>
+                    </div>
+                </div>
+            `;
+
+            chatMessages.append(messageHTML);
+            scrollToBottom();
+        }
+
+        // Function to escape HTML
         function escapeHtml(text) {
-            var map = {
+            const map = {
                 '&': '&amp;',
                 '<': '&lt;',
                 '>': '&gt;',
@@ -945,31 +1161,94 @@
             return text.replace(/[&<>"']/g, function(m) { return map[m]; });
         }
 
-        // Chat Widget Event Handlers
-        $('#chat-icon').on('click', function() {
-            $('#chat-window').toggleClass('show');
-            if ($('#chat-window').hasClass('show')) {
-                fetchChatHistory();
+        // Function to fetch chat history
+        function fetchChatHistory() {
+            $.ajax({
+                url: '{% url "chat_with_bot" %}',
+                method: 'GET',
+                success: function(response) {
+                    // Clear existing messages except welcome message
+                    chatMessages.find('.chat-message:not(:first)').remove();
+
+                    if (response.chat_history && response.chat_history.length > 0) {
+                        response.chat_history.forEach(function(message) {
+                            const isUser = message.sender === 'user';
+                            addMessage(message.text, isUser);
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.error('Error fetching chat history:', error);
+                }
+            });
+        }
+
+        // Function to send message
+        function sendMessage() {
+            const messageText = chatInput.val().trim();
+
+            if (messageText === '') {
+                return;
             }
+
+            // Disable send button
+            chatSendBtn.prop('disabled', true);
+
+            // Add user message to chat
+            addMessage(messageText, true);
+
+            // Clear input
+            chatInput.val('');
+
+            // Send message to server
+            $.ajax({
+                url: '{% url "chat_with_bot" %}',
+                method: 'POST',
+                data: {
+                    'message': messageText,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    if (response.messages && response.messages.length > 0) {
+                        response.messages.forEach(function(msg) {
+                            addMessage(msg.text, false);
+                        });
+                    }
+                    chatSendBtn.prop('disabled', false);
+                    chatInput.focus();
+                },
+                error: function(error) {
+                    if (error.status === 401) {
+                        addMessage('Please log in or register to use the chatbot.', false);
+                    } else {
+                        addMessage('Sorry, there was an error. Please try again.', false);
+                        console.error('Error sending message:', error);
+                    }
+                    chatSendBtn.prop('disabled', false);
+                    chatInput.focus();
+                }
+            });
+        }
+
+        // Send message on button click
+        chatSendBtn.on('click', function() {
+            sendMessage();
         });
 
-        $('#chat-close-button').on('click', function() {
-            $('#chat-window').removeClass('show');
-        });
-
-        $('#send-button').on('click', function() {
-            var userMessage = $('#chat-input').val().trim();
-            if (userMessage) {
-                sendMessage(userMessage);
-            }
-        });
-
-        $('#chat-input').on('keypress', function(e) {
+        // Send message on Enter key
+        chatInput.on('keypress', function(e) {
             if (e.which === 13 && !e.shiftKey) {
                 e.preventDefault();
-                var userMessage = $(this).val().trim();
-                if (userMessage) {
-                    sendMessage(userMessage);
+                sendMessage();
+            }
+        });
+
+        // Close chat when clicking outside (optional)
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.modern-chat-container, .chat-toggle-btn').length) {
+                if (chatContainer.hasClass('active')) {
+                    // Uncomment to enable close on outside click
+                    // chatContainer.removeClass('active');
                 }
             }
         });
