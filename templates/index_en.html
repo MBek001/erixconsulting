@@ -117,32 +117,8 @@
     }
 
     /* Team Section */
-    .team-carousel .owl-nav button {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 50px;
-        height: 50px;
-        background: white !important;
-        border-radius: 50%;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        color: #2563eb !important;
-        font-size: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .team-carousel .owl-nav button:hover {
-        background: #2563eb !important;
-        color: white !important;
-        transform: translateY(-50%) scale(1.1);
-    }
-
-    .team-carousel .owl-nav button.owl-prev {
-        left: -25px;
-    }
-
-    .team-carousel .owl-nav button.owl-next {
-        right: -25px;
+    .team-carousel .owl-nav {
+        display: none;
     }
 
     .team-carousel .owl-dots {
@@ -1032,13 +1008,12 @@
         $('.team-carousel').owlCarousel({
             loop: true,
             margin: 30,
-            nav: true,
-            navText: ['<i class="fas fa-chevron-left"></i>', '<i class="fas fa-chevron-right"></i>'],
+            nav: false,
             dots: true,
             autoplay: true,
-            autoplayTimeout: 4000,
+            autoplayTimeout: 5000,
             autoplayHoverPause: true,
-            smartSpeed: 800,
+            smartSpeed: 1200,
             responsive: {
                 0: { items: 1 },
                 768: { items: 2 },
