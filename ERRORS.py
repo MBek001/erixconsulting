@@ -11,7 +11,7 @@ def send_error_to_telegram(error_message):
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
 
     project_prefix = "Project: ErixConsulting:\n"
-    full_message = project_prefix + error_message
+    full_message = project_prefix + str(error_message)
     escaped_message = escape_markdown(full_message)
 
     payload = {
