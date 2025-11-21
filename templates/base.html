@@ -116,6 +116,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{% url 'blog' %}" class="nav-link {% if active_page == 'blog' %}active{% endif %}">
+                            Blog
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{% url 'contact' %}" class="nav-link {% if active_page == 'contact' %}active{% endif %}">
                             Contact
                         </a>
