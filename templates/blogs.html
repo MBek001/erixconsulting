@@ -1,433 +1,129 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block css %}
-    <!-- Local Libraries Stylesheet -->
-    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+{% block title %}Blog - Eric's Consulting{% endblock %}
 
-    <!-- Local Customized Bootstrap Stylesheet -->
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
-
-    <!-- Local Template Stylesheet -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-
-    <style>
-
-        .blog-wrap {
-            position: relative;
-            background-size: cover;
-            background-position: center;
-            height: 400px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-
-        .blog-wrap .blog-overlay {
-            position: absolute;
-            background-repeat: no-repeat;
-            background-image: url("{% static 'img/image-2000x450.jpg' %}");
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .blog-wrap .slider-text {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .blog-wrap {
-                height: 220px; /* Reduce height for mobile screens */
-            }
-
-            .blog-wrap .blog-overlay {
-                background-size: cover; /* Ensure the image always covers the screen */
-                background-position: center top; /* Align image more towards the top */
-            }
-
-            .blog-wrap .slider-text {
-                font-size: 1.2rem; /* Adjust font size for smaller screens */
-                padding: 10px; /* Add padding for better readability */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .blog-wrap {
-                height: 150px; /* Further reduce the height for very small screens */
-            }
-
-            .blog-wrap .slider-text {
-                font-size: 1rem; /* Smaller font size for mobile */
-            }
-        }
-
-    </style>
-    
-    <style>
-        /* Chat icon */
-        #chat-icon {
-            position: fixed; /* Fixed position */
-            bottom: 40px; /* Adjusted to ensure chat icon is visible */
-            left: 50px; /* Positioned on the left */
-            font-size: 20px; /* Icon size */
-            cursor: pointer;
-            z-index: 1000; /* Ensure it is above other content */
-            background-color: #007bff; /* Icon background color */
-            color: #fff; /* Icon color */
-            border-radius: 50%; /* Circular icon */
-            padding: 10px; /* Padding around icon */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow for depth */
-            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
-        }
-
-        #chat-icon:hover {
-            background-color: #0056b3; /* Darker background on hover */
-            transform: scale(1.1); /* Slightly increase size on hover */
-        }
-
-        /* Chat window */
-        #chat-window {
-            display: none;
-            position: fixed;
-            bottom: 100px;
-            right: 20px;
-            width: 350px;
-            height: 500px;
-            background-color: white;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Chat header */
-        #chat-header {
-            background-color: #007bff;
-            color: white;
-            padding: 15px;
-            border-radius: 15px 15px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Chat messages */
-        #chat-messages {
-            padding: 10px;
-            overflow-y: scroll;
-            flex: 1; /* Allow chat messages to grow and take available space */
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Messages */
-        .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 80%;
-            display: inline-block;
-            clear: both;
-        }
-
-        .user-message {
-            background-color: #007bff;
-            color: white;
-            margin-left: auto; /* Align to the right */
-            text-align: right;
-        }
-
-        .answer-message {
-            background-color: #f1f1f1;
-            color: #000;
-            margin-right: auto; /* Align to the left */
-            text-align: left;
-        }
-
-        /* Input container */
-        #chat-input-container {
-            padding: 10px;
-            display: flex;
-            border-top: 1px solid #ddd;
-        }
-
-        #chat-input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            outline: none; /* Remove default input focus outline */
-        }
-
-        #send-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            margin-left: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-        }
-
-        #send-button i {
-            font-size: 16px;
-        }
-    </style>
-{% endblock %}
-{{ open_requests }}
-{{ has_unread_messages }}
 {% block content %}
-
-
-    <section class="blog-wrap">
-        <div class="blog-overlay">
-        </div>
-        <div class="slider-text">
-        </div>
-    </section>
-    <div class="text-md-center" style=" font-style: inherit; color: rgb(84,84,84); font-size: xxx-large; margin-top: 50px; margin-bottom: -50px;
-            ">Welcome to our Blog-Page hope you will enjoy it
+<!-- Blog Hero Section -->
+<section class="hero-section" style="background: var(--gradient-primary); padding: 100px 0 60px;">
+    <div class="container text-center">
+        <h1 class="display-4 text-white mb-3 wow fadeInDown" data-wow-delay="0.1s">
+            <i class="fas fa-blog me-3"></i>Our Blog
+        </h1>
+        <p class="lead text-white mb-0 wow fadeInUp" data-wow-delay="0.2s">
+            Insights, Updates, and Expert Knowledge
+        </p>
     </div>
+</section>
 
-    <!-- Blog Section Start -->
-    <div class="container-fluid pt-5">
-        <div class="container py-5">
-            <div class="row">
+<!-- Blog Posts Section -->
+<section class="section-padding bg-light">
+    <div class="container">
+        {% if blogs %}
+            <div class="row g-4">
                 {% for post in blogs %}
-                    <div class="col-md-6 mb-4">
-                        <div class="blog-post">
-                            <!-- Display Theme/Title (Name) -->
-                            <h3>{{ post.theme }}</h3>
-
-                            <!-- Display file content if it exists (Video/Photo) -->
-                            {% if post.file %}
-                                {% if post.file.url|slice:"-4:" == ".mp4" %}
-                                    <video controls class="media-content">
+                <div class="col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="0.{{ forloop.counter }}s">
+                    <div class="blog-card" style="background: var(--white); border-radius: var(--radius-xl); overflow: hidden; box-shadow: var(--shadow); transition: var(--transition); height: 100%;">
+                        <!-- Blog Media -->
+                        {% if post.file %}
+                            <div class="blog-media" style="position: relative; overflow: hidden; height: 300px; background: var(--gray-200);">
+                                {% if post.file.url|slice:"-4:" == ".mp4" or post.file.url|slice:"-4:" == ".mov" %}
+                                    <video controls style="width: 100%; height: 100%; object-fit: cover;">
                                         <source src="{{ post.file.url }}" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
-                                {% elif post.file.url|slice:"-4:" == ".jpg" or post.file.url|slice:"-4:" == ".png" %}
-                                    <img src="{{ post.file.url }}" class="media-content" alt="Blog Image">
+                                {% elif post.file.url|slice:"-4:" == ".jpg" or post.file.url|slice:"-4:" == ".png" or post.file.url|slice:"-5:" == ".jpeg" or post.file.url|slice:"-4:" == ".gif" %}
+                                    <img src="{{ post.file.url }}" alt="{{ post.theme }}" style="width: 100%; height: 100%; object-fit: cover; transition: var(--transition);">
                                 {% else %}
-                                    <p>Unsupported file type.</p>
+                                    <div style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--gradient-primary);">
+                                        <i class="fas fa-file-alt" style="font-size: 4rem; color: var(--white);"></i>
+                                    </div>
                                 {% endif %}
-                            {% endif %}
+                            </div>
+                        {% else %}
+                            <div class="blog-media" style="position: relative; overflow: hidden; height: 300px; background: var(--gradient-primary); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-newspaper" style="font-size: 5rem; color: rgba(255,255,255,0.3);"></i>
+                            </div>
+                        {% endif %}
 
-                            <!-- Display Content -->
-                            <p>{{ post.content|truncatewords:30 }}</p>
+                        <!-- Blog Content -->
+                        <div style="padding: 2rem;">
+                            <!-- Blog Meta -->
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; color: var(--gray-500); font-size: 0.875rem;">
+                                <span><i class="far fa-calendar-alt me-1"></i>{{ post.created_at|date:"F j, Y" }}</span>
+                                <span><i class="far fa-clock me-1"></i>{{ post.created_at|date:"g:i A" }}</span>
+                            </div>
 
-                            <!-- Display Posted Date -->
-                            <p class="text-muted">Posted on {{ post.created_at|date:"F j, Y" }}</p>
+                            <!-- Blog Title -->
+                            <h3 style="font-size: 1.5rem; font-weight: 700; color: var(--dark); margin-bottom: 1rem; line-height: 1.4;">
+                                {{ post.theme }}
+                            </h3>
+
+                            <!-- Blog Excerpt -->
+                            <p style="color: var(--gray-600); font-size: 0.9375rem; line-height: 1.7; margin-bottom: 1.5rem;">
+                                {{ post.content|truncatewords:25 }}
+                            </p>
+
+                            <!-- Read More Button -->
+                            <a href="#" class="btn-read-more" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--primary); font-weight: 600; transition: var(--transition); text-decoration: none;">
+                                Read Full Article
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
+                </div>
                 {% endfor %}
             </div>
-        </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-5 wow fadeInUp">
+                <div style="background: var(--white); border-radius: var(--radius-xl); padding: 4rem 2rem; box-shadow: var(--shadow);">
+                    <i class="fas fa-newspaper" style="font-size: 5rem; color: var(--gray-300); margin-bottom: 2rem;"></i>
+                    <h3 style="color: var(--dark); margin-bottom: 1rem;">No Blog Posts Yet</h3>
+                    <p style="color: var(--gray-600); font-size: 1.125rem; max-width: 500px; margin: 0 auto;">
+                        Stay tuned! We're working on bringing you valuable insights and updates soon.
+                    </p>
+                </div>
+            </div>
+        {% endif %}
     </div>
-    <!-- Blog Section End -->
+</section>
 
+<style>
+/* Blog Card Hover Effect */
+.blog-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+}
 
-   <!-- Chat Icon -->
-    <div id="chat-icon">
-        <i class="fa fa-comments"></i>
-    </div>
+.blog-card:hover img {
+    transform: scale(1.1);
+}
 
-    <!-- Chat Window -->
-    <div id="chat-window">
-        <div id="chat-header">
-            <span>Live Chat</span>
-            <button id="chat-close-button">&times;</button>
-        </div>
-        <div id="chat-messages">
-            <!-- Messages will be dynamically added here -->
-        </div>
+/* Read More Button Hover */
+.btn-read-more:hover {
+    gap: 0.75rem;
+    color: var(--primary-dark);
+}
 
-        <div id="chat-input-container">
-            <input id="chat-input" type="text" placeholder="Type your message..."/>
-            <button id="send-button"><i class="fa fa-paper-plane"></i></button>
-        </div>
-    </div>
+/* Video Controls */
+.blog-card video::-webkit-media-controls-panel {
+    background: linear-gradient(transparent, rgba(0,0,0,0.5));
+}
 
-{% endblock %}
+/* Responsive */
+@media (max-width: 768px) {
+    .blog-media {
+        height: 220px !important;
+    }
 
+    .hero-section {
+        padding: 80px 0 40px !important;
+    }
 
-{% block js %}
-    <!-- Local JavaScript Libraries -->
-    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
-    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
-    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
-    <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
-
-    <!-- Template Javascript -->
-    <script src="{% static 'js/main.js' %}"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const posts = document.querySelectorAll('.blog-post');
-            const videos = document.querySelectorAll('video'); // Select all video elements
-            let currentIndex = 0;
-
-            function scrollToPost(index) {
-                if (index < 1 || index >= posts.length) return;
-                posts[index].scrollIntoView({behavior: 'smooth'});
-            }
-
-            function pauseAllVideos() {
-                videos.forEach(video => {
-                    video.pause(); // Pause all videos
-                    video.currentTime = 0; // Reset to the beginning
-                });
-            }
-
-            window.addEventListener('scroll', function () {
-                const scrollPosition = window.scrollY + window.innerHeight;
-                const postHeight = posts[0].offsetHeight;
-
-                if (scrollPosition >= (currentIndex + 1) * postHeight) {
-                    currentIndex++;
-                    if (currentIndex < posts.length) {
-                        pauseAllVideos(); // Pause all videos when moving to the next post
-                        scrollToPost(currentIndex);
-                    }
-                } else if (scrollPosition <= currentIndex * postHeight) {
-                    currentIndex--;
-                    if (currentIndex >= 0) {
-                        pauseAllVideos(); // Pause all videos when moving to the previous post
-                        scrollToPost(currentIndex);
-                    }
-                }
-            });
-
-            // Initial scroll to the first post
-            scrollToPost(0);
-        });
-    </script>
-   
-      <script>
-        $(document).ready(function () {
-
-            // Function to fetch chat history
-            function fetchChatHistory() {
-                $.ajax({
-                    url: '{% url "chat_with_bot" %}',  // URL to the Django view for chat history
-                    method: 'GET',
-                    success: function (response) {
-                        console.log('Chat history response:', response); // Debugging log
-
-                        $('#chat-messages').empty(); // Clear the existing messages
-
-                        // Loop through chat history and append messages
-                        response.chat_history.forEach(function (message) {
-                            var messageClass = message.sender === 'user' ? 'user-message' : 'answer-message';
-                            $('#chat-messages').append('<div class="message ' + messageClass + '">' + escapeHtml(message.text) + '</div>');
-                        });
-
-                        // Scroll to the bottom to show the latest messages
-                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
-                    },
-                    error: function (error) {
-                        console.error('Error fetching chat history:', error); // Log error
-                    }
-                });
-            }
-
-            function scrollToBottom() {
-                $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
-            }
-
-            // Hide chat window initially
-            $('#chat-window').hide();
-
-            // Toggle chat window visibility
-            $('#chat-icon').on('click', function () {
-                $('#chat-window').toggle(); // Show/Hide the chat window
-                if ($('#chat-window').is(':visible')) {
-                    fetchChatHistory(); // Fetch chat history when opening the chat window
-                }
-            });
-
-            // Close button for chat window
-            $('#chat-close-button').on('click', function () {
-                $('#chat-window').hide(); // Hide chat window when clicked
-            });
-
-            // Function to send message
-            function sendMessage(userMessage) {
-                // Append user message to chat window
-                $('#chat-messages').append('<div class="message user-message">' + escapeHtml(userMessage) + '</div>');
-                $('#chat-input').val('');  // Clear input field
-
-                scrollToBottom();
-
-                // Send message via AJAX POST request
-                $.ajax({
-                    url: '{% url "chat_with_bot" %}',  // URL to Django view handling messages
-                    method: 'POST',
-                    data: {
-                        'message': userMessage,
-                        'csrfmiddlewaretoken': '{{ csrf_token }}'
-                    },
-                    success: function (response) {
-                        // Append bot response to the chat window
-                        response.messages.forEach(function (msg) {
-                            $('#chat-messages').append('<div class="message answer-message">' + escapeHtml(msg.text) + '</div>');
-                        });
-
-                        // Scroll to the bottom after receiving the bot response
-                        $('#chat-messages').scrollTop($('#chat-messages')[0].scrollHeight);
-                    },
-                    error: function (error) {
-                        if (error.status === 401) {
-                            $('#chat-messages').append('<div  class="message error-message">You must log in or register to use the chatbot.</div>');
-                        } else {
-                            console.error('Error sending message:', error); // Log error if message sending fails
-                        }
-                    }
-                });
-            }
-
-            // Send message on button click
-            $('#send-button').on('click', function () {
-                var userMessage = $('#chat-input').val();
-                if (userMessage.trim()) {
-                    sendMessage(userMessage);  // Call sendMessage function
-                }
-            });
-
-            $('#chat-input').on('keypress', function (e) {
-                if (e.which === 13 && !e.shiftKey) {
-                    e.preventDefault();
-                    var userMessage = $('#chat-input').val();
-                    if (userMessage.trim()) {
-                        sendMessage(userMessage);  // Call sendMessage function
-                    }
-                }
-            });
-
-            // Escape HTML to prevent XSS
-            function escapeHtml(text) {
-                var map = {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#039;'
-                };
-                return text.replace(/[&<>"']/g, function (m) {
-                    return map[m];
-                });
-            }
-
-        });
-
-    </script>
-    
+    .hero-section h1 {
+        font-size: 2rem !important;
+    }
+}
+</style>
 {% endblock %}
