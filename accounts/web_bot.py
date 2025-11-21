@@ -93,7 +93,7 @@ def send_message_to_bot(request):
                         os.makedirs(CONVERSATIONS_DIR, exist_ok=True)
 
                         with open(file_path, 'a') as file:
-                            file.write(f'{assistant_name}: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
+                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
                         return JsonResponse({'status': 'success'}, status=200)
                     else:
                         error_message = response_data.get('description', 'Unknown error')
@@ -118,7 +118,7 @@ def fetch_messages(request):
     first_name = request.GET.get('first_name')
 
     filename = f"{first_name}_{chat_id}.txt"
-    file_path = os.path.join(BASE_DIR, filename)
+    file_path = os.path.join(CONVERSATIONS_DIR, filename)
 
     if not os.path.exists(file_path):
         logger.error(f"Chat file does not exist for {chat_id}")
@@ -228,11 +228,11 @@ def close_chat(request):
                         return JsonResponse({'success': False, 'error': 'Chat request not found.'}, status=404)
 
                     filename = f'{first_name}_{chat_id}.txt'
-                    file_path = os.path.join(BASE_DIR, filename)
+                    file_path = os.path.join(CONVERSATIONS_DIR, filename)
                     if os.path.exists(file_path):
                         os.remove(file_path)
 
-                    user_directory = os.path.join(BASE_DIR, f'{first_name}_{chat_id}')
+                    user_directory = os.path.join(CONVERSATIONS_DIR, f'{first_name}_{chat_id}')
                     if os.path.exists(user_directory):
                         shutil.rmtree(user_directory)
 
