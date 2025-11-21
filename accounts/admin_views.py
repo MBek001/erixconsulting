@@ -103,6 +103,10 @@ def team_member_add(request):
                 youtube=youtube
             )
 
+            # Make user staff member
+            user.is_staff = True
+            user.save()
+
             messages.success(request, 'Team member added successfully!')
             return redirect('team_member_list')
         except Exception as e:
@@ -300,7 +304,7 @@ def user_list(request):
 
     users = users.order_by('-join_date')
 
-    paginator = Paginator(users, 15)
+    paginator = Paginator(users, 100)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -313,34 +317,67 @@ def user_list(request):
     return render(request, 'admin/user_list.html', context)
 
 
+@login_required
+@user_passes_test(is_admin)
+def user_delete(request, pk):
+    """Delete user"""
+    try:
+        user = User.objects.get(pk=pk)
+        if user.is_superuser:
+            messages.error(request, 'Cannot delete superuser!')
+            return redirect('user_list')
+        user.delete()
+        messages.success(request, 'User deleted successfully!')
+    except User.DoesNotExist:
+        messages.error(request, 'User not found!')
+    except Exception as e:
+        messages.error(request, f'Error: {str(e)}')
+    return redirect('user_list')
+
+
 # ==================== CONTACT MESSAGES ====================
 
 @login_required
 @user_passes_test(is_admin)
 def message_list(request):
-    """List all contact messages"""
+    """List all messages (both contact and telegram)"""
     search_query = request.GET.get('search', '')
+    message_type = request.GET.get('type', 'all')
 
-    messages_query = ContactMessage.objects.all()
+    # Get telegram messages
+    telegram_messages = TelegramUserMessage.objects.all()
+
+    # Get contact messages
+    contact_messages = ContactMessage.objects.all()
 
     if search_query:
-        messages_query = messages_query.filter(
+        telegram_messages = telegram_messages.filter(
+            Q(first_name__icontains=search_query) |
+            Q(username__icontains=search_query) |
+            Q(chat_id__icontains=search_query)
+        )
+        contact_messages = contact_messages.filter(
             Q(name__icontains=search_query) |
             Q(email__icontains=search_query) |
             Q(subject__icontains=search_query) |
             Q(message__icontains=search_query)
         )
 
-    messages_query = messages_query.order_by('-created_at')
+    # Filter by type
+    if message_type == 'telegram':
+        contact_messages = ContactMessage.objects.none()
+    elif message_type == 'contact':
+        telegram_messages = TelegramUserMessage.objects.none()
 
-    paginator = Paginator(messages_query, 15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    telegram_messages = telegram_messages.order_by('-created_at')
+    contact_messages = contact_messages.order_by('-created_at')
 
     context = {
         'active_page': 'admin_messages',
-        'page_obj': page_obj,
+        'telegram_messages': telegram_messages[:50],
+        'contact_messages': contact_messages[:50],
         'search_query': search_query,
+        'message_type': message_type,
     }
     return render(request, 'admin/message_list.html', context)
 

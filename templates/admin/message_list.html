@@ -1,15 +1,73 @@
 {% extends 'admin/base.html' %}
 {% block title %}Messages - Admin Panel{% endblock %}
-{% block page_title %}Contact Messages{% endblock %}
+{% block page_title %}All Messages{% endblock %}
 {% block content %}
 <div class="data-table">
     <div class="data-table-header">
-        <h3 class="data-table-title">Contact Messages</h3>
+        <h3 class="data-table-title">All Messages</h3>
         <form method="GET" class="d-flex gap-2">
             <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ search_query }}">
+            <select name="type" class="form-select" style="width: 180px;">
+                <option value="all" {% if message_type == 'all' %}selected{% endif %}>All Messages</option>
+                <option value="telegram" {% if message_type == 'telegram' %}selected{% endif %}>Telegram Only</option>
+                <option value="contact" {% if message_type == 'contact' %}selected{% endif %}>Contact Only</option>
+            </select>
             <button type="submit" class="btn btn-secondary"><i class="bi bi-search"></i></button>
         </form>
     </div>
+
+    <!-- Telegram Messages -->
+    {% if telegram_messages %}
+    <h5 class="mt-4 mb-3">Telegram Messages ({{ telegram_messages|length }})</h5>
+    <table class="table table-modern">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Chat ID</th>
+                <th>Staff Assigned</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for message in telegram_messages %}
+            <tr>
+                <td>
+                    <strong>{{ message.first_name|default:message.username }}</strong>
+                    {% if message.username %}<br><small class="text-muted">@{{ message.username }}</small>{% endif %}
+                </td>
+                <td>{{ message.chat_id }}</td>
+                <td>{{ message.staff.get_full_name|default:"-" }}</td>
+                <td>
+                    {% if message.status == 'open' %}
+                        <span class="badge bg-success">Open</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Closed</span>
+                    {% endif %}
+                    {% if message.is_read %}
+                        <span class="badge bg-info">Read</span>
+                    {% else %}
+                        <span class="badge bg-warning">Unread</span>
+                    {% endif %}
+                </td>
+                <td>{{ message.created_at|date:"M d, Y H:i" }}</td>
+                <td>
+                    {% if message.message_file %}
+                    <a href="{{ message.message_file.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-file-text"></i> View
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <!-- Contact Messages -->
+    {% if contact_messages %}
+    <h5 class="mt-4 mb-3">Contact Form Messages ({{ contact_messages|length }})</h5>
     <table class="table table-modern">
         <thead>
             <tr>
@@ -21,7 +79,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for message in page_obj %}
+            {% for message in contact_messages %}
             <tr>
                 <td>
                     <strong>{{ message.name }}</strong><br>
@@ -37,12 +95,16 @@
                     </form>
                 </td>
             </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" class="text-center text-muted py-5">No messages found</td>
-            </tr>
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
+
+    {% if not telegram_messages and not contact_messages %}
+    <div class="text-center text-muted py-5">
+        <i class="bi bi-inbox" style="font-size: 3rem;"></i>
+        <p class="mt-3">No messages found</p>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
