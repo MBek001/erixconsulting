@@ -10,7 +10,7 @@ urlpatterns = [
     path('', home_view, name='home'),
     # path('about', about_view, name='about'),
     path('service', service_list, name='service'),
-    # path('blog', blog_view, name='blog'),
+    path('blog', blog_view, name='blog'),
     path('profile', Profile.as_view(), name='profile'),
     path('delete-profile-picture/', delete_profile_picture, name='delete_profile_picture'),
     path('contact', contact_us, name='contact'),
@@ -42,6 +42,7 @@ urlpatterns = [
 
     # User Management
     path('custom-admin/users/', admin_views.user_list, name='user_list_admin'),
+    path('custom-admin/users/<int:pk>/delete/', admin_views.user_delete, name='user_delete'),
 
     # Messages
     path('custom-admin/messages/', admin_views.message_list, name='message_list_admin'),

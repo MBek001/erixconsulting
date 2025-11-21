@@ -18,7 +18,7 @@ def chat_page(request):
     staff_messages = TelegramUserMessage.objects.filter(staff=request.user)
 
     for chat in staff_messages:
-        file_path = os.path.join(Admin_Dir, chat.message_file.name)
+        file_path = os.path.join(CONVERSATIONS_DIR, chat.message_file.name)
         if os.path.exists(file_path):
             try:
                 with open(file_path, 'r') as file:
@@ -44,7 +44,7 @@ def fetch_messages_history(request):
     first_name = request.GET.get('first_name')
 
     filename = f"{first_name}_{chat_id}.txt"
-    file_path = os.path.join(Admin_Dir, filename)
+    file_path = os.path.join(CONVERSATIONS_DIR, filename)
 
     if not os.path.exists(file_path):
         logger.error(f"Chat file does not exist for {chat_id}")

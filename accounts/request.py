@@ -48,16 +48,12 @@ def save_message(request):
             return JsonResponse({'status': 'error', 'message': 'Invalid data'}, status=400)
 
         filename = f'{first_name}_{chat_id}.txt'
-        file_path = os.path.join(BASE_DIR, filename)
-        admin_path = os.path.join(Admin_Dir,filename)
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-        os.makedirs(os.path.dirname(admin_path), exist_ok=True)
+        file_path = os.path.join(CONVERSATIONS_DIR, filename)
+        os.makedirs(CONVERSATIONS_DIR, exist_ok=True)
 
         if message:
             with open(file_path, 'a') as file_handle:
                 file_handle.write(f'customer: {message}\n created_at: {datetime.utcnow() + timedelta(hours=5)}\n')
-            with open(admin_path, 'a') as file_hand:
-                file_hand.write(f'customer: {message}\n created_at: {datetime.utcnow() + timedelta(hours=5)}\n')
         if file:
             with open(file_path, 'a') as file_handle:
                 file_handle.write(f'file: {file}\n created_at: {datetime.now() + timedelta(hours=5)}\n')

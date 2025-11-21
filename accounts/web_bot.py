@@ -88,16 +88,12 @@ def send_message_to_bot(request):
                             return JsonResponse({'status': 'error', 'message': 'An error occurred while updating the message status.'}, status=500)
 
                         filename = f'{first_name}_{chat_id}.txt'
-                        file_path = os.path.join(BASE_DIR, filename)
-                        admin_path = os.path.join(Admin_Dir,filename)
+                        file_path = os.path.join(CONVERSATIONS_DIR, filename)
 
-                        os.makedirs(os.path.dirname(file_path), exist_ok=True)
-                        os.makedirs(os.path.dirname(admin_path), exist_ok=True)
+                        os.makedirs(CONVERSATIONS_DIR, exist_ok=True)
 
                         with open(file_path, 'a') as file:
-                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
-                        with open(admin_path, 'a') as admin_file:
-                            admin_file.write(f'{assistant_name}: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
+                            file.write(f'{assistant_name}: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
                         return JsonResponse({'status': 'success'}, status=200)
                     else:
                         error_message = response_data.get('description', 'Unknown error')
