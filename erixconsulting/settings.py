@@ -97,31 +97,31 @@ WSGI_APPLICATION = 'erixconsulting.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-#
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'tuya$erixconsulting',
-#         'USER': 'tuya',
-#         'PASSWORD': 'tuyadatabases',
-#         'HOST': 'tuya.mysql.pythonanywhere-services.com',
-#         'PORT': '3306',
-#     },
-#     'cims': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'cims$default',
-#         'USER': 'cims',
-#         'PASSWORD': '5498603Ma.',
-#         'HOST': 'cims.mysql.pythonanywhere-services.com',
-#         'PORT': '3306',
-#     },
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
 # }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'tuya$erixconsulting',
+        'USER': 'tuya',
+        'PASSWORD': 'tuyadatabases',
+        'HOST': 'tuya.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+    },
+    'cims': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'cims$default',
+        'USER': 'cims',
+        'PASSWORD': '5498603Ma.',
+        'HOST': 'cims.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+    },
+}
 
 
 # Password validation
