@@ -19,11 +19,10 @@ from django.views.decorators.csrf import csrf_exempt
 from erixconsulting.settings import BASE_DIR
 
 load_dotenv()
-from config import *
+from config import CONVERSATIONS_DIR, BASE_DIR, BOT_TOKEN, CHANNEL_INFO_BOT, TELEGRAM_API_URL
 
 
 BASE_DIR =BASE_DIR
-TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL')
 logger = logging.getLogger(__name__)
 
 @user_passes_test(lambda u: u.is_staff, login_url='/login/')
@@ -93,7 +92,7 @@ def send_message_to_bot(request):
                         os.makedirs(CONVERSATIONS_DIR, exist_ok=True)
 
                         with open(file_path, 'a') as file:
-                            file.write(f'{assistant_name}: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
+                            file.write(f'assistant: {message_text}\ncreated_at: {datetime.now()+timedelta(hours=5)}\n')
                         return JsonResponse({'status': 'success'}, status=200)
                     else:
                         error_message = response_data.get('description', 'Unknown error')
@@ -118,7 +117,7 @@ def fetch_messages(request):
     first_name = request.GET.get('first_name')
 
     filename = f"{first_name}_{chat_id}.txt"
-    file_path = os.path.join(BASE_DIR, filename)
+    file_path = os.path.join(CONVERSATIONS_DIR, filename)
 
     if not os.path.exists(file_path):
         logger.error(f"Chat file does not exist for {chat_id}")
@@ -159,7 +158,7 @@ def fetch_messages(request):
                         "full_created_at": created_at_raw
                     })
                 else:
-                    is_assistant = (message_sender == 'assistant')
+                    is_assistant = (message_sender not in ['customer', first_name.lower()])
 
                     messages.append({
                         "first_name": first_name if not is_assistant else 'Assistant',
@@ -228,7 +227,7 @@ def close_chat(request):
                         return JsonResponse({'success': False, 'error': 'Chat request not found.'}, status=404)
 
                     filename = f'{first_name}_{chat_id}.txt'
-                    file_path = os.path.join(BASE_DIR, filename)
+                    file_path = os.path.join(CONVERSATIONS_DIR, filename)
                     if os.path.exists(file_path):
                         os.remove(file_path)
 

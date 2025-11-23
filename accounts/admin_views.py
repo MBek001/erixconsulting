@@ -5,7 +5,7 @@ from django.db.models import Q, Count
 from django.core.paginator import Paginator
 from accounts.models import (
     User, TeamMembership, Service, Comment, ContactMessage,
-    BlogPost, Conversation, ChatRequest
+    BlogPost, Conversation, ChatRequest, TelegramUserMessage
 )
 
 
@@ -325,14 +325,14 @@ def user_delete(request, pk):
         user = User.objects.get(pk=pk)
         if user.is_superuser:
             messages.error(request, 'Cannot delete superuser!')
-            return redirect('user_list')
+            return redirect('user_list_admin')
         user.delete()
         messages.success(request, 'User deleted successfully!')
     except User.DoesNotExist:
         messages.error(request, 'User not found!')
     except Exception as e:
         messages.error(request, f'Error: {str(e)}')
-    return redirect('user_list')
+    return redirect('user_list_admin')
 
 
 # ==================== CONTACT MESSAGES ====================

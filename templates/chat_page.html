@@ -55,7 +55,7 @@
 
 .sidebar-header {
     background: var(--white);
-    padding: 1.5rem;
+    padding: 2.2rem;
     color: var(--dark);
     border-bottom: 1px solid #e5e7eb;
 }
@@ -188,7 +188,7 @@
 }
 
 .chat-content-header {
-    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #0d6efd 100%);
     padding: 1.5rem;
     color: var(--white);
     display: flex;
@@ -206,7 +206,7 @@
     width: 45px;
     height: 45px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(13, 110, 253);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -513,10 +513,7 @@
 {% block content %}
 <div class="chat-page-wrapper">
     <div class="container chat-main-container">
-        <h1 class="page-title wow fadeInDown">
-            <i class="fas fa-comments"></i>
-            Live Chat Support
-        </h1>
+
 
         <div class="unified-chat-box wow fadeInUp" data-wow-delay="0.2s">
             <!-- Left Sidebar - Users -->
@@ -717,10 +714,23 @@ $(document).ready(function () {
             },
             success: function (response) {
                 const container = $('#messages-container');
-                container.empty();
 
+                // Combine and sort messages
                 let combined = [...response.messages, ...response.files];
                 combined.sort((a, b) => new Date(a.full_created_at) - new Date(b.full_created_at));
+
+                // Check if content changed
+                const newContent = JSON.stringify(combined);
+                if (container.data('lastContent') === newContent) {
+                    return; // No changes, skip update
+                }
+                container.data('lastContent', newContent);
+
+                // Save scroll position
+                const wasAtBottom = container.scrollTop() + container.innerHeight() >= container[0].scrollHeight - 50;
+
+                // Clear and rebuild (only when there are changes)
+                container.empty();
 
                 combined.forEach(item => {
                     if (item.file_path) {
@@ -754,7 +764,10 @@ $(document).ready(function () {
                     }
                 });
 
-                container.scrollTop(container[0].scrollHeight);
+                // Only scroll to bottom if user was already there
+                if (wasAtBottom) {
+                    container.scrollTop(container[0].scrollHeight);
+                }
             }
         });
     }

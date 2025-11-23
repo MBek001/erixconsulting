@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from accounts.models import TelegramUserMessage, RequestHistory
-from config import Admin_Dir
+from config import CONVERSATIONS_DIR
 
 logger = logging.getLogger(__name__)
 

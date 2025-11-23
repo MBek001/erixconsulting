@@ -12,15 +12,14 @@ BASE_DIR = Path(__file__).resolve().parent
 # Load environment variables from .env file
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# Django URLs
-DJANGO_SAVE_URL = os.getenv('DJANGO_SAVE_URL', 'http://localhost:8000/save-message')
-CHECK_CHAT_STATUS_URL = os.getenv('CHECK_CHAT_STATUS_URL', 'http://localhost:8000/check-chat-status/')
+DJANGO_SAVE_URL = os.getenv('DJANGO_SAVE_URL', 'http://localhost:8001/save-message')
+CHECK_CHAT_STATUS_URL = os.getenv('CHECK_CHAT_STATUS_URL', 'http://localhost:8001/check-chat-status/')
 
 # Telegram Bot Configuration
-BOT_TOKEN = os.getenv('BOT_TOKEN', '')
-INFO_CHANNEL_ID = os.getenv('INFO_CHANNEL_ID', '')
-CHANNEL_INFO_BOT = os.getenv('CHANNEL_INFO_BOT', '')
-TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL', 'https://api.telegram.org')
+BOT_TOKEN = "7334080838:AAECrnJlcDbhrdWVmSAK85VVre2z1fV-6p4"
+INFO_CHANNEL_ID = os.getenv('INFO_CHANNEL_ID', '-1003490393606')
+CHANNEL_INFO_BOT = os.getenv('CHANNEL_INFO_BOT', '7334080838:AAECrnJlcDbhrdWVmSAK85VVre2z1fV-6p4')
+TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL', 'https://api.telegram.org/bot7334080838:AAECrnJlcDbhrdWVmSAK85VVre2z1fV-6p4/sendMessage')
 
 # Directories
 CONVERSATIONS_DIR = os.path.join(BASE_DIR, 'media', 'conversations')
