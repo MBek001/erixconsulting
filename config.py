@@ -16,7 +16,7 @@ DJANGO_SAVE_URL = os.getenv('DJANGO_SAVE_URL', 'https://www.erixconsulting.com/s
 CHECK_CHAT_STATUS_URL = os.getenv('CHECK_CHAT_STATUS_URL', 'https://www.erixconsulting.com/check-chat-status/')
 
 # Telegram Bot Configuration
-BOT_TOKEN = "7334080838:AAECrnJlcDbhrdWVmSAK85VVre2z1fV-6p4"
+BOT_TOKEN = "6244691383:AAE51kV_ncZHYoZT1PSe3JrZVneosgd3KRU"
 INFO_CHANNEL_ID = os.getenv('INFO_CHANNEL_ID', '-1003490393606')
 CHANNEL_INFO_BOT = os.getenv('CHANNEL_INFO_BOT', '6244691383:AAE51kV_ncZHYoZT1PSe3JrZVneosgd3KRU')
 TELEGRAM_API_URL = os.getenv('TELEGRAM_API_URL', 'https://api.telegram.org/bot6244691383:AAE51kV_ncZHYoZT1PSe3JrZVneosgd3KRU/sendMessage')
